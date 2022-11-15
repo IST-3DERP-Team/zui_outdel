@@ -1,0 +1,180 @@
+<mvc:View controllerName="zuioutdel.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc" 
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:uiL="sap.ui.layout"
+    xmlns:uiT="sap.ui.table"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:sfb="sap.ui.comp.smartfilterbar"
+    xmlns:core="sap.ui.core"
+    height="100%">
+    <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false">
+        <content>
+            <VBox id="vbMRP" fitContainer="true">
+                <sfb:SmartFilterBar id="sfbMRP" entitySet="ZVB_3DERP_OUTDELFILTER" enableBasicSearch="true" search="onSearch" 
+                    persistencyKey="3DERP_OutDelKey" filterContainerWidth="14rem" useToolbar="true" showClearOnFB="true" initialise="onSFBInitialise">
+                    <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterSbu" key="SBU" groupId="_BASIC" label="{ddtext>/SBU}" controlType="dropDownList" 
+                            displayBehaviour="idOnly" mandatory="mandatory">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration>
+                    <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterDlvType" key="DLVTYPE" groupId="_BASIC" label="{ddtext>/DLVTYPE}" controlType="dropDownList" 
+                            displayBehaviour="idOnly" mandatory="notMandatory">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration>
+                    <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterDlvNo" key="DLVNO" groupId="_BASIC" label="{ddtext>/DLVNO}" controlType="dropDownList" 
+                            displayBehaviour="idOnly" mandatory="notMandatory">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration>
+                    <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterIssPlant" key="ISSPLANT" groupId="_BASIC" label="{ddtext>/ISSPLANT}" controlType="dropDownList" 
+                            displayBehaviour="idOnly" mandatory="notMandatory">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration>
+                    <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterRcvPlant" key="RCVPLANT" groupId="_BASIC" label="{ddtext>/RCVPLANT}" controlType="dropDownList" 
+                            displayBehaviour="idOnly" mandatory="notMandatory">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration>
+                    <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterRefDlvNo" key="REFDLVNO" groupId="_BASIC" label="{ddtext>/REFDLVNO}" controlType="dropDownList" 
+                            displayBehaviour="idOnly" mandatory="notMandatory">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration>
+                    <sfb:layoutData>
+                        <FlexItemData shrinkFactor="0"/>
+                    </sfb:layoutData>
+                </sfb:SmartFilterBar>
+
+                <uiT:Table id="outDelHdrTab"
+                    class="tablePadding"
+                    rows="{outDelHdr>/results}"
+                    visibleRowCountMode="Auto"
+                    showColumnVisibilityMenu="true"
+                    enableColumnFreeze="true"
+                    enableCellFilter="true"
+                    selectionMode="MultiToggle"
+                    firstVisibleRowChanged="onFirstVisibleRowChanged"
+                    cellClick="onCellClickMrpHdr"
+                    sort="onSorted"
+                    filter="onFilter"
+                    columnFreeze="onColumnUpdated"
+                    columnMove="onColumnUpdated"
+                    columnResize="onColumnUpdated"
+                    columnSelect="onColumnUpdated"
+                    columnVisibility="onColumnUpdated"
+                    rowSelectionChange="onRowSelectionChangeMrpHdr">
+                    <uiT:extension>
+                        <Toolbar>
+                            <Text text="{ui>/rowCountMrpHdr} {ddtext>/ROWS}" />
+                            <ToolbarSpacer/>
+                            <!-- <SearchField
+                                id="searchFieldMrpHdr"
+                                placeholder="Filter"
+                                value=""
+                                search="filterGlobally"
+                                width="15rem"/> -->
+                            <!-- <ToolbarSeparator/> -->
+                            <Button id="btnReserveMrpHdr" 
+                                icon="sap-icon://basket"
+                                text="{ddtext>/RESERVE}"
+                                press="onReserveMrpHdr"
+                                visible="true"/>
+                            <Button id="btnResetMrpHdr" 
+                                icon="sap-icon://reset"
+                                text="{ddtext>/RESET}"
+                                press="onResetMrpHdr"
+                                visible="true"/>
+                            <Button id="btnExecuteMrpHdr" 
+                                icon="sap-icon://feeder-arrow"
+                                text="{ddtext>/EXECUTE}"
+                                press="onExecuteMrpHdr" 
+                                visible="true" />
+                            <!-- <Button id="btnRefreshMrpHdr" 
+                                icon="sap-icon://refresh"
+                                text="Refresh"
+                                press="onRefreshMrpHdr"
+                                visible="true"/> -->
+                            <Button id="btnColPropMrpHdr" 
+                                icon="sap-icon://table-column"
+                                press="onColumnProp"
+                                tooltip="{ddtext>/COLUMNS}"
+                                visible="true" />
+                            <Button id="btnTabLayoutMrpHdr"
+                                icon="sap-icon://grid" 
+                                tooltip="{ddtext>/SAVELAYOUT}" 
+                                press="onSaveTableLayout"
+                                visible="true" />
+                        </Toolbar>
+                    </uiT:extension>
+                    <uiT:layoutData>
+                        <FlexItemData growFactor="1" baseSize="0%"/>
+                    </uiT:layoutData>
+                </uiT:Table>
+                
+                <uiT:Table id="outDelDtlTab"
+                    class="tablePadding"
+                    rows="{outDelDtl>/results}"
+                    visibleRowCountMode="Auto"
+                    showColumnVisibilityMenu="true"
+                    enableColumnFreeze="true"
+                    enableCellFilter="true"
+                    selectionMode="Single"
+                    selectionBehavior="RowOnly"
+                    firstVisibleRowChanged="onFirstVisibleRowChanged"
+                    cellClick="onCellClick"
+                    sort="onSorted"
+                    filter="onFilter"
+                    columnFreeze="onColumnUpdated"
+                    columnMove="onColumnUpdated"
+                    columnResize="onColumnUpdated"
+                    columnSelect="onColumnUpdated"
+                    columnVisibility="onColumnUpdated"
+                    rowSelectionChange="onRowSelectionChangeMrpDtl">
+                    <uiT:extension>
+                        <Toolbar>
+                            <Text text="{ui>/rowCountMrpDtl} {ddtext>/ROWS}" />
+                            <ToolbarSpacer/>
+                            <Button id="btnEditMrpDtl"
+                                icon="sap-icon://edit"
+                                text="{ddtext>/EDIT}"
+                                press="onEditMrpDtl"
+                                visible="true"/>
+                            <Button id="btnSaveMrpDtl" 
+                                icon="sap-icon://save"
+                                text="{ddtext>/SAVE}"
+                                press="onSaveMrpDtl" 
+                                visible="false" />
+                            <Button id="btnCancelMrpDtl" 
+                                icon="sap-icon://sys-cancel"
+                                text="{ddtext>/CANCEL}"
+                                press="onCancelMrpDtl" 
+                                visible="false" />                                        
+                            <Button id="btnRefreshMrpDtl" 
+                                icon="sap-icon://refresh"
+                                text="{ddtext>/REFRESH}"
+                                press="onRefreshMrpDtl"
+                                visible="false"/> 
+                            <Button id="btnColPropMrpDtl" 
+                                icon="sap-icon://table-column"
+                                press="onColumnProp"
+                                tooltip="{ddtext>/COLUMNS}"
+                                visible="true" />
+                            <Button id="btnTabLayoutMrpDtl"
+                                icon="sap-icon://grid" 
+                                tooltip="{ddtext>/SAVELAYOUT}"
+                                press="onSaveTableLayout"
+                                visible="true" />
+                        </Toolbar>
+                    </uiT:extension>
+                    <uiT:layoutData>
+                        <FlexItemData growFactor="1" baseSize="0%"/>
+                    </uiT:layoutData>
+                </uiT:Table>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>
