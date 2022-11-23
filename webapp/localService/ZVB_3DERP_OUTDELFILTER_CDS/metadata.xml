@@ -19,32 +19,33 @@
         <Schema Namespace="ZVB_3DERP_OUTDELFILTER_CDS" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
             <EntityType Name="ZVB_3DERP_DLVNO_SHType" sap:label="Delivery Number Search Help" sap:value-list="true" sap:content-version="1">
                 <Key>
-                    <PropertyRef Name="dlvno"/>
+                    <PropertyRef Name="DLVNO"/>
                 </Key>
-                <Property Name="dlvno" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Dlv No" sap:quickinfo="Delivery Number"/>
+                <Property Name="DLVNO" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Dlv No" sap:quickinfo="Delivery Number"/>
             </EntityType>
             <EntityType Name="ZVB_3DERP_DLVTYP_SHType" sap:label="Delivery Type Search Help" sap:value-list="true" sap:content-version="1">
                 <Key>
-                    <PropertyRef Name="dlvtyp"/>
+                    <PropertyRef Name="DLVTYP"/>
                 </Key>
-                <Property Name="dlvtyp" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Delivery Type"/>
+                <Property Name="DLVTYP" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Delivery Type"/>
+                <Property Name="DLVTYPDESC" Type="Edm.String" MaxLength="267" sap:display-format="UpperCase" sap:label="Description"/>
             </EntityType>
             <EntityType Name="ZVB_3DERP_OUTDELFILTERType" sap:label="Outbound Delivery Filter" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="DLVNO"/>
                 </Key>
                 <Property Name="DLVNO" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Dlv No" sap:quickinfo="Delivery Number" sap:value-list="standard"/>
-                <Property Name="Sbu" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="SBU" sap:quickinfo="ERP SBU" sap:value-list="standard"/>
-                <Property Name="DlvType" Type="Edm.String" MaxLength="267" sap:value-list="standard"/>
-                <Property Name="IssPlant" Type="Edm.String" MaxLength="35" sap:value-list="standard"/>
-                <Property Name="RcvPlant" Type="Edm.String" MaxLength="35" sap:value-list="standard"/>
+                <Property Name="SBU" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:label="SBU" sap:quickinfo="ERP SBU" sap:value-list="standard"/>
+                <Property Name="DLVTYPE" Type="Edm.String" MaxLength="267" sap:value-list="standard"/>
+                <Property Name="ISSPLANT" Type="Edm.String" MaxLength="35" sap:value-list="standard"/>
+                <Property Name="RCVPLANT" Type="Edm.String" MaxLength="35" sap:value-list="standard"/>
                 <Property Name="REFDLVNO" Type="Edm.String" MaxLength="1" sap:value-list="standard"/>
             </EntityType>
-            <EntityType Name="ZVB_3DERP_PLANTType" sap:label="3DERP: Plant" sap:value-list="true" sap:content-version="1">
+            <EntityType Name="ZVB_3DERP_PLANT_SHType" sap:label="Plant" sap:value-list="true" sap:content-version="1">
                 <Key>
-                    <PropertyRef Name="plantcd"/>
+                    <PropertyRef Name="PLANTCD"/>
                 </Key>
-                <Property Name="plantcd" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant"/>
+                <Property Name="PLANTCD" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant"/>
             </EntityType>
             <EntityType Name="ZVB_3DERP_REFDELVNO_SHType" sap:label="Reference Delivery Number" sap:value-list="true" sap:content-version="1">
                 <Key>
@@ -62,7 +63,7 @@
                 <EntitySet Name="ZVB_3DERP_DLVNO_SH" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_DLVNO_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZVB_3DERP_DLVTYP_SH" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_DLVTYP_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZVB_3DERP_OUTDELFILTER" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-                <EntitySet Name="ZVB_3DERP_PLANT" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_PLANTType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="ZVB_3DERP_PLANT_SH" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_PLANT_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZVB_3DERP_REFDELVNO_SH" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_REFDELVNO_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="ZVB_3DERP_SBU_SH" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_SBU_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
             </EntityContainer>
@@ -78,15 +79,12 @@
                                     <PropertyValue Property="LocalDataProperty" PropertyPath="DLVNO"/>
                                     <PropertyValue Property="ValueListProperty" String="DLVNO"/>
                                 </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="dlvno"/>
-                                </Record>
                             </Collection>
                         </PropertyValue>
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/Sbu" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/SBU" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
                         <PropertyValue Property="Label" String="3DERP: SBU"/>
@@ -95,7 +93,7 @@
                         <PropertyValue Property="Parameters">
                             <Collection>
                                 <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="Sbu"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="SBU"/>
                                     <PropertyValue Property="ValueListProperty" String="SBU"/>
                                 </Record>
                             </Collection>
@@ -103,7 +101,7 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/DlvType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/DLVTYPE" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
                         <PropertyValue Property="Label" String="Delivery Type Search Help"/>
@@ -112,51 +110,45 @@
                         <PropertyValue Property="Parameters">
                             <Collection>
                                 <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="DlvType"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="DLVTYPE"/>
                                     <PropertyValue Property="ValueListProperty" String="DLVTYP"/>
                                 </Record>
                                 <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="dlvtyp"/>
+                                    <PropertyValue Property="ValueListProperty" String="DLVTYPDESC"/>
                                 </Record>
                             </Collection>
                         </PropertyValue>
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/IssPlant" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/ISSPLANT" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
-                        <PropertyValue Property="Label" String="3DERP: Plant"/>
-                        <PropertyValue Property="CollectionPath" String="ZVB_3DERP_PLANT"/>
+                        <PropertyValue Property="Label" String="Plant"/>
+                        <PropertyValue Property="CollectionPath" String="ZVB_3DERP_PLANT_SH"/>
                         <PropertyValue Property="SearchSupported" Bool="false"/>
                         <PropertyValue Property="Parameters">
                             <Collection>
                                 <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="IssPlant"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="ISSPLANT"/>
                                     <PropertyValue Property="ValueListProperty" String="PLANTCD"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="plantcd"/>
                                 </Record>
                             </Collection>
                         </PropertyValue>
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/RcvPlant" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/RCVPLANT" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
-                        <PropertyValue Property="Label" String="3DERP: Plant"/>
-                        <PropertyValue Property="CollectionPath" String="ZVB_3DERP_PLANT"/>
+                        <PropertyValue Property="Label" String="Plant"/>
+                        <PropertyValue Property="CollectionPath" String="ZVB_3DERP_PLANT_SH"/>
                         <PropertyValue Property="SearchSupported" Bool="false"/>
                         <PropertyValue Property="Parameters">
                             <Collection>
                                 <Record Type="Common.ValueListParameterInOut">
-                                    <PropertyValue Property="LocalDataProperty" PropertyPath="RcvPlant"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="RCVPLANT"/>
                                     <PropertyValue Property="ValueListProperty" String="PLANTCD"/>
-                                </Record>
-                                <Record Type="Common.ValueListParameterDisplayOnly">
-                                    <PropertyValue Property="ValueListProperty" String="plantcd"/>
                                 </Record>
                             </Collection>
                         </PropertyValue>
