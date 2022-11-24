@@ -39,6 +39,9 @@ sap.ui.define([
                     activeDlvNo: ""
                 }), "ui")
 
+                var oComponent = this.getOwnerComponent();
+                this._router = oComponent.getRouter();
+
                 this.initializeComponent();
             },
 
@@ -406,6 +409,23 @@ sap.ui.define([
                 })
             },
 
+            onAddOutDelHdr() {
+                this._router.navTo("RouteInterplantTransferDC", {
+                    DLVNO: "test"
+                }, true);
+            },
+
+            onEditOutDelHdr() {
+                if (this.getView().getModel("ui").getData().activeDlvNo) {
+                    var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
+                    this._router.navTo("RouteInterplantTransferDC", {
+                        DLVNO: sDlvNo
+                    }, true);
+                } else {
+                    MessageBox.information(_oCaption.INFO_NO_SELECTED);
+                }
+            },
+
             onCellClickOutDelHdr(oEvent) {
                 var sDlvNo = oEvent.getParameters().rowBindingContext.getObject().DLVNO;
                 this.getView().getModel("ui").setProperty("/activeDlvNo", sDlvNo);
@@ -646,7 +666,7 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "DLVDTL"});
 
                 // MessageBox
-                // oDDTextParam.push({CODE: "INFO_NO_SELECTED"});
+                oDDTextParam.push({CODE: "INFO_NO_SELECTED"});
                 // oDDTextParam.push({CODE: "CONFIRM_DISREGARD_CHANGE"});
                 // oDDTextParam.push({CODE: "INFO_INVALID_SAVE"});
                 // oDDTextParam.push({CODE: "WARN_NO_DATA_MODIFIED"});

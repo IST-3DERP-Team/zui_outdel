@@ -1,0 +1,219 @@
+<mvc:View controllerName="zuioutdel.controller.InterplantTransferDC"
+    xmlns:mvc="sap.ui.core.mvc" 
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:uiL="sap.ui.layout"
+    xmlns:uiT="sap.ui.table"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:sfb="sap.ui.comp.smartfilterbar"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    height="100%">
+
+    <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false">
+        <content>
+            <VBox id="vbMain" fitContainer="true">
+                <Toolbar id="TB1" style="Clear">
+                    <ToolbarSpacer />
+                    <Button id="btnEditHeader" type="Ghost" icon="sap-icon://edit" press="onEditHeader" visible="true"/>
+                    <Button id="btnDeleteHeader" type="Ghost" icon="sap-icon://delete" press="onDeleteHeader" visible="true"/> 
+                    <Button id="btnPostHeader" type="Ghost" icon="sap-icon://settings" press="onPostHeader" visible="true"/> 
+                    <Button id="btnRefreshHeader" type="Ghost" icon="sap-icon://refresh" press="onRefreshHeader" visible="true"/> 
+                    <Button id="btnPrintHeader" type="Ghost" icon="sap-icon://print" press="onPrintHeader" visible="true"/> 
+                    <Button id="btnSaveHeader" type="Ghost" icon="sap-icon://save" press="onSaveHeader" visible="false"/> 
+                    <Button id="btnCancelHeader" type="Ghost" icon="sap-icon://sys-cancel" press="onCancelHeader" visible="false"/> 
+                </Toolbar>
+                <uiL:Splitter height="100%" orientation="Vertical">                     
+                    <uiL:Splitter>
+                        <uiL:layoutData><uiL:SplitterLayoutData size="40%" /></uiL:layoutData>
+                        <uiL:contentAreas>
+                            <f:Form id="frmHeader" editable="true" class="sapUiNoContentPadding" width="100%">
+                                <f:layout>
+                                    <f:ResponsiveGridLayout columnsL="4" singleContainerFullSize="false" />
+                                </f:layout>
+                                <f:formContainers>
+                                    <f:FormContainer ariaLabelledBy="Grp1" class="sapUiNoContentPadding" >
+                                        <f:formElements>
+                                            <f:FormElement label="{ddtext>/DLVNO}">  
+                                                <f:fields>
+                                                    <Input id="iptDlvNo" editable="false" >
+                                                    </Input>
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/MVTTYPE}">  
+                                                <f:fields>
+                                                    <Input id="iptMvtType" editable="false" >
+                                                    </Input>
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/STATUS}">  
+                                                <f:fields>
+                                                    <Input id="iptStatus" editable="false" >
+                                                    </Input>
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/DOCDT}">  
+                                                <f:fields>
+                                                    <DatePicker
+                                                        id="dpDocDt"
+                                                        placeholder="Enter Date ..."/>
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/REQDT}">  
+                                                <f:fields>
+                                                    <DatePicker
+                                                        id="dpReqDt"
+                                                        placeholder="Enter Date ..."/>
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/POSTDT}">  
+                                                <f:fields>
+                                                    <DatePicker
+                                                        id="dpPostDt"
+                                                        placeholder="Enter Date ..."/>
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/ACTISSDT}">  
+                                                <f:fields>
+                                                    <DatePicker
+                                                        id="dpActIssDt"
+                                                        placeholder="Enter Date ..."/>
+                                                </f:fields>
+                                            </f:FormElement>
+                                        </f:formElements>
+                                    </f:FormContainer>
+                                    <f:FormContainer ariaLabelledBy="Grp2" class="sapUiNoContentPadding" >
+                                        <f:formElements>
+                                            <f:FormElement label="{ddtext>/ISSPLANT}">  
+                                                <f:fields>
+                                                    <Input id="iptIssPlant" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/ISSSLOC}">  
+                                                <f:fields>
+                                                    <Input id="iptIssSloc" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/RCVPLANT}">  
+                                                <f:fields>
+                                                    <Input id="iptRcvPlant" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/RCVSLOC}">  
+                                                <f:fields>
+                                                    <Input id="iptRcvSloc" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/ETD}">  
+                                                <f:fields>
+                                                    <DatePicker
+                                                        id="dpETD"
+                                                        placeholder="Enter Date ..."/>
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/ETA}">  
+                                                <f:fields>
+                                                    <DatePicker
+                                                        id="dpETA"
+                                                        placeholder="Enter Date ..."/>
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/MODESHIP}">  
+                                                <f:fields>
+                                                    <Input id="iptShipMode" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                        </f:formElements>
+                                    </f:FormContainer>
+                                    <f:FormContainer ariaLabelledBy="Grp3" class="sapUiNoContentPadding" >
+                                        <f:formElements>
+                                            <f:FormElement label="{ddtext>/DLVNO}">  
+                                                <f:fields>
+                                                    <Input id="2" editable="false" >
+                                                    </Input>
+                                                </f:fields>
+                                            </f:FormElement>
+                                        </f:formElements>
+                                    </f:FormContainer>
+                                    <f:FormContainer ariaLabelledBy="Grp4" class="sapUiNoContentPadding" >
+                                        <f:formElements>
+                                            <f:FormElement label="{ddtext>/DLVNO}">  
+                                                <f:fields>
+                                                    <Input id="3" editable="false" >
+                                                    </Input>
+                                                </f:fields>
+                                            </f:FormElement>
+                                        </f:formElements>
+                                    </f:FormContainer>
+                                </f:formContainers>
+                            </f:Form>
+                        </uiL:contentAreas>
+                    </uiL:Splitter> 
+                    <uiL:Splitter>
+                        <uiL:layoutData><uiL:SplitterLayoutData size="55%" /></uiL:layoutData>
+                        <uiL:contentAreas>
+                            <uiT:Table id="detailTab"
+                                rows="{detail>/results}"
+                                visibleRowCountMode="Auto"
+                                showColumnVisibilityMenu="true"
+                                enableColumnFreeze="true"
+                                enableCellFilter="true"
+                                selectionMode="Single"
+                                selectionBehavior="RowSelector"
+                                firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                cellClick="onCellClick"
+                                sort="onSorted"
+                                filter="onFilter"
+                                columnFreeze="onColumnUpdated"
+                                columnMove="onColumnUpdated"
+                                columnResize="onColumnUpdated"
+                                columnSelect="onColumnUpdated"
+                                columnVisibility="onColumnUpdated"
+                                rowSelectionChange="onRowSelectionChange">
+                                <uiT:extension>
+                                    <Toolbar>
+                                        <ToolbarSpacer/>
+                                        <Button id="btnCreateDetail" 
+                                            icon="sap-icon://add"
+                                            press="onCreate('detail')"
+                                            visible="true"/>
+                                        <Button id="btnEditDetail" 
+                                            icon="sap-icon://edit"
+                                            press="onEdit('detail')"
+                                            visible="true"/>
+                                        <Button id="btnDeleteDetail" 
+                                            icon="sap-icon://delete"
+                                            press="onDelete('detail')" 
+                                            visible="true" />
+                                        <Button id="btnAddRowDetail" 
+                                            icon="sap-icon://add"
+                                            press="onAddRow('detail')"
+                                            visible="false" />
+                                        <Button id="btnRemoveRowDetail" 
+                                            icon="sap-icon://less"
+                                            press="onRemoveRow('detail')"
+                                            visible="false" />
+                                        <Button id="btnSaveDetail" 
+                                            icon="sap-icon://save"
+                                            press="onSave('detail')"
+                                            visible="false" />
+                                        <Button id="btnCancelDetail"
+                                            icon="sap-icon://sys-cancel"
+                                            press="onCancel('detail')"
+                                            visible="false" />
+                                    </Toolbar>
+                                </uiT:extension>
+                                <uiT:layoutData>
+                                    <FlexItemData growFactor="1" baseSize="0%"/>
+                                </uiT:layoutData>
+                            </uiT:Table>
+                        </uiL:contentAreas>
+                    </uiL:Splitter>
+                    <uiL:layoutData>
+                        <FlexItemData id="fidTabMain" growFactor="1" baseSize="0%"/>
+                    </uiL:layoutData>
+                </uiL:Splitter>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

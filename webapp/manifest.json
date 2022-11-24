@@ -166,6 +166,14 @@
                     "target": [
                         "TargetMain"
                     ]
+                },
+                {
+                    "name": "RouteInterplantTransferDC",
+                    "pattern": "InterplantTransferDC/{DLVNO}",
+                    "greedy": false,
+                    "target": [
+                        "TargetInterplantTransferDC"
+                    ]
                 }
             ],
             "targets": {
@@ -175,6 +183,13 @@
                     "clearControlAggregation": false,
                     "viewId": "Main",
                     "viewName": "Main"
+                },
+                "TargetInterplantTransferDC": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "InterplantTransferDC",
+                    "viewName": "InterplantTransferDC"
                 }
             }
         },
@@ -183,6 +198,9 @@
             "type": "XML",
             "async": true,
             "id": "App"
+        },
+        "config": {
+            "fullWidth": true
         }
     }
 }
