@@ -127,20 +127,78 @@
                                     </f:FormContainer>
                                     <f:FormContainer ariaLabelledBy="Grp3" class="sapUiNoContentPadding" >
                                         <f:formElements>
-                                            <f:FormElement label="{ddtext>/DLVNO}">  
+                                            <f:FormElement label="{ddtext>/VESSEL}">  
                                                 <f:fields>
-                                                    <Input id="2" editable="false" >
-                                                    </Input>
+                                                    <Input id="iptVessel" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/CONTAINERNO}">  
+                                                <f:fields>
+                                                    <Input id="iptContainerNo" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/HBL}">  
+                                                <f:fields>
+                                                    <Input id="iptHBL" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/MBL}">  
+                                                <f:fields>
+                                                    <Input id="iptMBL" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/NOPACK}">  
+                                                <f:fields>
+                                                    <Input id="iptNoPack" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/CREATEDBY}">  
+                                                <f:fields>
+                                                    <Input id="iptCreatedBy" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/CREATEDDT}">  
+                                                <f:fields>
+                                                    <Input id="iptCreatedDt" editable="false" />
                                                 </f:fields>
                                             </f:FormElement>
                                         </f:formElements>
                                     </f:FormContainer>
                                     <f:FormContainer ariaLabelledBy="Grp4" class="sapUiNoContentPadding" >
                                         <f:formElements>
-                                            <f:FormElement label="{ddtext>/DLVNO}">  
+                                            <f:FormElement label="{ddtext>/FORWARDER}">  
                                                 <f:fields>
-                                                    <Input id="3" editable="false" >
-                                                    </Input>
+                                                    <Input id="iptForwarder" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/CARRIER}">  
+                                                <f:fields>
+                                                    <Input id="iptCarrier" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/REFDOCNO}">  
+                                                <f:fields>
+                                                    <Input id="iptRefDocNo" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/REFDOCDT}">  
+                                                <f:fields>
+                                                    <Input id="iptRefDocDt" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/DELETED}">  
+                                                <f:fields>
+                                                    <Input id="iptDeleted" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/UPDATEDBY}">  
+                                                <f:fields>
+                                                    <Input id="iptUpdatedBy" editable="false" />
+                                                </f:fields>
+                                            </f:FormElement>
+                                            <f:FormElement label="{ddtext>/UPDATEDDT}">  
+                                                <f:fields>
+                                                    <Input id="iptUpdatedDt" editable="false" />
                                                 </f:fields>
                                             </f:FormElement>
                                         </f:formElements>
@@ -152,61 +210,157 @@
                     <uiL:Splitter>
                         <uiL:layoutData><uiL:SplitterLayoutData size="55%" /></uiL:layoutData>
                         <uiL:contentAreas>
-                            <uiT:Table id="detailTab"
-                                rows="{detail>/results}"
-                                visibleRowCountMode="Auto"
-                                showColumnVisibilityMenu="true"
-                                enableColumnFreeze="true"
-                                enableCellFilter="true"
-                                selectionMode="Single"
-                                selectionBehavior="RowSelector"
-                                firstVisibleRowChanged="onFirstVisibleRowChanged"
-                                cellClick="onCellClick"
-                                sort="onSorted"
-                                filter="onFilter"
-                                columnFreeze="onColumnUpdated"
-                                columnMove="onColumnUpdated"
-                                columnResize="onColumnUpdated"
-                                columnSelect="onColumnUpdated"
-                                columnVisibility="onColumnUpdated"
-                                rowSelectionChange="onRowSelectionChange">
-                                <uiT:extension>
-                                    <Toolbar>
-                                        <ToolbarSpacer/>
-                                        <Button id="btnCreateDetail" 
-                                            icon="sap-icon://add"
-                                            press="onCreate('detail')"
-                                            visible="true"/>
-                                        <Button id="btnEditDetail" 
-                                            icon="sap-icon://edit"
-                                            press="onEdit('detail')"
-                                            visible="true"/>
-                                        <Button id="btnDeleteDetail" 
-                                            icon="sap-icon://delete"
-                                            press="onDelete('detail')" 
-                                            visible="true" />
-                                        <Button id="btnAddRowDetail" 
-                                            icon="sap-icon://add"
-                                            press="onAddRow('detail')"
-                                            visible="false" />
-                                        <Button id="btnRemoveRowDetail" 
-                                            icon="sap-icon://less"
-                                            press="onRemoveRow('detail')"
-                                            visible="false" />
-                                        <Button id="btnSaveDetail" 
-                                            icon="sap-icon://save"
-                                            press="onSave('detail')"
-                                            visible="false" />
-                                        <Button id="btnCancelDetail"
-                                            icon="sap-icon://sys-cancel"
-                                            press="onCancel('detail')"
-                                            visible="false" />
-                                    </Toolbar>
-                                </uiT:extension>
-                                <uiT:layoutData>
-                                    <FlexItemData growFactor="1" baseSize="0%"/>
-                                </uiT:layoutData>
-                            </uiT:Table>
+                            <IconTabBar id="itbDetails" 
+                                headerMode="Inline"
+                                expanded="{device>/isNoPhone}" 
+                                expandable="false" 
+                                class="sapUiNoContentPadding" 
+                                stretchContentHeight="true" 
+                                applyContentPadding="false"
+                                select="onSelectTab">
+                                <items>
+                                    <IconTabFilter id="itfDlvDtlHU" text="DELIVERY DETAILS (HU)" key="dlvDtlHU">
+                                        <uiT:Table id="dlvDtlHUTab"
+                                            rows="{dlvDtlHU>/results}"
+                                            visibleRowCountMode="Auto"
+                                            showColumnVisibilityMenu="true"
+                                            enableColumnFreeze="true"
+                                            enableCellFilter="true"
+                                            selectionMode="Single"
+                                            selectionBehavior="RowOnly"
+                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                            cellClick="onCellClick"
+                                            sort="onSorted"
+                                            filter="onFilter"
+                                            columnFreeze="onColumnUpdated"
+                                            columnMove="onColumnUpdated"
+                                            columnResize="onColumnUpdated"
+                                            columnSelect="onColumnUpdated"
+                                            columnVisibility="onColumnUpdated"
+                                            rowSelectionChange="onRowSelectionChange">
+                                            <uiT:extension>
+                                                <Toolbar>
+                                                    <ToolbarSpacer/>
+                                                    <Button id="btnCreateDlvDtlHU" 
+                                                        icon="sap-icon://add"
+                                                        press="onCreateDlvDtlHU"
+                                                        visible="true"/>
+                                                    <Button id="btnDeleteDlvDtlHU" 
+                                                        icon="sap-icon://delete"
+                                                        press="onDeleteDlvDtlHU" 
+                                                        visible="true" />
+                                                    <Button id="btnRefreshDlvDtlHU" 
+                                                        icon="sap-icon://refresh"
+                                                        press="onRefresh('dlvDtlHU')" 
+                                                        visible="true" />
+                                                </Toolbar>
+                                            </uiT:extension>
+                                            <uiT:layoutData>
+                                                <FlexItemData growFactor="1" baseSize="0%"/>
+                                            </uiT:layoutData>
+                                        </uiT:Table>
+                                    </IconTabFilter>
+                                    <IconTabFilter id="itfDlvDtl" text="DELIVERY DETAILS" key="dlvDtl">
+                                        <uiT:Table id="dlvDtlTab"
+                                            rows="{dlvDtl>/results}"
+                                            visibleRowCountMode="Auto"
+                                            showColumnVisibilityMenu="true"
+                                            enableColumnFreeze="true"
+                                            enableCellFilter="true"
+                                            selectionMode="Single"
+                                            selectionBehavior="RowOnly"
+                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                            cellClick="onCellClick"
+                                            sort="onSorted"
+                                            filter="onFilter"
+                                            columnFreeze="onColumnUpdated"
+                                            columnMove="onColumnUpdated"
+                                            columnResize="onColumnUpdated"
+                                            columnSelect="onColumnUpdated"
+                                            columnVisibility="onColumnUpdated"
+                                            rowSelectionChange="onRowSelectionChange">
+                                            <uiT:extension>
+                                                <Toolbar>
+                                                    <ToolbarSpacer/>
+                                                    <Button id="btnRefreshDlvDtl" 
+                                                        icon="sap-icon://refresh"
+                                                        press="onRefresh('dlvDtl')" 
+                                                        visible="true" />
+                                                </Toolbar>
+                                            </uiT:extension>
+                                            <uiT:layoutData>
+                                                <FlexItemData growFactor="1" baseSize="0%"/>
+                                            </uiT:layoutData>
+                                        </uiT:Table>
+                                    </IconTabFilter>
+                                    <IconTabFilter id="itfStatOvw" text="STATUS OVERVIEW" key="statOvw">
+                                        <uiT:Table id="statOvwTab"
+                                            rows="{statOvw>/results}"
+                                            visibleRowCountMode="Auto"
+                                            showColumnVisibilityMenu="true"
+                                            enableColumnFreeze="true"
+                                            enableCellFilter="true"
+                                            selectionMode="Single"
+                                            selectionBehavior="RowOnly"
+                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                            cellClick="onCellClick"
+                                            sort="onSorted"
+                                            filter="onFilter"
+                                            columnFreeze="onColumnUpdated"
+                                            columnMove="onColumnUpdated"
+                                            columnResize="onColumnUpdated"
+                                            columnSelect="onColumnUpdated"
+                                            columnVisibility="onColumnUpdated"
+                                            rowSelectionChange="onRowSelectionChange">
+                                            <uiT:extension>
+                                                <Toolbar>
+                                                    <ToolbarSpacer/>
+                                                    <Button id="btnRefreshStatOvw" 
+                                                        icon="sap-icon://refresh"
+                                                        press="onRefresh('statOvw')" 
+                                                        visible="true" />
+                                                </Toolbar>
+                                            </uiT:extension>
+                                            <uiT:layoutData>
+                                                <FlexItemData growFactor="1" baseSize="0%"/>
+                                            </uiT:layoutData>
+                                        </uiT:Table>
+                                    </IconTabFilter>
+                                    <IconTabFilter id="itfMatDoc" text="MATERIAL DOCUMENTS" key="matDoc">
+                                        <uiT:Table id="matDocTab"
+                                            rows="{matDoc>/results}"
+                                            visibleRowCountMode="Auto"
+                                            showColumnVisibilityMenu="true"
+                                            enableColumnFreeze="true"
+                                            enableCellFilter="true"
+                                            selectionMode="Single"
+                                            selectionBehavior="RowOnly"
+                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                            cellClick="onCellClick"
+                                            sort="onSorted"
+                                            filter="onFilter"
+                                            columnFreeze="onColumnUpdated"
+                                            columnMove="onColumnUpdated"
+                                            columnResize="onColumnUpdated"
+                                            columnSelect="onColumnUpdated"
+                                            columnVisibility="onColumnUpdated"
+                                            rowSelectionChange="onRowSelectionChange">
+                                            <uiT:extension>
+                                                <Toolbar>
+                                                    <ToolbarSpacer/>
+                                                    <Button id="btnRefreshMatDoc" 
+                                                        icon="sap-icon://refresh"
+                                                        press="onRefresh('matDoc')" 
+                                                        visible="true" />
+                                                </Toolbar>
+                                            </uiT:extension>
+                                            <uiT:layoutData>
+                                                <FlexItemData growFactor="1" baseSize="0%"/>
+                                            </uiT:layoutData>
+                                        </uiT:Table>
+                                    </IconTabFilter>
+                                </items>
+                            </IconTabBar>
                         </uiL:contentAreas>
                     </uiL:Splitter>
                     <uiL:layoutData>
