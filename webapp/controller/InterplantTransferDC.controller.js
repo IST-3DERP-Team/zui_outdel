@@ -99,7 +99,10 @@ sap.ui.define([
                     refDocDt: "",
                     deleted: false,
                     updatedBy: "",
-                    updatedDt: ""
+                    updatedDt: "",
+
+                    whseCd: "",
+                    storAreaCd: ""
                 }
 
                 setTimeout(() => {
@@ -375,42 +378,52 @@ sap.ui.define([
                 // Validation
                 var sErrMsg = "";
 
-                if (!this.byId("cmbDocType").getSelectedKey()) sErrMsg = _oCaption.DOCTYPE;
-                else if (!this.byId("cmbPurchOrg").getSelectedKey()) sErrMsg = _oCaption.PURCHORG;
-                else if (!this.byId("cmbVendor").getSelectedKey()) sErrMsg = _oCaption.VENDOR;
-                else if (!this.byId("cmbPurchGrp").getSelectedKey()) sErrMsg = _oCaption.PURCHGRP;
-                else if (!this.byId("cmbCompany").getSelectedKey()) sErrMsg = _oCaption.COMPANY;
-                else if (!this.byId("cmbPurchPlant").getSelectedKey()) sErrMsg = _oCaption.PURCHPLANT;
-                else if (!this.byId("cmbShipToPlant").getSelectedKey()) sErrMsg = _oCaption.SHIPTOPLANT;
-                else if (!this.byId("cmbIncoTerms").getSelectedKey()) sErrMsg = _oCaption.INCOTERMS;
-                else if (!this.byId("cmbPayTerms").getSelectedKey()) sErrMsg = _oCaption.PAYTERMS;
-                else if (!this.byId("iptDestination").getValue()) sErrMsg = _oCaption.DESTINATION;
-                else if (!this.byId("cmbShipMode").getSelectedKey()) sErrMsg = _oCaption.SHIPMODE;
+                if (!this.byId("dpDocDt").getValue()) sErrMsg = _oCaption.DOCDT;
+                else if (!this.byId("dpReqDt").getValue()) sErrMsg = _oCaption.REQDT;
+                else if (!this.byId("cmbIssPlant").getSelectedKey()) sErrMsg = _oCaption.ISSPLANT;
+                else if (!this.byId("cmbIssSloc").getSelectedKey()) sErrMsg = _oCaption.ISSSLOC;
+                else if (!this.byId("cmbRcvPlant").getSelectedKey()) sErrMsg = _oCaption.RCVPLANT;
+                else if (!this.byId("cmbRcvSloc").getSelectedKey()) sErrMsg = _oCaption.RCVSLOC;
+                else if (!this.byId("cmbShipMode").getSelectedKey()) sErrMsg = _oCaption.MODESHIP;
 
                 if (sErrMsg.length > 0) {
                     sErrMsg += " is required."
-                    sap.m.MessageBox.warning(sErrMsg);
+                    MessageBox.warning(sErrMsg);
                     return;
                 }
 
-                _oHeader.docType = this.byId("cmbDocType").getSelectedKey();
-                _oHeader.purchOrg = this.byId("cmbPurchOrg").getSelectedKey();
-                _oHeader.vendor = this.byId("cmbVendor").getSelectedKey();
-                _oHeader.purchGrp = this.byId("cmbPurchGrp").getSelectedKey();
-                _oHeader.company = this.byId("cmbCompany").getSelectedKey();
-                _oHeader.purchPlant = this.byId("cmbPurchPlant").getSelectedKey();
-                _oHeader.shipToPlant = this.byId("cmbShipToPlant").getSelectedKey();
-                _oHeader.incoTerms = this.byId("cmbIncoTerms").getSelectedKey();
-                _oHeader.currency = this.byId("iptCurrency").getValue();
-                _oHeader.payTerms = this.byId("cmbPayTerms").getSelectedKey();
-                _oHeader.destination = this.byId("iptDestination").getValue();
-                _oHeader.shipMode = this.byId("cmbShipMode").getSelectedKey();
+                _oHeader.dlvNo = _this.byId("iptDlvNo").getValue();
+                _oHeader.mvtType = _this.byId("iptMvtType").getValue();
+                _oHeader.status = _this.byId("iptStatus").getValue();
+                _oHeader.docDt = _this.byId("dpDocDt").getValue();
+                _oHeader.reqDt = _this.byId("dpReqDt").getValue();
+                _oHeader.postDt = _this.byId("dpPostDt").getValue();
+                _oHeader.actIssDt = _this.byId("dpActIssDt").getValue();
 
-                this.getResources("VPOManualTaxSet", "taxCode", "PURCHORG eq '" + _oHeader.purchOrg + "' and VENDORCD eq '" + _oHeader.vendor + "'")
-                this.getResources("VPOManualZCheckSet", "glAccount", "SBU eq '" + _sbu + "' and FIELD1 eq 'GLACCT' and FIELD2 eq '" + _oHeader.shipToPlant + "'");
-                this.getResources("VPOManualZCheckSet", "acctAssCat", "SBU eq '" + _sbu + "' and FIELD1 eq '" + _oHeader.docType + "' and FIELD2 eq 'ACCTASS'");
+                _oHeader.issPlant = _this.byId("cmbIssPlant").getSelectedKey();
+                _oHeader.issSloc = _this.byId("cmbIssSloc").getSelectedKey();
+                _oHeader.rcvPlant = _this.byId("cmbRcvPlant").getSelectedKey();
+                _oHeader.rcvSloc = _this.byId("cmbRcvSloc").getSelectedKey();
+                _oHeader.etd = _this.byId("dpETD").getValue();
+                _oHeader.eta = _this.byId("dpETA").getValue();
+                _oHeader.shipMode = _this.byId("cmbShipMode").getSelectedKey();
 
-                this.getDiscRate();
+                _oHeader.vessel = _this.byId("iptVessel").getValue();
+                _oHeader.containerNo = _this.byId("iptContainerNo").getValue();
+                _oHeader.hbl = _this.byId("iptHBL").getValue();
+                _oHeader.mbl = _this.byId("iptMBL").getValue();
+                _oHeader.noPack = _this.byId("iptNoPack").getValue();
+                _oHeader.createdBy = _this.byId("iptCreatedBy").getValue();
+                _oHeader.createdDt = _this.byId("iptCreatedDt").getValue();
+
+                _oHeader.forwarder = _this.byId("iptForwarder").getValue();
+                _oHeader.carrier = _this.byId("iptCarrier").getValue();
+                _oHeader.refDocNo = _this.byId("iptRefDocNo").getValue();
+                _oHeader.refDocDt = _this.byId("dpRefDocDt").getValue();
+                _oHeader.deleted = _this.byId("chkDeleted").getSelected();
+                _oHeader.updatedBy = _this.byId("iptUpdatedBy").getValue();
+                _oHeader.updatedDt = _this.byId("iptUpdatedDt").getValue();
+
                 this.setControlEditMode("header", false);
             },
 
@@ -495,6 +508,10 @@ sap.ui.define([
 
                 if (sModel == "issPlant") {
                     this.getResources("SLocSet", "issSloc", "PLANTCD eq '" + sKey + "'");
+                } else if (sModel == "issSloc") {
+                    var oIssSloc = (this.getView().getModel(sModel).getData().results.filter(x => x.ISSSLOC == sKey))[0];
+                    _oHeader.whseCd = oIssSloc.WHSECD;
+                    _oHeader.storAreaCd = oIssSloc.STORAREACD;
                 } else if (sModel == "rcvPlant") {
                     this.getResources("SLocSet", "rcvSloc", "PLANTCD eq '" + sKey + "'");
                 }
