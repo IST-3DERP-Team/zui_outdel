@@ -169,7 +169,7 @@
                 },
                 {
                     "name": "RouteInterplantTransferDC",
-                    "pattern": "InterplantTransferDC/{DLVNO}",
+                    "pattern": "InterplantTransferDC/{sbu},{dlvNo}",
                     "greedy": false,
                     "target": [
                         "TargetInterplantTransferDC"

@@ -15,7 +15,7 @@
             <VBox id="vbMain" fitContainer="true">
                 <Toolbar id="TB1" style="Clear">
                     <ToolbarSpacer />
-                    <Button id="btnEditHeader" type="Ghost" icon="sap-icon://edit" press="onEditHeader" visible="true"/>
+                    <Button id="btnEditHeader" type="Ghost" icon="sap-icon://edit" press="onChangeHeader" visible="true"/>
                     <Button id="btnDeleteHeader" type="Ghost" icon="sap-icon://delete" press="onDeleteHeader" visible="true"/> 
                     <Button id="btnPostHeader" type="Ghost" icon="sap-icon://settings" press="onPostHeader" visible="true"/> 
                     <Button id="btnRefreshHeader" type="Ghost" icon="sap-icon://refresh" press="onRefreshHeader" visible="true"/> 
@@ -36,91 +36,138 @@
                                         <f:formElements>
                                             <f:FormElement label="{ddtext>/DLVNO}">  
                                                 <f:fields>
-                                                    <Input id="iptDlvNo" editable="false" >
-                                                    </Input>
+                                                    <Input id="iptDlvNo" editable="false" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/MVTTYPE}">  
                                                 <f:fields>
-                                                    <Input id="iptMvtType" editable="false" >
-                                                    </Input>
+                                                    <Input id="iptMvtType" editable="false" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/STATUS}">  
                                                 <f:fields>
-                                                    <Input id="iptStatus" editable="false" >
-                                                    </Input>
+                                                    <Input id="iptStatus" editable="false" />
                                                 </f:fields>
                                             </f:FormElement>
-                                            <f:FormElement label="{ddtext>/DOCDT}">  
+                                            <f:FormElement id="feDocDt" label="{ddtext>/DOCDT}">  
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpDocDt"
-                                                        placeholder="Enter Date ..."/>
+                                                        editable="{ui>/editModeHeader}"/>
                                                 </f:fields>
                                             </f:FormElement>
-                                            <f:FormElement label="{ddtext>/REQDT}">  
+                                            <f:FormElement id="feReqDt" label="{ddtext>/REQDT}">  
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpReqDt"
-                                                        placeholder="Enter Date ..."/>
+                                                        editable="{ui>/editModeHeader}"/>
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/POSTDT}">  
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpPostDt"
-                                                        placeholder="Enter Date ..."/>
+                                                        editable="{ui>/editModeHeader}"/>
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/ACTISSDT}">  
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpActIssDt"
-                                                        placeholder="Enter Date ..."/>
+                                                        editable="{ui>/editModeHeader}"/>
                                                 </f:fields>
                                             </f:FormElement>
                                         </f:formElements>
                                     </f:FormContainer>
                                     <f:FormContainer ariaLabelledBy="Grp2" class="sapUiNoContentPadding" >
                                         <f:formElements>
-                                            <f:FormElement label="{ddtext>/ISSPLANT}">  
+                                            <f:FormElement id="feIssPlant" label="{ddtext>/ISSPLANT}">  
                                                 <f:fields>
-                                                    <Input id="iptIssPlant" editable="false" />
+                                                    <ComboBox
+                                                        id="cmbIssPlant"
+                                                        showSecondaryValues= "true"
+                                                        items="{
+                                                            path: 'issPlant>/results',
+                                                            sorter: { path: 'PLANTCD' }
+                                                        }"
+                                                        editable="{ui>/editModeHeader}"
+                                                        selectionChange="onDropdownSelectionChange">
+                                                        <core:ListItem id="liIssPlant" key="{issPlant>PLANTCD}" text="{issPlant>PLANTCD} - ({issPlant>DESCRIP})"/>
+                                                    </ComboBox>
                                                 </f:fields>
                                             </f:FormElement>
-                                            <f:FormElement label="{ddtext>/ISSSLOC}">  
+                                            <f:FormElement id="feIssSloc" label="{ddtext>/ISSSLOC}">  
                                                 <f:fields>
-                                                    <Input id="iptIssSloc" editable="false" />
+                                                    <ComboBox
+                                                        id="cmbIssSloc"
+                                                        showSecondaryValues= "true"
+                                                        items="{
+                                                            path: 'issSloc>/results',
+                                                            sorter: { path: 'SLoc' }
+                                                        }"
+                                                        editable="{ui>/editModeHeader}"
+                                                        selectionChange="onDropdownSelectionChange">
+                                                        <core:ListItem id="liIssSloc" key="{issSloc>SLOC}" text="{issSloc>SLOC} - ({issSloc>DESCRIP})"/>
+                                                    </ComboBox>
                                                 </f:fields>
                                             </f:FormElement>
-                                            <f:FormElement label="{ddtext>/RCVPLANT}">  
+                                            <f:FormElement id="feRcvPlant" label="{ddtext>/RCVPLANT}">  
                                                 <f:fields>
-                                                    <Input id="iptRcvPlant" editable="false" />
+                                                    <ComboBox
+                                                        id="cmbRcvPlant"
+                                                        showSecondaryValues= "true"
+                                                        items="{
+                                                            path: 'rcvPlant>/results',
+                                                            sorter: { path: 'PLANTCD' }
+                                                        }"
+                                                        editable="{ui>/editModeHeader}"
+                                                        selectionChange="onDropdownSelectionChange">
+                                                        <core:ListItem id="liRcvPlant" key="{rcvPlant>PLANTCD}" text="{rcvPlant>PLANTCD} - ({rcvPlant>DESCRIP})"/>
+                                                    </ComboBox>
                                                 </f:fields>
                                             </f:FormElement>
-                                            <f:FormElement label="{ddtext>/RCVSLOC}">  
+                                            <f:FormElement id="feRcvSloc" label="{ddtext>/RCVSLOC}">  
                                                 <f:fields>
-                                                    <Input id="iptRcvSloc" editable="false" />
+                                                    <ComboBox
+                                                        id="cmbRcvSloc"
+                                                        showSecondaryValues= "true"
+                                                        items="{
+                                                            path: 'rcvSloc>/results',
+                                                            sorter: { path: 'SLoc' }
+                                                        }"
+                                                        editable="{ui>/editModeHeader}"
+                                                        selectionChange="onDropdownSelectionChange">
+                                                        <core:ListItem id="liRcvSloc" key="{rcvSloc>SLOC}" text="{rcvSloc>SLOC} - ({rcvSloc>DESCRIP})"/>
+                                                    </ComboBox>
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/ETD}">  
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpETD"
-                                                        placeholder="Enter Date ..."/>
+                                                        editable="{ui>/editModeHeader}"/>
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/ETA}">  
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpETA"
-                                                        placeholder="Enter Date ..."/>
+                                                        editable="{ui>/editModeHeader}"/>
                                                 </f:fields>
                                             </f:FormElement>
-                                            <f:FormElement label="{ddtext>/MODESHIP}">  
+                                            <f:FormElement id="feShipMode" label="{ddtext>/MODESHIP}">  
                                                 <f:fields>
-                                                    <Input id="iptShipMode" editable="false" />
+                                                    <ComboBox
+                                                        id="cmbShipMode"
+                                                        showSecondaryValues= "true"
+                                                        items="{
+                                                            path: 'shipMode>/results',
+                                                            sorter: { path: 'SHIPMODE' }
+                                                        }"
+                                                        editable="{ui>/editModeHeader}"
+                                                        selectionChange="onDropdownSelectionChange">
+                                                        <core:ListItem id="liShipMode" key="{shipMode>SHIPMODE}" text="{shipMode>SHIPMODE} - ({shipMode>DESCRIP})"/>
+                                                    </ComboBox>
                                                 </f:fields>
                                             </f:FormElement>
                                         </f:formElements>
@@ -129,22 +176,22 @@
                                         <f:formElements>
                                             <f:FormElement label="{ddtext>/VESSEL}">  
                                                 <f:fields>
-                                                    <Input id="iptVessel" editable="false" />
+                                                    <Input id="iptVessel" editable="{ui>/editModeHeader}" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/CONTAINERNO}">  
                                                 <f:fields>
-                                                    <Input id="iptContainerNo" editable="false" />
+                                                    <Input id="iptContainerNo" editable="{ui>/editModeHeader}" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/HBL}">  
                                                 <f:fields>
-                                                    <Input id="iptHBL" editable="false" />
+                                                    <Input id="iptHBL" editable="{ui>/editModeHeader}" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/MBL}">  
                                                 <f:fields>
-                                                    <Input id="iptMBL" editable="false" />
+                                                    <Input id="iptMBL" editable="{ui>/editModeHeader}" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/NOPACK}">  
@@ -168,27 +215,31 @@
                                         <f:formElements>
                                             <f:FormElement label="{ddtext>/FORWARDER}">  
                                                 <f:fields>
-                                                    <Input id="iptForwarder" editable="false" />
+                                                    <Input id="iptForwarder" editable="{ui>/editModeHeader}" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/CARRIER}">  
                                                 <f:fields>
-                                                    <Input id="iptCarrier" editable="false" />
+                                                    <Input id="iptCarrier" editable="{ui>/editModeHeader}" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/REFDOCNO}">  
                                                 <f:fields>
-                                                    <Input id="iptRefDocNo" editable="false" />
+                                                    <Input id="iptRefDocNo" editable="{ui>/editModeHeader}" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/REFDOCDT}">  
                                                 <f:fields>
-                                                    <Input id="iptRefDocDt" editable="false" />
+                                                    <DatePicker
+                                                        id="dpRefDocDt"
+                                                        editable="{ui>/editModeHeader}"/>
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/DELETED}">  
                                                 <f:fields>
-                                                    <Input id="iptDeleted" editable="false" />
+                                                    <CheckBox 
+                                                        id="chkDeleted"
+                                                        editable="false"/>
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/UPDATEDBY}">  

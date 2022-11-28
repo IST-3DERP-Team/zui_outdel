@@ -411,7 +411,8 @@ sap.ui.define([
 
             onAddOutDelHdr() {
                 this._router.navTo("RouteInterplantTransferDC", {
-                    DLVNO: "test"
+                    sbu: _this.getView().getModel("ui").getData().activeSbu,
+                    dlvNo: "empty"
                 }, true);
             },
 
@@ -419,7 +420,8 @@ sap.ui.define([
                 if (this.getView().getModel("ui").getData().activeDlvNo) {
                     var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
                     this._router.navTo("RouteInterplantTransferDC", {
-                        DLVNO: sDlvNo
+                        sbu: _this.getView().getModel("ui").getData().activeSbu,
+                        dlvNo: sDlvNo
                     }, true);
                 } else {
                     MessageBox.information(_oCaption.INFO_NO_SELECTED);
