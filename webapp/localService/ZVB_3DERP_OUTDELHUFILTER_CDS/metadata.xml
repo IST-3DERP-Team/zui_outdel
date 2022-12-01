@@ -16,7 +16,7 @@
         <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
     </edmx:Reference>
     <edmx:DataServices m:DataServiceVersion="2.0">
-        <Schema Namespace="ZVB_3DERP_OUTDELFILTER_CDS" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <Schema Namespace="ZVB_3DERP_OUTDELHUFILTER_CDS" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
             <EntityType Name="ZVB_3DERP_DLVNO_SHType" sap:label="Delivery Number Search Help" sap:value-list="true" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="DLVNO"/>
@@ -30,7 +30,7 @@
                 <Property Name="DLVTYP" Type="Edm.String" Nullable="false" MaxLength="10" sap:text="DESCRIPTION" sap:label="Delivery Type"/>
                 <Property Name="DESCRIPTION" Type="Edm.String" MaxLength="256" sap:label="Description" sap:quickinfo="ERP Description Char256"/>
             </EntityType>
-            <EntityType Name="ZVB_3DERP_OUTDELFILTERType" sap:label="Outbound Delivery Filter" sap:content-version="1">
+            <EntityType Name="ZVB_3DERP_OUTDELHUFILTERType" sap:label="Outbound Delivery HU Filter" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="DLVNO"/>
                 </Key>
@@ -59,15 +59,15 @@
                 </Key>
                 <Property Name="SBU" Type="Edm.String" Nullable="false" MaxLength="5" sap:display-format="UpperCase" sap:label="SBU" sap:quickinfo="ERP SBU"/>
             </EntityType>
-            <EntityContainer Name="ZVB_3DERP_OUTDELFILTER_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
-                <EntitySet Name="ZVB_3DERP_DLVNO_SH" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_DLVNO_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-                <EntitySet Name="ZVB_3DERP_DLVTYP_SH" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_DLVTYP_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-                <EntitySet Name="ZVB_3DERP_OUTDELFILTER" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-                <EntitySet Name="ZVB_3DERP_PLANT_SH" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_PLANT_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-                <EntitySet Name="ZVB_3DERP_REFDELVNO_SH" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_REFDELVNO_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-                <EntitySet Name="ZVB_3DERP_SBU_SH" EntityType="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_SBU_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+            <EntityContainer Name="ZVB_3DERP_OUTDELHUFILTER_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="ZVB_3DERP_DLVNO_SH" EntityType="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_DLVNO_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="ZVB_3DERP_DLVTYP_SH" EntityType="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_DLVTYP_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="ZVB_3DERP_OUTDELHUFILTER" EntityType="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_OUTDELHUFILTERType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="ZVB_3DERP_PLANT_SH" EntityType="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_PLANT_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="ZVB_3DERP_REFDELVNO_SH" EntityType="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_REFDELVNO_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="ZVB_3DERP_SBU_SH" EntityType="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_SBU_SHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
             </EntityContainer>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/DLVNO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_OUTDELHUFILTERType/DLVNO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
                         <PropertyValue Property="Label" String="Delivery Number Search Help"/>
@@ -84,7 +84,7 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/SBU" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_OUTDELHUFILTERType/SBU" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
                         <PropertyValue Property="Label" String="3DERP: SBU"/>
@@ -101,7 +101,7 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/DLVTYPE" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_OUTDELHUFILTERType/DLVTYPE" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
                         <PropertyValue Property="Label" String="Delivery Type Search Help"/>
@@ -121,7 +121,7 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/ISSPLANT" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_OUTDELHUFILTERType/ISSPLANT" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
                         <PropertyValue Property="Label" String="Plant"/>
@@ -138,7 +138,7 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/RCVPLANT" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_OUTDELHUFILTERType/RCVPLANT" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
                         <PropertyValue Property="Label" String="Plant"/>
@@ -155,7 +155,7 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTERType/REFDLVNO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_OUTDELHUFILTERType/REFDLVNO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Common.ValueList">
                     <Record>
                         <PropertyValue Property="Label" String="Reference Delivery Number"/>
@@ -172,7 +172,7 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <Annotations Target="ZVB_3DERP_OUTDELFILTER_CDS.ZVB_3DERP_OUTDELFILTER_CDS_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotations Target="ZVB_3DERP_OUTDELHUFILTER_CDS.ZVB_3DERP_OUTDELHUFILTER_CDS_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
                 <Annotation Term="Aggregation.ApplySupported">
                     <Record>
                         <PropertyValue Property="Transformations">
@@ -186,8 +186,8 @@
                     </Record>
                 </Annotation>
             </Annotations>
-            <atom:link rel="self" href="http://159.138.39.203:8000/sap/opu/odata/sap/ZVB_3DERP_OUTDELFILTER_CDS/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
-            <atom:link rel="latest-version" href="http://159.138.39.203:8000/sap/opu/odata/sap/ZVB_3DERP_OUTDELFILTER_CDS/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="self" href="http://159.138.39.203:8000/sap/opu/odata/sap/ZVB_3DERP_OUTDELHUFILTER_CDS/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="http://159.138.39.203:8000/sap/opu/odata/sap/ZVB_3DERP_OUTDELHUFILTER_CDS/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
         </Schema>
     </edmx:DataServices>
 </edmx:Edmx>

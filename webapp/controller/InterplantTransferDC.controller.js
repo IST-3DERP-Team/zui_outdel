@@ -472,6 +472,15 @@ sap.ui.define([
                 });
             },
 
+            onCreateDlvDtlHU() {
+                this._router.navTo("RouteDeliveryItem", {
+                    sbu: _this.getView().getModel("ui").getData().activeSbu,
+                    dlvNo: "empty",
+                    issPlant: "empty",
+                    rcvPlant: "empty"
+                }, true);
+            },
+
             getResources(pEntitySet, pModel, pFilter) {
                 var oModel = this.getOwnerComponent().getModel();
                 var oJSONModel = new JSONModel();
@@ -509,7 +518,7 @@ sap.ui.define([
                 if (sModel == "issPlant") {
                     this.getResources("SLocSet", "issSloc", "PLANTCD eq '" + sKey + "'");
                 } else if (sModel == "issSloc") {
-                    var oIssSloc = (this.getView().getModel(sModel).getData().results.filter(x => x.ISSSLOC == sKey))[0];
+                    var oIssSloc = (this.getView().getModel(sModel).getData().results.filter(x => x.SLOC == sKey))[0];
                     _oHeader.whseCd = oIssSloc.WHSECD;
                     _oHeader.storAreaCd = oIssSloc.STORAREACD;
                 } else if (sModel == "rcvPlant") {

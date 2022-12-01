@@ -1,0 +1,85 @@
+<mvc:View controllerName="zuioutdel.controller.DeliveryItem"
+    xmlns:mvc="sap.ui.core.mvc" 
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:uiL="sap.ui.layout"
+    xmlns:uiT="sap.ui.table"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:sfb="sap.ui.comp.smartfilterbar"
+    xmlns:core="sap.ui.core"
+    height="100%">
+    <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false">
+        <content>
+            <VBox id="vbDlvItem" fitContainer="true">
+                <sfb:SmartFilterBar id="sfbDlvItem" entitySet="ZVB_3DERP_OUTDELHUFILTER" enableBasicSearch="true" search="onSearch" 
+                    persistencyKey="3DERP_DlvItemKey" filterContainerWidth="14rem" useToolbar="true" showClearOnFB="true" initialise="onSFBInitialise">
+                    <!-- <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterOuterPack" key="OUTERPACK" groupId="_BASIC" label="{ddtext>/OUTERPACK}" controlType="dropDownList"
+                            displayBehaviour="idOnly" mandatory="notMandatory" index="0">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration> -->
+                    <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterDlvNo" key="DLVNO" groupId="_BASIC" label="{ddtext>/DLVNO}" controlType="dropDownList" 
+                            displayBehaviour="idOnly" mandatory="notMandatory" index="1">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration>
+                    <!-- <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterPONo" key="PONO" groupId="_BASIC" label="{ddtext>/PONO}" controlType="dropDownList" 
+                            displayBehaviour="idOnly" mandatory="notMandatory" index="2">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration>
+                    <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterMatType" key="MATTYPE" groupId="_BASIC" label="{ddtext>/MATTYPE}" controlType="dropDownList" 
+                            displayBehaviour="idAndDescription" mandatory="notMandatory" index="3">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration>
+                    <sfb:controlConfiguration>
+                        <sfb:ControlConfiguration id="filterIONo" key="IONO" groupId="_BASIC" label="{ddtext>/IONO}" controlType="dropDownList" 
+                            displayBehaviour="idOnly" mandatory="notMandatory" index="4">
+                        </sfb:ControlConfiguration>
+                    </sfb:controlConfiguration> -->
+                    <sfb:layoutData>
+                        <FlexItemData shrinkFactor="0"/>
+                    </sfb:layoutData>
+                </sfb:SmartFilterBar>
+
+                <uiT:Table id="dlvItemTab"
+                    class="tablePadding"
+                    rows="{dlvItem>/results}"
+                    visibleRowCountMode="Auto"
+                    showColumnVisibilityMenu="true"
+                    enableColumnFreeze="true"
+                    enableCellFilter="true"
+                    selectionMode="MultiToggle"
+                    firstVisibleRowChanged="onFirstVisibleRowChanged"
+                    cellClick="onCellClick"
+                    sort="onSorted"
+                    filter="onFilter"
+                    columnFreeze="onColumnUpdated"
+                    columnMove="onColumnUpdated"
+                    columnResize="onColumnUpdated"
+                    columnSelect="onColumnUpdated"
+                    columnVisibility="onColumnUpdated"
+                    rowSelectionChange="onRowSelectionChange">
+                    <uiT:extension>
+                        <Toolbar>
+                            <Text text="{ui>/rowCount} {ddtext>/ROWS}" />
+                            <ToolbarSpacer/>
+                            <Button id="btnAdd" 
+                                icon="sap-icon://add"
+                                press="onAdd"
+                                visible="true"/>
+                            <Button id="btnCancel" 
+                                icon="sap-icon://sys-cancel"
+                                press="onCancel"
+                                visible="true"/>
+                        </Toolbar>
+                    </uiT:extension>
+                    <uiT:layoutData>
+                        <FlexItemData growFactor="1" baseSize="0%"/>
+                    </uiT:layoutData>
+                </uiT:Table>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>
