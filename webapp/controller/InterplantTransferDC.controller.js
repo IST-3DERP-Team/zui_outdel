@@ -101,6 +101,7 @@ sap.ui.define([
                     updatedBy: "",
                     updatedDt: "",
 
+                    dlvType: "",
                     whseCd: "",
                     storAreaCd: "",
                     statusDesc: ""
@@ -304,6 +305,7 @@ sap.ui.define([
                     success: function (data, response) {
                         console.log("DlvHeaderNewSet", data)
                         if (data.results.length > 0) {
+                            _oHeader.dlvType = data.results[0].DLVTYPE;
                             _oHeader.mvtType = data.results[0].MVTTYPE;
                             _oHeader.status = data.results[0].STATUSCD;
                             _oHeader.statusDesc = data.results[0].STATUSDESC;
@@ -443,39 +445,64 @@ sap.ui.define([
                     return;
                 }
 
-                // var param = {
-                //     DLVNO: _this.byId("iptDlvNo").getValue()
-                //     BWART
-                //     STATUSCD
-                //     DOCDT
-                //     PLANDLVDT
-                //     POSTDT
-                //     ACTDLVDT
+                var oModel = this.getOwnerComponent().getModel();
+
+                var param = {
+                    DLVNO: _this.byId("iptDlvNo").getValue(),
+                    BWART: _this.byId("iptMvtType").getValue(),
+                    STATUSCD: _oHeader.status,
+                    DOCDT: sapDateFormat.format(new Date(_this.byId("dpDocDt").getValue())) + "T00:00:00",
+                    PLANDLVDT: _this.byId("dpReqDt").getValue() + "T00:00:00",
+                    POSTDT: _this.byId("dpPostDt").getValue() + "T00:00:00",
+                    ACTDLVDT: _this.byId("dpActIssDt").getValue() + "T00:00:00",
                     
-                //     ISSPLNT
-                //     ISSSLOC
-                //     RCVPLNT
-                //     RCVSLOC
-                //     ETD
-                //     ETA
-                //     EVERS
+                    ISSPLNT: _this.byId("cmbIssPlant").getSelectedKey(),
+                    ISSSLOC: _this.byId("cmbIssSloc").getSelectedKey(),
+                    RCVPLNT: _this.byId("cmbRcvPlant").getSelectedKey(),
+                    RCVSLOC: _this.byId("cmbRcvSloc").getSelectedKey(),
+                    ETD: _this.byId("dpETD").getValue() + "T00:00:00",
+                    ETA: _this.byId("dpETA").getValue() + "T00:00:00",
+                    EVERS: _this.byId("cmbShipMode").getSelectedKey(),
 
-                //     VESSEL
-                //     CONTNO
-                //     HBL
-                //     MBL
-                //     TOTALPKG
+                    VESSEL: _this.byId("iptVessel").getValue(),
+                    CONTNO: _this.byId("iptContainerNo").getValue(),
+                    HBL: _this.byId("iptHBL").getValue(),
+                    MBL: _this.byId("iptMBL").getValue(),
+                    TOTALPKG: _this.byId("iptNoPack").getValue(),
 
-                //     FORWRDR
-                //     CARRIER
-                //     REFDOC
-                //     REFDOCDT
+                    FORWRDR: _this.byId("iptForwarder").getValue(),
+                    CARRIER: _this.byId("iptCarrier").getValue(),
+                    REFDOC: _this.byId("iptRefDocNo").getValue(),
+                    REFDOCDT: sapDateFormat.format(new Date(_this.byId("dpRefDocDt").getValue())) + "T00:00:00",                    
 
-                //     DLVTYP
-                //     WHSECD
-                //     STORAREACD
-                    
-                // }
+                    DLVTYP: _oHeader.dlvType,
+                    WHSECD: _oHeader.whseCd,
+                    STORAREACD: _oHeader.storAreaCd
+                }
+
+                console.log("DlvHeaderTbl param", param)
+                oModel.create("/DlvHeaderTblSet", param, {
+                    method: "POST",
+                    success: function(data, oResponse) {
+                        console.log("DlvHeaderTbl", oResponse)
+                        
+                    },
+                    error: function(err) {
+                        console.log("error", err)
+                        // var oError = JSON.parse(err.responseText);
+                        // var sError = oError.error.message.value;
+
+                        // sError = sError.replace("Property", "Column");
+                        // sError = sError.replace("at offset '20'", "");
+
+                        // MessageBox.error(sError,
+                        // {
+                        //     styleClass: bCompact ? "sapUiSizeCompact" : ""
+                        // });
+
+                        // _this.closeLoadingDialog();
+                    }
+                });
 
 
                 _oHeader.dlvNo = _this.byId("iptDlvNo").getValue();
