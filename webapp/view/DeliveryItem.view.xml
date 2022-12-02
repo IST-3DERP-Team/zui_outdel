@@ -13,17 +13,17 @@
             <VBox id="vbDlvItem" fitContainer="true">
                 <sfb:SmartFilterBar id="sfbDlvItem" entitySet="ZVB_3DERP_OUTDELHUFILTER" enableBasicSearch="true" search="onSearch" 
                     persistencyKey="3DERP_DlvItemKey" filterContainerWidth="14rem" useToolbar="true" showClearOnFB="true" initialise="onSFBInitialise">
-                    <!-- <sfb:controlConfiguration>
+                    <sfb:controlConfiguration>
                         <sfb:ControlConfiguration id="filterOuterPack" key="OUTERPACK" groupId="_BASIC" label="{ddtext>/OUTERPACK}" controlType="dropDownList"
                             displayBehaviour="idOnly" mandatory="notMandatory" index="0">
                         </sfb:ControlConfiguration>
-                    </sfb:controlConfiguration> -->
+                    </sfb:controlConfiguration>
                     <sfb:controlConfiguration>
                         <sfb:ControlConfiguration id="filterDlvNo" key="DLVNO" groupId="_BASIC" label="{ddtext>/DLVNO}" controlType="dropDownList" 
                             displayBehaviour="idOnly" mandatory="notMandatory" index="1">
                         </sfb:ControlConfiguration>
                     </sfb:controlConfiguration>
-                    <!-- <sfb:controlConfiguration>
+                    <sfb:controlConfiguration>
                         <sfb:ControlConfiguration id="filterPONo" key="PONO" groupId="_BASIC" label="{ddtext>/PONO}" controlType="dropDownList" 
                             displayBehaviour="idOnly" mandatory="notMandatory" index="2">
                         </sfb:ControlConfiguration>
@@ -37,7 +37,7 @@
                         <sfb:ControlConfiguration id="filterIONo" key="IONO" groupId="_BASIC" label="{ddtext>/IONO}" controlType="dropDownList" 
                             displayBehaviour="idOnly" mandatory="notMandatory" index="4">
                         </sfb:ControlConfiguration>
-                    </sfb:controlConfiguration> -->
+                    </sfb:controlConfiguration>
                     <sfb:layoutData>
                         <FlexItemData shrinkFactor="0"/>
                     </sfb:layoutData>

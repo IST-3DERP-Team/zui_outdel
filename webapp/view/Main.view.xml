@@ -11,7 +11,7 @@
     <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false">
         <content>
             <VBox id="vbOutDel" fitContainer="true">
-                <sfb:SmartFilterBar id="sfbOutDel" entitySet="ZVB_3DERP_OUTDELHUFILTER" enableBasicSearch="true" search="onSearch" 
+                <sfb:SmartFilterBar id="sfbOutDel" entitySet="ZVB_3DERP_OUTDELFILTER" enableBasicSearch="true" search="onSearch" 
                     persistencyKey="3DERP_OutDelKey" filterContainerWidth="14rem" useToolbar="true" showClearOnFB="true" initialise="onSFBInitialise">
                     <sfb:controlConfiguration>
                         <sfb:ControlConfiguration id="filterSbu" key="SBU" groupId="_BASIC" label="{ddtext>/SBU}" controlType="dropDownList" filterType="single"

@@ -102,7 +102,8 @@ sap.ui.define([
                     updatedDt: "",
 
                     whseCd: "",
-                    storAreaCd: ""
+                    storAreaCd: "",
+                    statusDesc: ""
                 }
 
                 setTimeout(() => {
@@ -291,17 +292,67 @@ sap.ui.define([
                     this.byId("cmbRcvSloc").setPlaceholder("");
                 }
 
-                if (_this.getView().getModel("ui").getData().activeDlvNo == "empty") _this.onAddHeader();
+                if (_this.getView().getModel("ui").getData().activeDlvNo == "empty") _this.getNumber();
                 else _this.onEditHeader();
+            },
+
+            getNumber() {
+                var oModel = this.getOwnerComponent().getModel();
+                var sNoRangeCd = "";
+
+                oModel.read('/DlvHeaderNewSet', {
+                    success: function (data, response) {
+                        console.log("DlvHeaderNewSet", data)
+                        if (data.results.length > 0) {
+                            _oHeader.mvtType = data.results[0].MVTTYPE;
+                            _oHeader.status = data.results[0].STATUSCD;
+                            _oHeader.statusDesc = data.results[0].STATUSDESC;
+                            sNoRangeCd = data.results[0].NORANGECD;
+
+                            var oModelRFC = _this.getOwnerComponent().getModel("ZGW_3DERP_RFC_SRV");
+                            var oParamGetNumber = {};
+
+                            oParamGetNumber["N_GetNumberParam"] = [{
+                                IUserid: _startUpInfo.id,
+                                INorangecd: sNoRangeCd,
+                                IKeycd: ""
+                            }];
+                            oParamGetNumber["N_GetNumberReturn"] = [];
+
+                            oModelRFC.create("/GetNumberSet", oParamGetNumber, {
+                                method: "POST",
+                                success: function(oResult, oResponse) {
+                                    console.log("GetNumberSet", oResult, oResponse);
+
+                                    if (oResult.EReturnno.length > 0) {
+                                        _this.getView().getModel("ui").setProperty("/activeDlvNo", oResult.EReturnno);
+                                        _this.onAddHeader()
+                                    } else {
+                                        var sMessage = oResult.N_GetNumberReturn.results[0].Type + ' - ' + oResult.N_GetNumberReturn.results[0].Message;
+                                        sap.m.MessageBox.error(sMessage);
+                                    }
+                                },
+                                error: function(err) {
+                                    sap.m.MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
+                                    _this.closeLoadingDialog();
+                                }
+                            });
+                        }
+                    },
+                    error: function (err) { 
+                        console.log("error", err)
+                    }
+                })
             },
 
             onAddHeader() {
                 var sCurrentDate = sapDateFormat.format(new Date());
+                var dlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
 
                 // Set header values
-                _this.byId("iptDlvNo").setValue("");
-                _this.byId("iptMvtType").setValue("");
-                _this.byId("iptStatus").setValue("");
+                _this.byId("iptDlvNo").setValue(dlvNo);
+                _this.byId("iptMvtType").setValue(_oHeader.mvtType);
+                _this.byId("iptStatus").setValue(_oHeader.status + "-" + _oHeader.statusDesc);
                 _this.byId("dpDocDt").setValue(sCurrentDate);
                 _this.byId("dpReqDt").setValue(sCurrentDate);
                 _this.byId("dpPostDt").setValue(sCurrentDate);
@@ -392,6 +443,41 @@ sap.ui.define([
                     return;
                 }
 
+                // var param = {
+                //     DLVNO: _this.byId("iptDlvNo").getValue()
+                //     BWART
+                //     STATUSCD
+                //     DOCDT
+                //     PLANDLVDT
+                //     POSTDT
+                //     ACTDLVDT
+                    
+                //     ISSPLNT
+                //     ISSSLOC
+                //     RCVPLNT
+                //     RCVSLOC
+                //     ETD
+                //     ETA
+                //     EVERS
+
+                //     VESSEL
+                //     CONTNO
+                //     HBL
+                //     MBL
+                //     TOTALPKG
+
+                //     FORWRDR
+                //     CARRIER
+                //     REFDOC
+                //     REFDOCDT
+
+                //     DLVTYP
+                //     WHSECD
+                //     STORAREACD
+                    
+                // }
+
+
                 _oHeader.dlvNo = _this.byId("iptDlvNo").getValue();
                 _oHeader.mvtType = _this.byId("iptMvtType").getValue();
                 _oHeader.status = _this.byId("iptStatus").getValue();
@@ -413,16 +499,18 @@ sap.ui.define([
                 _oHeader.hbl = _this.byId("iptHBL").getValue();
                 _oHeader.mbl = _this.byId("iptMBL").getValue();
                 _oHeader.noPack = _this.byId("iptNoPack").getValue();
-                _oHeader.createdBy = _this.byId("iptCreatedBy").getValue();
-                _oHeader.createdDt = _this.byId("iptCreatedDt").getValue();
+                // _oHeader.createdBy = _this.byId("iptCreatedBy").getValue();
+                // _oHeader.createdDt = _this.byId("iptCreatedDt").getValue();
 
                 _oHeader.forwarder = _this.byId("iptForwarder").getValue();
                 _oHeader.carrier = _this.byId("iptCarrier").getValue();
                 _oHeader.refDocNo = _this.byId("iptRefDocNo").getValue();
                 _oHeader.refDocDt = _this.byId("dpRefDocDt").getValue();
-                _oHeader.deleted = _this.byId("chkDeleted").getSelected();
-                _oHeader.updatedBy = _this.byId("iptUpdatedBy").getValue();
-                _oHeader.updatedDt = _this.byId("iptUpdatedDt").getValue();
+                // _oHeader.deleted = _this.byId("chkDeleted").getSelected();
+                // _oHeader.updatedBy = _this.byId("iptUpdatedBy").getValue();
+                // _oHeader.updatedDt = _this.byId("iptUpdatedDt").getValue();
+
+
 
                 this.setControlEditMode("header", false);
             },

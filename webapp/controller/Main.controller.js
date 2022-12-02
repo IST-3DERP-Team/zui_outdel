@@ -49,12 +49,15 @@ sap.ui.define([
                 this.getCaption();
                 this.getColumns();
 
-                var oModel = this.getOwnerComponent().getModel("ZVB_3DERP_OUTDELHUFILTER_CDS");
+                var oModel = this.getOwnerComponent().getModel("ZVB_3DERP_OUTDELFILTER_CDS");
                 var oSmartFilter = this.getView().byId("sfbOutDel");
                 oSmartFilter.setModel(oModel);
 
-                var oModel2 = this.getOwnerComponent().getModel("ZVB_3DERP_OUTDELFILTER_CDS");
-                console.log("initializeComponent",oModel, oModel2)
+                // var oModel2 = _this.getOwnerComponent().getModel("ZVB_3DERP_OUTDELHUFILTER_CDS");
+                // var oSmartFilter2 = _this.getView().byId("sfbDlvItem");
+                // oSmartFilter2.setModel(oModel2);
+
+                //console.log("initializeComponent",oModel, oModel2)
 
                 this.byId("btnAddOutDelHdr").setEnabled(false);
                 this.byId("btnEditOutDelHdr").setEnabled(false);
