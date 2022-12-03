@@ -104,12 +104,14 @@ sap.ui.define([
                     dlvType: "",
                     whseCd: "",
                     storAreaCd: "",
-                    statusDesc: ""
+                    statusDesc: "",
+                    createdTm: "",
+                    updatedTm: ""
                 }
 
                 setTimeout(() => {
                     _this.onChangeHeader();
-                }, 1000);
+                }, 1500);
                 
                 _this.closeLoadingDialog();
             },
@@ -354,7 +356,7 @@ sap.ui.define([
                 // Set header values
                 _this.byId("iptDlvNo").setValue(dlvNo);
                 _this.byId("iptMvtType").setValue(_oHeader.mvtType);
-                _this.byId("iptStatus").setValue(_oHeader.status + "-" + _oHeader.statusDesc);
+                _this.byId("iptStatus").setValue(_oHeader.status + " - (" + _oHeader.statusDesc + ")");
                 _this.byId("dpDocDt").setValue(sCurrentDate);
                 _this.byId("dpReqDt").setValue(sCurrentDate);
                 _this.byId("dpPostDt").setValue(sCurrentDate);
@@ -451,41 +453,102 @@ sap.ui.define([
                     DLVNO: _this.byId("iptDlvNo").getValue(),
                     BWART: _this.byId("iptMvtType").getValue(),
                     STATUSCD: _oHeader.status,
-                    DOCDT: sapDateFormat.format(new Date(_this.byId("dpDocDt").getValue())) + "T00:00:00",
-                    PLANDLVDT: _this.byId("dpReqDt").getValue() + "T00:00:00",
-                    POSTDT: _this.byId("dpPostDt").getValue() + "T00:00:00",
-                    ACTDLVDT: _this.byId("dpActIssDt").getValue() + "T00:00:00",
                     
                     ISSPLNT: _this.byId("cmbIssPlant").getSelectedKey(),
                     ISSSLOC: _this.byId("cmbIssSloc").getSelectedKey(),
                     RCVPLNT: _this.byId("cmbRcvPlant").getSelectedKey(),
                     RCVSLOC: _this.byId("cmbRcvSloc").getSelectedKey(),
-                    ETD: _this.byId("dpETD").getValue() + "T00:00:00",
-                    ETA: _this.byId("dpETA").getValue() + "T00:00:00",
                     EVERS: _this.byId("cmbShipMode").getSelectedKey(),
 
                     VESSEL: _this.byId("iptVessel").getValue(),
                     CONTNO: _this.byId("iptContainerNo").getValue(),
                     HBL: _this.byId("iptHBL").getValue(),
                     MBL: _this.byId("iptMBL").getValue(),
-                    TOTALPKG: _this.byId("iptNoPack").getValue(),
+                    TOTALPKG: (_this.byId("iptNoPack").getValue() ? parseInt(_this.byId("iptNoPack").getValue()) : 0),
 
                     FORWRDR: _this.byId("iptForwarder").getValue(),
                     CARRIER: _this.byId("iptCarrier").getValue(),
-                    REFDOC: _this.byId("iptRefDocNo").getValue(),
-                    REFDOCDT: sapDateFormat.format(new Date(_this.byId("dpRefDocDt").getValue())) + "T00:00:00",                    
+                    REFDOC: _this.byId("iptRefDocNo").getValue(),                    
 
                     DLVTYP: _oHeader.dlvType,
                     WHSECD: _oHeader.whseCd,
                     STORAREACD: _oHeader.storAreaCd
                 }
 
+                // Insert date if has value
+                if (_this.byId("dpDocDt").getValue()) 
+                    param.DOCDT = sapDateFormat.format(new Date(_this.byId("dpDocDt").getValue())) + "T00:00:00";
+                if (_this.byId("dpReqDt").getValue()) 
+                    param.PLANDLVDT = sapDateFormat.format(new Date(_this.byId("dpReqDt").getValue())) + "T00:00:00";
+                if (_this.byId("dpPostDt").getValue()) 
+                    param.POSTDT = sapDateFormat.format(new Date(_this.byId("dpPostDt").getValue())) + "T00:00:00";
+                if (_this.byId("dpActIssDt").getValue()) 
+                    param.ACTDLVDT = sapDateFormat.format(new Date(_this.byId("dpActIssDt").getValue())) + "T00:00:00";
+                if (_this.byId("dpETD").getValue()) 
+                    param.ETD = sapDateFormat.format(new Date(_this.byId("dpETD").getValue())) + "T00:00:00";
+                if (_this.byId("dpETA").getValue()) 
+                    param.ETA = sapDateFormat.format(new Date(_this.byId("dpETA").getValue())) + "T00:00:00";
+                if (_this.byId("dpRefDocDt").getValue()) 
+                    REFDOCDT = sapDateFormat.format(new Date(_this.byId("dpRefDocDt").getValue())) + "T00:00:00";
+
                 console.log("DlvHeaderTbl param", param)
                 oModel.create("/DlvHeaderTblSet", param, {
                     method: "POST",
                     success: function(data, oResponse) {
-                        console.log("DlvHeaderTbl", oResponse)
+                        console.log("DlvHeaderTbl", data)
                         
+                        var oJSONModel = new JSONModel();
+                        var sFilter = "DLVNO eq '" + _this.byId("iptDlvNo").getValue() + "'";
+
+                        oModel.read("/DlvHeaderTblSet", {
+                            urlParameters: {
+                                "$filter": sFilter
+                            },
+                            success: function (data, response) {
+                                console.log("DlvHeaderTblSet read", data);
+                                var oDlvHdr = data.results[0];
+                                _oHeader.dlvNo = oDlvHdr.DLVNO;
+                                _oHeader.mvtType = oDlvHdr.MVTTYPE;
+                                _oHeader.status = oDlvHdr.STATUSCD;
+                                _oHeader.docDt = oDlvHdr.DOCDT;
+                                _oHeader.reqDt = oDlvHdr.PLANDLVDT;
+                                _oHeader.postDt = oDlvHdr.POSTDT;
+                                _oHeader.actIssDt = oDlvHdr.ACTDLVDT;
+
+                                _oHeader.issPlant = oDlvHdr.ISSPLNT;
+                                _oHeader.issSloc = oDlvHdr.ISSSLOC;
+                                _oHeader.rcvPlant = oDlvHdr.RCVPLNT;
+                                _oHeader.rcvSloc = oDlvHdr.RCVSLOC;
+                                _oHeader.etd = oDlvHdr.ETD;
+                                _oHeader.eta = oDlvHdr.ETA;
+                                _oHeader.shipMode = oDlvHdr.EVERS;
+
+                                _oHeader.vessel = oDlvHdr.VESSEL;
+                                _oHeader.containerNo = oDlvHdr.CONTNO;
+                                _oHeader.hbl = oDlvHdr.HBL;
+                                _oHeader.mbl = oDlvHdr.MBL;
+                                _oHeader.noPack = oDlvHdr.TOTALPKG;
+                                _oHeader.createdBy = oDlvHdr.CREATEDBY;
+                                _oHeader.createdDt = oDlvHdr.CREATEDDT;
+
+                                _oHeader.forwarder = oDlvHdr.FORWRDR;
+                                _oHeader.carrier = oDlvHdr.CARRIER;
+                                _oHeader.refDocNo = oDlvHdr.REFDOC;
+                                _oHeader.refDocDt = oDlvHdr.REFDOCDT;
+                                _oHeader.deleted = oDlvHdr.DELETED;
+                                _oHeader.updatedBy = oDlvHdr.UPDATEDBY;
+                                _oHeader.updatedDt = oDlvHdr.UPDATEDDT;
+
+                                _oHeader.dlvType = oDlvHdr.DLVTYP;
+                                _oHeader.whseCd = oDlvHdr.WHSECD;
+                                _oHeader.storAreaCd = oDlvHdr.STORAREACD;
+                                _oHeader.createdTm = oDlvHdr.CREATEDTM;
+                                _oHeader.updatedTm = oDlvHdr.UPDATEDTM;
+                                
+                            },
+                            error: function (err) {
+                            }
+                        })
                     },
                     error: function(err) {
                         console.log("error", err)
@@ -505,37 +568,7 @@ sap.ui.define([
                 });
 
 
-                _oHeader.dlvNo = _this.byId("iptDlvNo").getValue();
-                _oHeader.mvtType = _this.byId("iptMvtType").getValue();
-                _oHeader.status = _this.byId("iptStatus").getValue();
-                _oHeader.docDt = _this.byId("dpDocDt").getValue();
-                _oHeader.reqDt = _this.byId("dpReqDt").getValue();
-                _oHeader.postDt = _this.byId("dpPostDt").getValue();
-                _oHeader.actIssDt = _this.byId("dpActIssDt").getValue();
-
-                _oHeader.issPlant = _this.byId("cmbIssPlant").getSelectedKey();
-                _oHeader.issSloc = _this.byId("cmbIssSloc").getSelectedKey();
-                _oHeader.rcvPlant = _this.byId("cmbRcvPlant").getSelectedKey();
-                _oHeader.rcvSloc = _this.byId("cmbRcvSloc").getSelectedKey();
-                _oHeader.etd = _this.byId("dpETD").getValue();
-                _oHeader.eta = _this.byId("dpETA").getValue();
-                _oHeader.shipMode = _this.byId("cmbShipMode").getSelectedKey();
-
-                _oHeader.vessel = _this.byId("iptVessel").getValue();
-                _oHeader.containerNo = _this.byId("iptContainerNo").getValue();
-                _oHeader.hbl = _this.byId("iptHBL").getValue();
-                _oHeader.mbl = _this.byId("iptMBL").getValue();
-                _oHeader.noPack = _this.byId("iptNoPack").getValue();
-                // _oHeader.createdBy = _this.byId("iptCreatedBy").getValue();
-                // _oHeader.createdDt = _this.byId("iptCreatedDt").getValue();
-
-                _oHeader.forwarder = _this.byId("iptForwarder").getValue();
-                _oHeader.carrier = _this.byId("iptCarrier").getValue();
-                _oHeader.refDocNo = _this.byId("iptRefDocNo").getValue();
-                _oHeader.refDocDt = _this.byId("dpRefDocDt").getValue();
-                // _oHeader.deleted = _this.byId("chkDeleted").getSelected();
-                // _oHeader.updatedBy = _this.byId("iptUpdatedBy").getValue();
-                // _oHeader.updatedDt = _this.byId("iptUpdatedDt").getValue();
+                
 
 
 
