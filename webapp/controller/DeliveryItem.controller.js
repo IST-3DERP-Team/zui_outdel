@@ -34,6 +34,7 @@ sap.ui.define([
 
                 this._aColumns = {};
                 this.getCaption();
+                this.getColumns();
 
                 var oModel = _this.getOwnerComponent().getModel("ZVB_3DERP_OUTDELHUFILTER_CDS");
                 var oSmartFilter = _this.getView().byId("sfbDlvItem");
@@ -58,8 +59,6 @@ sap.ui.define([
             },
 
             initializeComponent() {
-                this.getColumns();
-            
                 _this.byId("btnAdd").setEnabled(false);
                 _this.byId("btnCancel").setEnabled(false);
 
@@ -316,11 +315,19 @@ sap.ui.define([
                 })
             },
 
-            onAddOutDelHdr() {
-                this._router.navTo("RouteInterplantTransferDC", {
-                    sbu: _this.getView().getModel("ui").getData().activeSbu,
-                    dlvNo: "empty"
-                }, true);
+            onAdd() {
+                var oTable = this.byId("dlvItemTab");
+                var aSelIdx = oTable.getSelectedIndices();
+
+                if (aSelIdx.length === 0) {
+                    MessageBox.information(_oCaption.INFO_NO_RECORD_SELECT);
+                    return;
+                }
+
+                // this._router.navTo("RouteInterplantTransferDC", {
+                //     sbu: _this.getView().getModel("ui").getData().activeSbu,
+                //     dlvNo: _this.getView().getModel("ui").getData().activeDlvNo
+                // }, true);
             },
 
             onEditOutDelHdr() {
@@ -568,7 +575,7 @@ sap.ui.define([
                 // oDDTextParam.push({CODE: "INFO_SEL_ONE_COL"});
                 // oDDTextParam.push({CODE: "INFO_LAYOUT_SAVE"});
                 // oDDTextParam.push({CODE: "INFO_CREATE_DATA_NOT_ALLOW"});
-                // oDDTextParam.push({CODE: "INFO_NO_RECORD_SELECT"});
+                oDDTextParam.push({CODE: "INFO_NO_RECORD_SELECT"});
                 // oDDTextParam.push({CODE: "INFO_NO_DELETE_MODIFIED"});
                 // oDDTextParam.push({CODE: "INFO_USE_GMC_REQ"});
                 // oDDTextParam.push({CODE: "INFO_ALREADY_EXIST"});

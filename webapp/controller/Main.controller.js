@@ -19,6 +19,7 @@ sap.ui.define([
         
         var _this;
         var _oCaption = {};
+        var _dlvNo = "";
 
         // shortcut for sap.ui.table.SortOrder
         var SortOrder = library.SortOrder;
@@ -77,6 +78,17 @@ sap.ui.define([
 
                 this.byId("outDelHdrTab").addEventDelegate(oTableEventDelegate);
                 this.byId("outDelDtlTab").addEventDelegate(oTableEventDelegate);
+
+                // Double click
+                var oTable = this.getView().byId("outDelHdrTab");
+                oTable.attachBrowserEvent('dblclick', function (e) {
+                    e.preventDefault();
+
+                    _this._router.navTo("RouteInterplantTransferDC", {
+                        sbu: _this.getView().getModel("ui").getData().activeSbu,
+                        dlvNo: _dlvNo
+                    }, true);
+                });
 
                 this.closeLoadingDialog();
             },
@@ -437,6 +449,7 @@ sap.ui.define([
             onCellClickOutDelHdr(oEvent) {
                 var sDlvNo = oEvent.getParameters().rowBindingContext.getObject().DLVNO;
                 this.getView().getModel("ui").setProperty("/activeDlvNo", sDlvNo);
+                _dlvNo = sDlvNo;
 
                 this.onCellClick(oEvent);
 
@@ -444,6 +457,12 @@ sap.ui.define([
 
                 // Clear Sort and Filter
                 this.clearSortFilter("outDelDtlTab");
+            },
+
+            onRowSelectionChangeOutDelHdr(oEvent) {
+                var sPath = oEvent.getParameter("rowContext").getPath();
+                var oData = _this.getView().getModel("outDelHdr").getProperty(sPath);
+                _dlvNo = oData.DLVNO;
             },
 
             clearSortFilter(pTable) {

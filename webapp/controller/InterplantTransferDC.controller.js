@@ -59,6 +59,8 @@ sap.ui.define([
                 this.getResources("PlantSet", "rcvPlant", "SBU eq '" + sbu + "' and DCIND eq ''");
                 this.getResources("ShipModeSet", "shipMode", "");
 
+                this.getStatusOverview();
+
                 _this.initializeComponent();
             },
 
@@ -409,6 +411,33 @@ sap.ui.define([
                 })
             },
 
+            getStatusOverview() {
+                var oModel = _this.getOwnerComponent().getModel();
+                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+                var sFilter = "DLVNO eq '" + sDlvNo + "'";
+
+                oModel.read('/StatOvwSet', {
+                    urlParameters: {
+                        "$filter": sFilter
+                    },
+                    success: function (data, response) {
+                        console.log("StatOvwSet", data)
+                        if (data.results.length > 0) {
+                            data.results.forEach(item => {
+
+                            });
+
+                            var oJSONModel = new JSONModel();
+                            oJSONModel.setData(data);
+                            _this.getView().setModel(oJSONModel, "statOvw")
+                        }
+                    },
+                    error: function (err) { 
+                        console.log("error", err)
+                    }
+                })
+            },
+
             onAddHeader() {
                 _this.setHeaderValue(false);
                 _this.setControlEditMode("header", true)
@@ -594,9 +623,9 @@ sap.ui.define([
             onCreateDlvDtlHU() {
                 this._router.navTo("RouteDeliveryItem", {
                     sbu: _this.getView().getModel("ui").getData().activeSbu,
-                    dlvNo: "empty",
-                    issPlant: "empty",
-                    rcvPlant: "empty"
+                    dlvNo: _oHeader.dlvNo,
+                    issPlant: _oHeader.issPlant,
+                    rcvPlant: _oHeader.rcvPlant
                 }, true);
             },
 
