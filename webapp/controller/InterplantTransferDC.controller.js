@@ -54,6 +54,7 @@ sap.ui.define([
                 // Get Resources
                 var sbu = oEvent.getParameter("arguments").sbu;
 
+                this.getResources("Status001Set", "status", "");
                 this.getResources("PlantSet", "issPlant", "SBU eq '" + sbu + "' and DCIND eq 'X'");
                 this.getResources("PlantSet", "rcvPlant", "SBU eq '" + sbu + "' and DCIND eq ''");
                 this.getResources("ShipModeSet", "shipMode", "");
@@ -296,7 +297,65 @@ sap.ui.define([
                 }
 
                 if (_this.getView().getModel("ui").getData().activeDlvNo == "empty") _this.getNumber();
-                else _this.onEditHeader();
+                else _this.getHeader();
+            },
+
+            getHeader() {
+                var oModel = this.getOwnerComponent().getModel();
+                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+                var sFilter = "DLVNO eq '" + sDlvNo + "'";
+
+                oModel.read("/DlvHeaderTblSet", {
+                    urlParameters: {
+                        "$filter": sFilter
+                    },
+                    success: function (data, response) {
+                        console.log("DlvHeaderTblSet read", data);
+                        var oDlvHdr = data.results[0];
+                        _oHeader.dlvNo = oDlvHdr.DLVNO;
+                        _oHeader.mvtType = oDlvHdr.MVTTYPE;
+                        _oHeader.status = oDlvHdr.STATUSCD;
+                        _oHeader.docDt = (oDlvHdr.DOCDT ? sapDateFormat.format(new Date(oDlvHdr.DOCDT)) : "");
+                        _oHeader.reqDt = (oDlvHdr.PLANDLVDT ? sapDateFormat.format(new Date(oDlvHdr.PLANDLVDT)) : "");
+                        _oHeader.postDt = (oDlvHdr.POSTDT ? sapDateFormat.format(new Date(oDlvHdr.POSTDT)) : "");
+                        _oHeader.actIssDt = (oDlvHdr.ACTDLVDT ? sapDateFormat.format(new Date(oDlvHdr.ACTDLVDT)) : "");
+
+                        _oHeader.issPlant = oDlvHdr.ISSPLNT;
+                        _oHeader.issSloc = oDlvHdr.ISSSLOC;
+                        _oHeader.rcvPlant = oDlvHdr.RCVPLNT;
+                        _oHeader.rcvSloc = oDlvHdr.RCVSLOC;
+                        _oHeader.etd = (oDlvHdr.ETD ? sapDateFormat.format(new Date(oDlvHdr.ETD)) : "");
+                        _oHeader.eta = (oDlvHdr.ETA ? sapDateFormat.format(new Date(oDlvHdr.ETA)) : "");
+                        _oHeader.shipMode = oDlvHdr.EVERS;
+
+                        _oHeader.vessel = oDlvHdr.VESSEL;
+                        _oHeader.containerNo = oDlvHdr.CONTNO;
+                        _oHeader.hbl = oDlvHdr.HBL;
+                        _oHeader.mbl = oDlvHdr.MBL;
+                        _oHeader.noPack = oDlvHdr.TOTALPKG;
+                        _oHeader.createdBy = oDlvHdr.CREATEDBY;
+                        _oHeader.createdDt = (oDlvHdr.CREATEDDT ? sapDateFormat.format(new Date(oDlvHdr.CREATEDDT)) : "");
+
+                        _oHeader.forwarder = oDlvHdr.FORWRDR;
+                        _oHeader.carrier = oDlvHdr.CARRIER;
+                        _oHeader.refDocNo = oDlvHdr.REFDOC;
+                        _oHeader.refDocDt = (oDlvHdr.REFDOCDT ? sapDateFormat.format(new Date(oDlvHdr.REFDOCDT)) : "");
+                        _oHeader.deleted = (oDlvHdr.DELETED == "X" ? true : false);
+                        _oHeader.updatedBy = oDlvHdr.UPDATEDBY;
+                        _oHeader.updatedDt = (oDlvHdr.UPDATEDDT ? sapDateFormat.format(new Date(oDlvHdr.UPDATEDDT)) : "");
+
+                        _oHeader.dlvType = oDlvHdr.DLVTYP;
+                        _oHeader.whseCd = oDlvHdr.WHSECD;
+                        _oHeader.storAreaCd = oDlvHdr.STORAREACD;
+                        _oHeader.createdTm = oDlvHdr.CREATEDTM;
+                        _oHeader.updatedTm = oDlvHdr.UPDATEDTM;
+
+                        _this.setHeaderValue(true);
+                        
+                    },
+                    error: function (err) {
+                    }
+                })
             },
 
             getNumber() {
@@ -330,6 +389,7 @@ sap.ui.define([
 
                                     if (oResult.EReturnno.length > 0) {
                                         _this.getView().getModel("ui").setProperty("/activeDlvNo", oResult.EReturnno);
+                                        _oHeader.dlvNo = oResult.EReturnno;
                                         _this.onAddHeader()
                                     } else {
                                         var sMessage = oResult.N_GetNumberReturn.results[0].Type + ' - ' + oResult.N_GetNumberReturn.results[0].Message;
@@ -350,83 +410,85 @@ sap.ui.define([
             },
 
             onAddHeader() {
-                var sCurrentDate = sapDateFormat.format(new Date());
-                var dlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
-
-                // Set header values
-                _this.byId("iptDlvNo").setValue(dlvNo);
-                _this.byId("iptMvtType").setValue(_oHeader.mvtType);
-                _this.byId("iptStatus").setValue(_oHeader.status + " - (" + _oHeader.statusDesc + ")");
-                _this.byId("dpDocDt").setValue(sCurrentDate);
-                _this.byId("dpReqDt").setValue(sCurrentDate);
-                _this.byId("dpPostDt").setValue(sCurrentDate);
-                _this.byId("dpActIssDt").setValue(sCurrentDate);
-
-                _this.byId("cmbIssPlant").setSelectedKey("");
-                _this.byId("cmbIssSloc").setSelectedKey("");
-                _this.byId("cmbRcvPlant").setSelectedKey("");
-                _this.byId("cmbRcvSloc").setSelectedKey("");
-                _this.byId("dpETD").setValue("");
-                _this.byId("dpETA").setValue("");
-                _this.byId("cmbShipMode").setSelectedKey("");
-
-                _this.byId("iptVessel").setValue("");
-                _this.byId("iptContainerNo").setValue("");
-                _this.byId("iptHBL").setValue("");
-                _this.byId("iptMBL").setValue("");
-                _this.byId("iptNoPack").setValue("");
-                _this.byId("iptCreatedBy").setValue(_startUpInfo.id);
-                _this.byId("iptCreatedDt").setValue(sCurrentDate);
-
-                _this.byId("iptForwarder").setValue("");
-                _this.byId("iptCarrier").setValue("");
-                _this.byId("iptRefDocNo").setValue("");
-                _this.byId("dpRefDocDt").setValue("");
-                _this.byId("chkDeleted").setSelected(false);
-                _this.byId("iptUpdatedBy").setValue("");
-                _this.byId("iptUpdatedDt").setValue("");
-
-                this.setControlEditMode("header", true)
+                _this.setHeaderValue(false);
+                _this.setControlEditMode("header", true)
             },
 
             onEditHeader() {
-                var sCurrentDate = sapDateFormat.format(new Date());
-                var dlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+                _this.setControlEditMode("header", true)
+            },
 
-                // Set header values
-                _this.byId("iptDlvNo").setValue(dlvNo);
-                _this.byId("iptMvtType").setValue("");
-                _this.byId("iptStatus").setValue("");
-                _this.byId("dpDocDt").setValue(sCurrentDate);
-                _this.byId("dpReqDt").setValue(sCurrentDate);
-                _this.byId("dpPostDt").setValue(sCurrentDate);
-                _this.byId("dpActIssDt").setValue(sCurrentDate);
+            setHeaderValue(pWithValue) {
+                if (pWithValue) {
 
-                _this.byId("cmbIssPlant").setSelectedKey("");
-                _this.byId("cmbIssSloc").setSelectedKey("");
-                _this.byId("cmbRcvPlant").setSelectedKey("");
-                _this.byId("cmbRcvSloc").setSelectedKey("");
-                _this.byId("dpETD").setValue("");
-                _this.byId("dpETA").setValue("");
-                _this.byId("cmbShipMode").setSelectedKey("");
+                    _this.byId("iptDlvNo").setValue(_oHeader.dlvNo);
+                    _this.byId("iptMvtType").setValue(_oHeader.mvtType);
+                    _this.byId("cmbStatus").setSelectedKey(_oHeader.status);
+                    _this.byId("dpDocDt").setValue(_oHeader.docDt);
+                    _this.byId("dpReqDt").setValue(_oHeader.reqDt);
+                    _this.byId("dpPostDt").setValue(_oHeader.postDt);
+                    _this.byId("dpActIssDt").setValue(_oHeader.actIssDt);
 
-                _this.byId("iptVessel").setValue("");
-                _this.byId("iptContainerNo").setValue("");
-                _this.byId("iptHBL").setValue("");
-                _this.byId("iptMBL").setValue("");
-                _this.byId("iptNoPack").setValue("");
-                _this.byId("iptCreatedBy").setValue(_startUpInfo.id);
-                _this.byId("iptCreatedDt").setValue(sCurrentDate);
+                    _this.byId("cmbIssPlant").setSelectedKey(_oHeader.issPlant);
+                    _this.byId("cmbIssSloc").setSelectedKey(_oHeader.issSloc);
+                    _this.byId("cmbRcvPlant").setSelectedKey(_oHeader.rcvPlant);
+                    _this.byId("cmbRcvSloc").setSelectedKey(_oHeader.rcvSloc);
+                    _this.byId("dpETD").setValue(_oHeader.etd);
+                    _this.byId("dpETA").setValue(_oHeader.eta);
+                    _this.byId("cmbShipMode").setSelectedKey(_oHeader.shipMode);
 
-                _this.byId("iptForwarder").setValue("");
-                _this.byId("iptCarrier").setValue("");
-                _this.byId("iptRefDocNo").setValue("");
-                _this.byId("dpRefDocDt").setValue("");
-                _this.byId("chkDeleted").setSelected("");
-                _this.byId("iptUpdatedBy").setValue("");
-                _this.byId("iptUpdatedDt").setValue("");
+                    _this.byId("iptVessel").setValue(_oHeader.vessel);
+                    _this.byId("iptContainerNo").setValue(_oHeader.containerNo);
+                    _this.byId("iptHBL").setValue(_oHeader.hbl);
+                    _this.byId("iptMBL").setValue(_oHeader.mbl);
+                    _this.byId("iptNoPack").setValue(_oHeader.noPack);
+                    _this.byId("iptCreatedBy").setValue(_oHeader.createdBy);
+                    _this.byId("iptCreatedDt").setValue(_oHeader.createdDt);
 
-                this.setControlEditMode("header", true)
+                    _this.byId("iptForwarder").setValue(_oHeader.forwarder);
+                    _this.byId("iptCarrier").setValue(_oHeader.carrier);
+                    _this.byId("iptRefDocNo").setValue(_oHeader.refDocNo);
+                    _this.byId("dpRefDocDt").setValue(_oHeader.refDocDt);
+                    _this.byId("chkDeleted").setSelected(_oHeader.deleted);
+                    _this.byId("iptUpdatedBy").setValue(_oHeader.updatedBy);
+                    _this.byId("iptUpdatedDt").setValue(_oHeader.updatedDt);
+
+                } else {
+                    var sCurrentDate = sapDateFormat.format(new Date());
+
+                    _this.byId("iptDlvNo").setValue(_oHeader.dlvNo);
+                    _this.byId("iptMvtType").setValue(_oHeader.mvtType);
+                    _this.byId("cmbStatus").setSelectedKey(_oHeader.status);
+                    _this.byId("dpDocDt").setValue(sCurrentDate);
+                    _this.byId("dpReqDt").setValue(sCurrentDate);
+                    _this.byId("dpPostDt").setValue(sCurrentDate);
+                    _this.byId("dpActIssDt").setValue(sCurrentDate);
+
+                    _this.byId("cmbIssPlant").setSelectedKey("");
+                    _this.byId("cmbIssSloc").setSelectedKey("");
+                    _this.byId("cmbRcvPlant").setSelectedKey("");
+                    _this.byId("cmbRcvSloc").setSelectedKey("");
+                    _this.byId("dpETD").setValue("");
+                    _this.byId("dpETA").setValue("");
+                    _this.byId("cmbShipMode").setSelectedKey("");
+
+                    _this.byId("iptVessel").setValue("");
+                    _this.byId("iptContainerNo").setValue("");
+                    _this.byId("iptHBL").setValue("");
+                    _this.byId("iptMBL").setValue("");
+                    _this.byId("iptNoPack").setValue("");
+                    _this.byId("iptCreatedBy").setValue(_startUpInfo.id);
+                    _this.byId("iptCreatedDt").setValue(sCurrentDate);
+
+                    _this.byId("iptForwarder").setValue("");
+                    _this.byId("iptCarrier").setValue("");
+                    _this.byId("iptRefDocNo").setValue("");
+                    _this.byId("dpRefDocDt").setValue("");
+                    _this.byId("chkDeleted").setSelected(false);
+                    _this.byId("iptUpdatedBy").setValue("");
+                    _this.byId("iptUpdatedDt").setValue("");
+                    
+                }
             },
 
             onSaveHeader() {
@@ -495,60 +557,8 @@ sap.ui.define([
                 oModel.create("/DlvHeaderTblSet", param, {
                     method: "POST",
                     success: function(data, oResponse) {
-                        console.log("DlvHeaderTbl", data)
-                        
-                        var oJSONModel = new JSONModel();
-                        var sFilter = "DLVNO eq '" + _this.byId("iptDlvNo").getValue() + "'";
-
-                        oModel.read("/DlvHeaderTblSet", {
-                            urlParameters: {
-                                "$filter": sFilter
-                            },
-                            success: function (data, response) {
-                                console.log("DlvHeaderTblSet read", data);
-                                var oDlvHdr = data.results[0];
-                                _oHeader.dlvNo = oDlvHdr.DLVNO;
-                                _oHeader.mvtType = oDlvHdr.MVTTYPE;
-                                _oHeader.status = oDlvHdr.STATUSCD;
-                                _oHeader.docDt = oDlvHdr.DOCDT;
-                                _oHeader.reqDt = oDlvHdr.PLANDLVDT;
-                                _oHeader.postDt = oDlvHdr.POSTDT;
-                                _oHeader.actIssDt = oDlvHdr.ACTDLVDT;
-
-                                _oHeader.issPlant = oDlvHdr.ISSPLNT;
-                                _oHeader.issSloc = oDlvHdr.ISSSLOC;
-                                _oHeader.rcvPlant = oDlvHdr.RCVPLNT;
-                                _oHeader.rcvSloc = oDlvHdr.RCVSLOC;
-                                _oHeader.etd = oDlvHdr.ETD;
-                                _oHeader.eta = oDlvHdr.ETA;
-                                _oHeader.shipMode = oDlvHdr.EVERS;
-
-                                _oHeader.vessel = oDlvHdr.VESSEL;
-                                _oHeader.containerNo = oDlvHdr.CONTNO;
-                                _oHeader.hbl = oDlvHdr.HBL;
-                                _oHeader.mbl = oDlvHdr.MBL;
-                                _oHeader.noPack = oDlvHdr.TOTALPKG;
-                                _oHeader.createdBy = oDlvHdr.CREATEDBY;
-                                _oHeader.createdDt = oDlvHdr.CREATEDDT;
-
-                                _oHeader.forwarder = oDlvHdr.FORWRDR;
-                                _oHeader.carrier = oDlvHdr.CARRIER;
-                                _oHeader.refDocNo = oDlvHdr.REFDOC;
-                                _oHeader.refDocDt = oDlvHdr.REFDOCDT;
-                                _oHeader.deleted = oDlvHdr.DELETED;
-                                _oHeader.updatedBy = oDlvHdr.UPDATEDBY;
-                                _oHeader.updatedDt = oDlvHdr.UPDATEDDT;
-
-                                _oHeader.dlvType = oDlvHdr.DLVTYP;
-                                _oHeader.whseCd = oDlvHdr.WHSECD;
-                                _oHeader.storAreaCd = oDlvHdr.STORAREACD;
-                                _oHeader.createdTm = oDlvHdr.CREATEDTM;
-                                _oHeader.updatedTm = oDlvHdr.UPDATEDTM;
-                                
-                            },
-                            error: function (err) {
-                            }
-                        })
+                        console.log("DlvHeaderTbl create", data)
+                        _this.getHeader();
                     },
                     error: function(err) {
                         console.log("error", err)
@@ -567,11 +577,6 @@ sap.ui.define([
                     }
                 });
 
-
-                
-
-
-
                 this.setControlEditMode("header", false);
             },
 
@@ -580,41 +585,7 @@ sap.ui.define([
                     actions: ["Yes", "No"],
                     onClose: function (sAction) {
                         if (sAction == "Yes") {
-                            _this.setControlEditMode("header", false)
-
-                            // Set header values
-                            _this.byId("iptDlvNo").setValue(_oHeader.dlvNo);
-                            _this.byId("iptMvtType").setValue(_oHeader.mvtType);
-                            _this.byId("iptStatus").setValue(_oHeader.status);
-                            _this.byId("dpDocDt").setValue(_oHeader.docDt);
-                            _this.byId("dpReqDt").setValue(_oHeader.reqDt);
-                            _this.byId("dpPostDt").setValue(_oHeader.postDt);
-                            _this.byId("dpActIssDt").setValue(_oHeader.actIssDt);
-
-                            _this.byId("cmbIssPlant").setSelectedKey(_oHeader.issPlant);
-                            _this.byId("cmbIssSloc").setSelectedKey(_oHeader.issSloc);
-                            _this.byId("cmbRcvPlant").setSelectedKey(_oHeader.rcvPlant);
-                            _this.byId("cmbRcvSloc").setSelectedKey(_oHeader.rcvSloc);
-                            _this.byId("dpETD").setValue(_oHeader.etd);
-                            _this.byId("dpETA").setValue(_oHeader.eta);
-                            _this.byId("cmbShipMode").setSelectedKey(_oHeader.shipMode);
-
-                            _this.byId("iptVessel").setValue(_oHeader.vessel);
-                            _this.byId("iptContainerNo").setValue(_oHeader.containerNo);
-                            _this.byId("iptHBL").setValue(_oHeader.hbl);
-                            _this.byId("iptMBL").setValue(_oHeader.mbl);
-                            _this.byId("iptNoPack").setValue(_oHeader.noPack);
-                            _this.byId("iptCreatedBy").setValue(_oHeader.createdBy);
-                            _this.byId("iptCreatedDt").setValue(_oHeader.createdDt);
-
-                            _this.byId("iptForwarder").setValue(_oHeader.forwarder);
-                            _this.byId("iptCarrier").setValue(_oHeader.carrier);
-                            _this.byId("iptRefDocNo").setValue(_oHeader.refDocNo);
-                            _this.byId("dpRefDocDt").setValue(_oHeader.refDocDt);
-                            _this.byId("chkDeleted").setSelected(_oHeader.deleted);
-                            _this.byId("iptUpdatedBy").setValue(_oHeader.updatedBy);
-                            _this.byId("iptUpdatedDt").setValue(_oHeader.updatedDt);
-        
+                            _this.setControlEditMode("header", false);
                         }
                     }
                 });

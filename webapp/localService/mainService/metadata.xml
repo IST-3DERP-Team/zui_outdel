@@ -253,12 +253,10 @@
             </EntityType>
             <EntityType Name="Status" sap:content-version="1">
                 <Key>
-                    <PropertyRef Name="DLVTYP"/>
-                    <PropertyRef Name="DLVSTATCD"/>
+                    <PropertyRef Name="STATUS"/>
                 </Key>
-                <Property Name="DLVTYP" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Delivery Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="DLVSTATCD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Dlvry Status Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
-                <Property Name="SHORTTEXT" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="Short Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="STATUS" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Dlvry Status Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DESCRIP" Type="Edm.String" Nullable="false" MaxLength="50" sap:unicode="false" sap:label="Short Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
             <EntityContainer Name="ZGW_3DERP_OUTDEL_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
                 <EntitySet Name="OutDelHeaderSet" EntityType="ZGW_3DERP_OUTDEL_SRV.OutDelHeader" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
@@ -273,7 +271,7 @@
                 <EntitySet Name="DlvTypeSet" EntityType="ZGW_3DERP_OUTDEL_SRV.DlvType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="DlvHeaderNewSet" EntityType="ZGW_3DERP_OUTDEL_SRV.DlvHeaderNew" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="DlvHeaderTblSet" EntityType="ZGW_3DERP_OUTDEL_SRV.DlvHeaderTbl" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
-                <EntitySet Name="StatusSet" EntityType="ZGW_3DERP_OUTDEL_SRV.Status" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="Status001Set" EntityType="ZGW_3DERP_OUTDEL_SRV.Status" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
             </EntityContainer>
             <atom:link rel="self" href="http://159.138.39.203:8000/sap/opu/odata/sap/ZGW_3DERP_OUTDEL_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
             <atom:link rel="latest-version" href="http://159.138.39.203:8000/sap/opu/odata/sap/ZGW_3DERP_OUTDEL_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>

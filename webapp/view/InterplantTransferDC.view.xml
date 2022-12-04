@@ -15,7 +15,7 @@
             <VBox id="vbMain" fitContainer="true">
                 <Toolbar id="TB1" style="Clear">
                     <ToolbarSpacer />
-                    <Button id="btnEditHeader" type="Ghost" icon="sap-icon://edit" press="onChangeHeader" visible="true"/>
+                    <Button id="btnEditHeader" type="Ghost" icon="sap-icon://edit" press="onEditHeader" visible="true"/>
                     <Button id="btnDeleteHeader" type="Ghost" icon="sap-icon://delete" press="onDeleteHeader" visible="true"/> 
                     <Button id="btnPostHeader" type="Ghost" icon="sap-icon://settings" press="onPostHeader" visible="true"/> 
                     <Button id="btnRefreshHeader" type="Ghost" icon="sap-icon://refresh" press="onRefreshHeader" visible="true"/> 
@@ -46,7 +46,6 @@
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/STATUS}">  
                                                 <f:fields>
-                                                    <Input id="iptStatus" editable="false" />
                                                     <ComboBox
                                                         id="cmbStatus"
                                                         showSecondaryValues= "true"
@@ -54,9 +53,9 @@
                                                             path: 'status>/results',
                                                             sorter: { path: 'DLVSTATCD' }
                                                         }"
-                                                        editable="{ui>/editModeHeader}"
+                                                        editable="false"
                                                         selectionChange="onDropdownSelectionChange">
-                                                        <core:ListItem id="liStatus" key="{status>DLVSTATCD}" text="{status>DLVSTATCD} - ({status>SHORTTEXT})"/>
+                                                        <core:ListItem id="liStatus" key="{status>STATUS}" text="{status>STATUS} - ({status>DESCRIP})"/>
                                                     </ComboBox>
                                                 </f:fields>
                                             </f:FormElement>
