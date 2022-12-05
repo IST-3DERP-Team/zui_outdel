@@ -59,8 +59,6 @@ sap.ui.define([
                 this.getResources("PlantSet", "rcvPlant", "SBU eq '" + sbu + "' and DCIND eq ''");
                 this.getResources("ShipModeSet", "shipMode", "");
 
-                this.getStatusOverview();
-
                 _this.initializeComponent();
             },
 
@@ -352,6 +350,9 @@ sap.ui.define([
                         _oHeader.createdTm = oDlvHdr.CREATEDTM;
                         _oHeader.updatedTm = oDlvHdr.UPDATEDTM;
 
+                        _this.getDlvDtlHU();
+                        _this.getStatOvw();
+
                         _this.setHeaderValue(true);
                         
                     },
@@ -411,7 +412,43 @@ sap.ui.define([
                 })
             },
 
-            getStatusOverview() {
+            getDlvDtlHU() {
+                var oModel = this.getOwnerComponent().getModel();
+                var sDlvNo = _oHeader.dlvNo;
+
+                var sFilter = "DLVNO eq '" + sDlvNo + "'";
+                oModel.read('/DlvDetailHUSet', {
+                    urlParameters: {
+                        "$filter": sFilter
+                    },
+                    success: function (data, response) {
+                        console.log("DlvDetailHUSet", data)
+
+                        if (data.results.length > 0) {
+                            data.results.forEach(item => {
+
+                                item.DELETED = item.DELETED === "X" ? true : false;
+
+                                if (item.CREATEDDT !== null)
+                                    item.CREATEDDT = sapDateFormat.format(item.CREATEDDT) + " " + _this.formatTime(item.CREATEDTM);
+
+                                if (item.UPDATEDDT !== null)
+                                    item.UPDATEDDT = sapDateFormat.format(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
+                            })
+
+                            var oJSONModel = new sap.ui.model.json.JSONModel();
+                            oJSONModel.setData(data);
+                            _this.getView().setModel(oJSONModel, "dlvDtlHU");
+                        }
+                    },
+                    error: function (err) { 
+                        console.log("error", err)
+                        _this.closeLoadingDialog();
+                    }
+                })
+            },
+
+            getStatOvw() {
                 var oModel = _this.getOwnerComponent().getModel();
                 var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
                 var sFilter = "DLVNO eq '" + sDlvNo + "'";
@@ -805,6 +842,12 @@ sap.ui.define([
 
             closeLoadingDialog() {
                 _this._LoadingDialog.close();
+            },
+
+            formatTime(pTime) {
+                var time = pTime.split(':');
+                let now = new Date();
+                return (new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...time)).toLocaleTimeString();
             },
 
             getCaption() {

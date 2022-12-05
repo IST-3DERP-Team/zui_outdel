@@ -62,6 +62,8 @@ sap.ui.define([
                 _this.byId("btnAdd").setEnabled(false);
                 _this.byId("btnCancel").setEnabled(false);
 
+                _this.getDlvDtlHU();
+
                 this._tableRendered = "";
                 var oTableEventDelegate = {
                     onkeyup: function(oEvent){
@@ -261,12 +263,13 @@ sap.ui.define([
             getDlvItem(pFilters, pFilterGlobal) {
                 var oModel = this.getOwnerComponent().getModel();
                 var oTable = _this.getView().byId("dlvItemTab");
+                var sDlvNo = "";
                 var sIssPlant = _this.getView().getModel("ui").getData().activeIssPlant;
                 var sRcvPlant = _this.getView().getModel("ui").getData().activeRcvPlant;
                 var sDirectionCd = "IN";
                 var sDlvAsgnd = "";
 
-                var sFilter = "PLANT eq '" + sIssPlant + "' and SHIPTOPLANT eq '" + sRcvPlant + 
+                var sFilter = "DLVNO eq '" + sDlvNo + "' and PLANT eq '" + sIssPlant + "' and SHIPTOPLANT eq '" + sRcvPlant + 
                     "' and DIRECTIONCD eq '" + sDirectionCd + "' and DLVASGND eq '" + sDlvAsgnd + "'"
                 //console.log("getDlvItem", sFilter)
                 oModel.read('/DlvDetailHUSet', {
@@ -315,6 +318,28 @@ sap.ui.define([
                 })
             },
 
+            getDlvDtlHU() {
+                var oModel = this.getOwnerComponent().getModel();
+                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+
+                var sFilter = "DLVNO eq '" + sDlvNo + "'";
+                oModel.read('/DlvDetailHUSet', {
+                    urlParameters: {
+                        "$filter": sFilter
+                    },
+                    success: function (data, response) {
+                        console.log("DlvDetailHUSet", data)
+
+                        var oJSONModel = new sap.ui.model.json.JSONModel();
+                        oJSONModel.setData(data);
+                        _this.getView().setModel(oJSONModel, "dlvDtlHU");
+                    },
+                    error: function (err) { 
+                        console.log("error", err)
+                    }
+                })
+            },
+
             onAdd() {
                 var oTable = this.byId("dlvItemTab");
                 var aSelIdx = oTable.getSelectedIndices();
@@ -323,6 +348,88 @@ sap.ui.define([
                     MessageBox.information(_oCaption.INFO_NO_RECORD_SELECT);
                     return;
                 }
+
+                var oModel = this.getOwnerComponent().getModel();
+                var aData = _this.getView().getModel("dlvItem").getData().results;
+                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+                var iIdx = 0;
+
+                var aDlvDtlHU = _this.getView().getModel("dlvDtlHU").getData().results;
+                var iMaxDlvItem = 0;
+                var iMaxSeqNo = 0;
+                if (aDlvDtlHU.length > 0) {
+                    iMaxDlvItem = Math.max(...aDlvDtlHU.map(x => x.DLVITEM));
+                    iMaxSeqNo = Math.max(...aDlvDtlHU.map(x => x.SEQNO));
+                }
+
+                aSelIdx.forEach(i => {
+                    var oData = aData[i];
+                    var sEntitySet = "/DlvDetailHUTblSet(DLVNO='" + oData.DLVNO + "',DLVITEM='" + oData.DLVITEM + "',SEQNO='" + oData.SEQNO + "')";
+                    var param = {
+                        DLVASGND: sDlvNo
+                    }
+
+                    oModel.update(sEntitySet, param, {
+                        method: "PUT",
+                        success: function(data, oResponse) {
+                            console.log(sEntitySet, data, oResponse)
+
+                            var oDataCreate = aData[iIdx];
+                            // DlvTem
+                            var iDlvItem = parseInt(oDataCreate.DLVITEM);
+                            if (iMaxDlvItem == 0) iMaxDlvItem = iDlvItem;
+                            else if (iMaxDlvItem > iDlvItem) iMaxDlvItem += 1;
+                            else iMaxDlvItem = iDlvItem + 1;
+
+                            // SeqNo
+                            var iSeqNo = parseInt(oDataCreate.SEQNO);
+                            if (iMaxSeqNo == 0) iMaxSeqNo = iSeqNo;
+                            else if (iMaxSeqNo > iSeqNo) iMaxSeqNo += 1;
+                            else iMaxSeqNo = iSeqNo + 1;
+
+                            var paramCreate = {
+                                DLVNO: sDlvNo,
+                                DLVITEM: iMaxDlvItem.toString().padStart(4, '0'),
+                                SEQNO: iMaxSeqNo.toString().padStart(3, '0'),
+                                PLANTCD: oDataCreate.PLANTCD,
+                                SLOC: oDataCreate.SLOC,
+                                MATNO: oDataCreate.MATNO,
+                                BATCH: oDataCreate.BATCH,
+                                PKGNO: oDataCreate.PKGNO,
+                                HUID: oDataCreate.HUID,
+                                DLVQTYORD: oDataCreate.DLVQTYORD,
+                                DLVQTYBSE: oDataCreate.DLVQTYBSE,
+                                ORDUOM: oDataCreate.ORDUOM,
+                                BASEUOM: oDataCreate.BASEUOM,
+                                ACTQTYORD: oDataCreate.ACTQTYORD,
+                                ACTQTYBSE: oDataCreate.ACTQTYBSE
+                            };
+
+                            console.log("paramCreate", paramCreate);
+                            // oModel.create("/DlvDetailHUTblSet", paramCreate, {
+                            //     method: "POST",
+                            //     success: function(data, oResponse) {
+                            //         console.log("DlvDetailHUTblSet create", data)
+                            //     },
+                            //     error: function(err) {
+                            //         console.log("error", err)
+                            //     }
+                            // });
+
+
+                            iIdx++;
+                            if (iIdx === aSelIdx.length) {
+                            }
+
+                        },
+                        error: function(err) {
+                            console.log("error", err)
+                        }
+                    });
+                })
+
+                //console.log("onAdd", aSelIdx)
+
 
                 // this._router.navTo("RouteInterplantTransferDC", {
                 //     sbu: _this.getView().getModel("ui").getData().activeSbu,
