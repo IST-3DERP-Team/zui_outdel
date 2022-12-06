@@ -351,7 +351,9 @@ sap.ui.define([
                         _oHeader.updatedTm = oDlvHdr.UPDATEDTM;
 
                         _this.getDlvDtlHU();
+                        _this.getDlvDtl();
                         _this.getStatOvw();
+                        _this.getMatDoc();
 
                         _this.setHeaderValue(true);
                         
@@ -442,10 +444,50 @@ sap.ui.define([
 
                             _this.setRowReadMode("dlvDtlHU");
                         }
+
+                        _this.closeLoadingDialog();
                     },
                     error: function (err) { 
                         console.log("error", err)
                         _this.closeLoadingDialog();
+                    }
+                })
+            },
+
+            getDlvDtl() {
+                var oModel = _this.getOwnerComponent().getModel();
+                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+                var sFilter = "DLVNO eq '" + sDlvNo + "'";
+
+                oModel.read('/DlvDetailSet', {
+                    urlParameters: {
+                        "$filter": sFilter
+                    },
+                    success: function (data, response) {
+                        console.log("DlvDetailSet", data)
+                        if (data.results.length > 0) {
+                            data.results.forEach(item => {
+
+                                item.DELETED = item.DELETED === "X" ? true : false;
+
+                                if (item.CREATEDDT !== null)
+                                    item.CREATEDDT = sapDateFormat.format(item.CREATEDDT) + " " + _this.formatTime(item.CREATEDTM);
+
+                                if (item.UPDATEDDT !== null)
+                                    item.UPDATEDDT = sapDateFormat.format(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
+                            })
+
+                            var oJSONModel = new sap.ui.model.json.JSONModel();
+                            oJSONModel.setData(data);
+                            _this.getView().setModel(oJSONModel, "dlvDtl");
+
+                            _this.setRowReadMode("dlvDtl");
+                        }
+
+                        _this.closeLoadingDialog();
+                    },
+                    error: function (err) { 
+                        console.log("error", err)
                     }
                 })
             },
@@ -472,6 +514,39 @@ sap.ui.define([
 
                             _this.setRowReadMode("statOvw");
                         }
+
+                        _this.closeLoadingDialog();
+                    },
+                    error: function (err) { 
+                        console.log("error", err)
+                    }
+                })
+            },
+
+            getMatDoc() {
+                var oModel = _this.getOwnerComponent().getModel();
+                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+                var sFilter = "DLVNO eq '" + sDlvNo + "'";
+
+                oModel.read('/MatDocSet', {
+                    urlParameters: {
+                        "$filter": sFilter
+                    },
+                    success: function (data, response) {
+                        console.log("MatDocSet", data)
+                        if (data.results.length > 0) {
+                            data.results.forEach(item => {
+
+                            });
+
+                            var oJSONModel = new JSONModel();
+                            oJSONModel.setData(data);
+                            _this.getView().setModel(oJSONModel, "matDoc");
+
+                            _this.setRowReadMode("matDoc");
+                        }
+
+                        _this.closeLoadingDialog();
                     },
                     error: function (err) { 
                         console.log("error", err)
@@ -715,6 +790,14 @@ sap.ui.define([
                         }
                     }
                 });
+            },
+
+            onRefresh(pModel) {
+                _this.showLoadingDialog("Loading...");
+                if (pModel == "dlvDtlHU") _this.getDlvDtlHU();
+                else if (pModel == "dlvDtl") _this.getDlvDtl();
+                else if (pModel == "statOvw") _this.getStatOvw();
+                else if (pModel == "matDoc") _this.getMatDoc();
             },
 
             setRowReadMode(arg) {

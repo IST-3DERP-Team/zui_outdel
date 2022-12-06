@@ -389,8 +389,8 @@ sap.ui.define([
 
                             var paramCreate = {
                                 DLVNO: sDlvNo,
-                                DLVITEM: iMaxDlvItem.toString().padStart(5, '0'),
-                                SEQNO: iMaxSeqNo.toString().padStart(4, '0'),
+                                DLVITEM: iMaxDlvItem.toString(), //.toString().padStart(5, '0'),
+                                SEQNO: iMaxSeqNo.toString(), //.toString().padStart(4, '0'),
                                 PLANTCD: oDataCreate.PLANT,
                                 SLOC: oDataCreate.SLOC,
                                 MATNO: oDataCreate.MATNO,
@@ -451,71 +451,72 @@ sap.ui.define([
                     },
                     success: function (data, response) {
                         console.log("HUToDetailSet", data)
+                        _this.onClose();
+                        
+                        // if (data.results.length > 0) {
+                        //     var iDlvItemMax = parseInt(data.results[0].DLVITEMMAX);
+                        //     var iDlvItem = 0;
+                        //     var iIdx = 0;
+                        //     var iIdxMax = data.results.length;
 
-                        if (data.results.length > 0) {
-                            var iDlvItemMax = parseInt(data.results[0].DLVITEMMAX);
-                            var iDlvItem = 0;
-                            var iIdx = 0;
-                            var iIdxMax = data.results.length;
+                        //     data.results.forEach(item => {
 
-                            data.results.forEach(item => {
+                        //         if (parseInt(item.DLVITEM) > 0) {
+                        //             iDlvItem = parseInt(item.DLVITEM);
+                        //         } else {
+                        //             iDlvItemMax += 1;
+                        //             iDlvItem = iDlvItemMax;
+                        //         }
 
-                                if (parseInt(item.DLVITEM) > 0) {
-                                    iDlvItem = parseInt(item.DLVITEM);
-                                } else {
-                                    iDlvItemMax += 1;
-                                    iDlvItem = iDlvItemMax;
-                                }
+                        //         var oModel = _this.getOwnerComponent().getModel();
+                        //         var sEntitySet = "/DlvDetailTblSet(DLVNO='" + sDlvNo + "',DLVITEM='" + 
+                        //             iDlvItem.toString().padStart(5, '0') + "')";
 
-                                var oModel = _this.getOwnerComponent().getModel();
-                                var sEntitySet = "/DlvDetailTblSet(DLVNO='" + sDlvNo + "',DLVITEM='" + 
-                                    iDlvItem.toString().padStart(5, '0') + "')";
+                        //         var param = {
+                        //             DLVNO: sDlvNo,
+                        //             DLVITEM: iDlvItem.toString().padStart(5, '0'),
+                        //             PLANTCD: item.PLANTCD,
+                        //             SLOC: item.SLOC,
+                        //             MATNO: item.MATNO,
+                        //             BATCH: item.BATCH,
+                        //             IONO: item.IONO,
+                        //             VENDBATCH: item.DYELOT,
+                        //             GRADE: item.GRADE,
+                        //             NEWBATCH: item.NEWBATCH,
+                        //             EBELN: item.PONO,
+                        //             EBELP: item.POITEM,
+                        //             DLVQTYORD: item.DLVQTYORD,
+                        //             DLVQTYBSE: item.DLVQTYBASE,
+                        //             ORDUOM: item.ORDUOM,
+                        //             BASEUOM: item.BASEUOM,
+                        //             ACTQTYORD: item.ACTQTYORD,
+                        //             ACTQTYBSE: item.ACTQTYBASE,
+                        //             TRANCURR: item.COSTCURR,
+                        //             SHIPTOPLANT: item.SHIPTOPLANT,
+                        //             REFDLVNO: item.REFDLVNO,
+                        //             REFDLVITEM: item.REFDLVITEM
+                        //         }
 
-                                var param = {
-                                    DLVNO: sDlvNo,
-                                    DLVITEM: iDlvItem.toString().padStart(5, '0'),
-                                    PLANTCD: item.PLANTCD,
-                                    SLOC: item.SLOC,
-                                    MATNO: item.MATNO,
-                                    BATCH: item.BATCH,
-                                    IONO: item.IONO,
-                                    VENDBATCH: item.DYELOT,
-                                    GRADE: item.GRADE,
-                                    NEWBATCH: item.NEWBATCH,
-                                    EBELN: item.PONO,
-                                    EBELP: item.POITEM,
-                                    DLVQTYORD: item.DLVQTYORD,
-                                    DLVQTYBSE: item.DLVQTYBASE,
-                                    ORDUOM: item.ORDUOM,
-                                    BASEUOM: item.BASEUOM,
-                                    ACTQTYORD: item.ACTQTYORD,
-                                    ACTQTYBSE: item.ACTQTYBASE,
-                                    TRANCURR: item.COSTCURR,
-                                    SHIPTOPLANT: item.SHIPTOPLANT,
-                                    REFDLVNO: item.REFDLVNO,
-                                    REFDLVITEM: item.REFDLVITEM
-                                }
-
-                                console.log("DlvDetailTblSet update", sEntitySet, param)
-                                //setTimeout(() => {
-                                    oModel.update(sEntitySet, param, {
-                                        method: "PUT",
-                                        success: function(data, oResponse) {
-                                            console.log(sEntitySet, data, oResponse)
-                                            //console.log("done...", iIdx)
-                                            iIdx++;
-                                            if (iIdx === iIdxMax) {
-                                                _this.onClose()
-                                            }
+                        //         console.log("DlvDetailTblSet update", sEntitySet, param)
+                        //         //setTimeout(() => {
+                        //             oModel.update(sEntitySet, param, {
+                        //                 method: "PUT",
+                        //                 success: function(data, oResponse) {
+                        //                     console.log(sEntitySet, data, oResponse)
+                        //                     //console.log("done...", iIdx)
+                        //                     iIdx++;
+                        //                     if (iIdx === iIdxMax) {
+                        //                         _this.onClose()
+                        //                     }
                 
-                                        },
-                                        error: function(err) {
-                                            console.log("error", err)
-                                        }
-                                    });
-                                //}, 500);
-                            })
-                        }
+                        //                 },
+                        //                 error: function(err) {
+                        //                     console.log("error", err)
+                        //                 }
+                        //             });
+                        //         //}, 500);
+                        //     })
+                        // }
                     },
                     error: function (err) { 
                         console.log("error", err)
