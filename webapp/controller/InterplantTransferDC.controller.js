@@ -439,6 +439,8 @@ sap.ui.define([
                             var oJSONModel = new sap.ui.model.json.JSONModel();
                             oJSONModel.setData(data);
                             _this.getView().setModel(oJSONModel, "dlvDtlHU");
+
+                            _this.setRowReadMode("dlvDtlHU");
                         }
                     },
                     error: function (err) { 
@@ -466,7 +468,9 @@ sap.ui.define([
 
                             var oJSONModel = new JSONModel();
                             oJSONModel.setData(data);
-                            _this.getView().setModel(oJSONModel, "statOvw")
+                            _this.getView().setModel(oJSONModel, "statOvw");
+
+                            _this.setRowReadMode("statOvw");
                         }
                     },
                     error: function (err) { 
@@ -482,6 +486,10 @@ sap.ui.define([
 
             onEditHeader() {
                 _this.setControlEditMode("header", true)
+            },
+
+            onDeleteHeader() {
+
             },
 
             setHeaderValue(pWithValue) {
@@ -664,6 +672,72 @@ sap.ui.define([
                     issPlant: _oHeader.issPlant,
                     rcvPlant: _oHeader.rcvPlant
                 }, true);
+            },
+
+            onDeleteDlvDtlHU() {
+                var oTable = this.byId("dlvDtlHUTab");
+                var aSelIdx = oTable.getSelectedIndices();
+
+                if (aSelIdx.length === 0) {
+                    MessageBox.information(_oCaption.INFO_NO_RECORD_SELECT);
+                    return;
+                }
+
+                MessageBox.confirm(_oCaption.INFO_PROCEED_DELETE, {
+                    actions: ["Yes", "No"],
+                    onClose: function (sAction) {
+                        if (sAction === "Yes") {
+
+                            var oModel = _this.getOwnerComponent().getModel();
+                            var aData = _this.getView().getModel("dlvDtlHU").getData().results;
+            
+                            aSelIdx.forEach(i => {
+                                var oData = aData[i];     
+                                var sEntitySet = "/DlvDetailHUTblSet(DLVNO='" + oData.DLVNO + "',DLVITEM='" + oData.DLVITEM + "',SEQNO='" + oData.SEQNO + "')";
+                                console.log("sEntitySet", sEntitySet)
+                                oModel.remove(sEntitySet, {
+                                    method: "DELETE",
+                                    success: function(data, oResponse) {
+                                        console.log(sEntitySet, data, oResponse)
+
+                                        // iIdx++;
+                                        // if (iIdx === aSelIdx.length) {
+                                        //     _this.onSaveDlvDtl();
+                                        // }
+
+                                    },
+                                    error: function(err) {
+                                        console.log("error", err)
+                                    }
+                                });
+                                
+                            });
+                        }
+                    }
+                });
+            },
+
+            setRowReadMode(arg) {
+                var oTable = this.byId(arg + "Tab");
+                oTable.getColumns().forEach((col, idx) => {                    
+                    this._aColumns[arg].filter(item => item.label === col.getLabel().getText())
+                        .forEach(ci => {
+                            if (ci.type === "STRING" || ci.type === "NUMBER") {
+                                col.setTemplate(new sap.m.Text({
+                                    text: "{" + arg + ">" + ci.name + "}",
+                                    wrapping: false,
+                                    tooltip: "{" + arg + ">" + ci.name + "}"
+                                }));
+                            }
+                            else if (ci.type === "BOOLEAN") {
+                                col.setTemplate(new sap.m.CheckBox({selected: "{" + arg + ">" + ci.name + "}", editable: false}));
+                            }
+
+                            if (ci.required) {
+                                col.getLabel().removeStyleClass("requiredField");
+                            }
+                        })
+                })
             },
 
             getResources(pEntitySet, pModel, pFilter) {
@@ -897,11 +971,11 @@ sap.ui.define([
                 // oDDTextParam.push({CODE: "INFO_SEL_ONE_COL"});
                 // oDDTextParam.push({CODE: "INFO_LAYOUT_SAVE"});
                 // oDDTextParam.push({CODE: "INFO_CREATE_DATA_NOT_ALLOW"});
-                // oDDTextParam.push({CODE: "INFO_NO_RECORD_SELECT"});
+                oDDTextParam.push({CODE: "INFO_NO_RECORD_SELECT"});
                 // oDDTextParam.push({CODE: "INFO_NO_DELETE_MODIFIED"});
                 // oDDTextParam.push({CODE: "INFO_USE_GMC_REQ"});
                 // oDDTextParam.push({CODE: "INFO_ALREADY_EXIST"});
-                // oDDTextParam.push({CODE: "INFO_PROCEED_DELETE"});
+                oDDTextParam.push({CODE: "INFO_PROCEED_DELETE"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",

@@ -374,7 +374,7 @@ sap.ui.define([
                         success: function(data, oResponse) {
                             console.log(sEntitySet, data, oResponse)
 
-                            var oDataCreate = aData[iIdx];
+                            var oDataCreate = oData; //aData[iIdx];
                             // DlvTem
                             var iDlvItem = parseInt(oDataCreate.DLVITEM);
                             if (iMaxDlvItem == 0) iMaxDlvItem = iDlvItem;
@@ -389,36 +389,37 @@ sap.ui.define([
 
                             var paramCreate = {
                                 DLVNO: sDlvNo,
-                                DLVITEM: iMaxDlvItem.toString().padStart(4, '0'),
-                                SEQNO: iMaxSeqNo.toString().padStart(3, '0'),
-                                PLANTCD: oDataCreate.PLANTCD,
+                                DLVITEM: iMaxDlvItem.toString().padStart(5, '0'),
+                                SEQNO: iMaxSeqNo.toString().padStart(4, '0'),
+                                PLANTCD: oDataCreate.PLANT,
                                 SLOC: oDataCreate.SLOC,
                                 MATNO: oDataCreate.MATNO,
                                 BATCH: oDataCreate.BATCH,
-                                PKGNO: oDataCreate.PKGNO,
+                                PKGNO: oDataCreate.PACKNO,
                                 HUID: oDataCreate.HUID,
-                                DLVQTYORD: oDataCreate.DLVQTYORD,
-                                DLVQTYBSE: oDataCreate.DLVQTYBSE,
-                                ORDUOM: oDataCreate.ORDUOM,
+                                DLVQTYORD: oDataCreate.REQQTY,
+                                DLVQTYBSE: oDataCreate.REQQTYBASE,
+                                ORDUOM: oDataCreate.UOM,
                                 BASEUOM: oDataCreate.BASEUOM,
-                                ACTQTYORD: oDataCreate.ACTQTYORD,
-                                ACTQTYBSE: oDataCreate.ACTQTYBSE
+                                ACTQTYORD: oDataCreate.ACTQTY,
+                                ACTQTYBSE: oDataCreate.ACTQTYBASE
                             };
 
                             console.log("paramCreate", paramCreate);
-                            // oModel.create("/DlvDetailHUTblSet", paramCreate, {
-                            //     method: "POST",
-                            //     success: function(data, oResponse) {
-                            //         console.log("DlvDetailHUTblSet create", data)
-                            //     },
-                            //     error: function(err) {
-                            //         console.log("error", err)
-                            //     }
-                            // });
+                            oModel.create("/DlvDetailHUTblSet", paramCreate, {
+                                method: "POST",
+                                success: function(data, oResponse) {
+                                    console.log("DlvDetailHUTblSet create", data)
+                                },
+                                error: function(err) {
+                                    console.log("error", err)
+                                }
+                            });
 
 
                             iIdx++;
                             if (iIdx === aSelIdx.length) {
+                                _this.onSaveDlvDtl();
                             }
 
                         },
@@ -435,18 +436,110 @@ sap.ui.define([
                 //     sbu: _this.getView().getModel("ui").getData().activeSbu,
                 //     dlvNo: _this.getView().getModel("ui").getData().activeDlvNo
                 // }, true);
+            },            
+
+            onSaveDlvDtl() {
+                console.log("onSaveDlvDtl")
+                var oModel = this.getOwnerComponent().getModel();
+                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+
+                var sFilter = "DLVASGND eq '" + sDlvNo + "'";
+                console.log("onSaveDlvDtl", sFilter)
+                oModel.read('/HUToDetailSet', {
+                    urlParameters: {
+                        "$filter": sFilter
+                    },
+                    success: function (data, response) {
+                        console.log("HUToDetailSet", data)
+
+                        if (data.results.length > 0) {
+                            var iDlvItemMax = parseInt(data.results[0].DLVITEMMAX);
+                            var iDlvItem = 0;
+                            var iIdx = 0;
+                            var iIdxMax = data.results.length;
+
+                            data.results.forEach(item => {
+
+                                if (parseInt(item.DLVITEM) > 0) {
+                                    iDlvItem = parseInt(item.DLVITEM);
+                                } else {
+                                    iDlvItemMax += 1;
+                                    iDlvItem = iDlvItemMax;
+                                }
+
+                                var oModel = _this.getOwnerComponent().getModel();
+                                var sEntitySet = "/DlvDetailTblSet(DLVNO='" + sDlvNo + "',DLVITEM='" + 
+                                    iDlvItem.toString().padStart(5, '0') + "')";
+
+                                var param = {
+                                    DLVNO: sDlvNo,
+                                    DLVITEM: iDlvItem.toString().padStart(5, '0'),
+                                    PLANTCD: item.PLANTCD,
+                                    SLOC: item.SLOC,
+                                    MATNO: item.MATNO,
+                                    BATCH: item.BATCH,
+                                    IONO: item.IONO,
+                                    VENDBATCH: item.DYELOT,
+                                    GRADE: item.GRADE,
+                                    NEWBATCH: item.NEWBATCH,
+                                    EBELN: item.PONO,
+                                    EBELP: item.POITEM,
+                                    DLVQTYORD: item.DLVQTYORD,
+                                    DLVQTYBSE: item.DLVQTYBASE,
+                                    ORDUOM: item.ORDUOM,
+                                    BASEUOM: item.BASEUOM,
+                                    ACTQTYORD: item.ACTQTYORD,
+                                    ACTQTYBSE: item.ACTQTYBASE,
+                                    TRANCURR: item.COSTCURR,
+                                    SHIPTOPLANT: item.SHIPTOPLANT,
+                                    REFDLVNO: item.REFDLVNO,
+                                    REFDLVITEM: item.REFDLVITEM
+                                }
+
+                                console.log("DlvDetailTblSet update", sEntitySet, param)
+                                //setTimeout(() => {
+                                    oModel.update(sEntitySet, param, {
+                                        method: "PUT",
+                                        success: function(data, oResponse) {
+                                            console.log(sEntitySet, data, oResponse)
+                                            //console.log("done...", iIdx)
+                                            iIdx++;
+                                            if (iIdx === iIdxMax) {
+                                                _this.onClose()
+                                            }
+                
+                                        },
+                                        error: function(err) {
+                                            console.log("error", err)
+                                        }
+                                    });
+                                //}, 500);
+                            })
+                        }
+                    },
+                    error: function (err) { 
+                        console.log("error", err)
+                    }
+                })
             },
 
-            onEditOutDelHdr() {
-                if (this.getView().getModel("ui").getData().activeDlvNo) {
-                    var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
-                    this._router.navTo("RouteInterplantTransferDC", {
-                        sbu: _this.getView().getModel("ui").getData().activeSbu,
-                        dlvNo: sDlvNo
-                    }, true);
-                } else {
-                    MessageBox.information(_oCaption.INFO_NO_SELECTED);
-                }
+            onCancel() {
+                MessageBox.confirm(_oCaption.INFO_PROCEED_CLOSE, {
+                    actions: ["Yes", "No"],
+                    onClose: function (sAction) {
+                        if (sAction === "Yes") {
+                            _this.onClose();                        
+                        }
+                    }
+                });
+            },
+
+            onClose() {
+                var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
+                this._router.navTo("RouteInterplantTransferDC", {
+                    sbu: _this.getView().getModel("ui").getData().activeSbu,
+                    dlvNo: sDlvNo
+                }, true);
             },
 
             onCellClickOutDelHdr(oEvent) {
@@ -686,7 +779,7 @@ sap.ui.define([
                 // oDDTextParam.push({CODE: "INFO_NO_DELETE_MODIFIED"});
                 // oDDTextParam.push({CODE: "INFO_USE_GMC_REQ"});
                 // oDDTextParam.push({CODE: "INFO_ALREADY_EXIST"});
-                // oDDTextParam.push({CODE: "INFO_PROCEED_DELETE"});
+                oDDTextParam.push({CODE: "INFO_PROCEED_CLOSE"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",
