@@ -20,6 +20,7 @@ sap.ui.define([
         var _this;
         var _oCaption = {};
         var _dlvNo = "";
+        var _aRefDlvNo = [];
 
         // shortcut for sap.ui.table.SortOrder
         var SortOrder = library.SortOrder;
@@ -47,6 +48,7 @@ sap.ui.define([
             },
 
             initializeComponent() {
+                this.getRefDlvNo();
                 this.getCaption();
                 this.getColumns();
 
@@ -329,6 +331,15 @@ sap.ui.define([
 
                                 if (item.UPDATEDDT !== null)
                                     item.UPDATEDDT = sapDateFormat.format(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
+
+                                // Add Reference Delivery Number
+                                if (_aRefDlvNo.filter(i => i.DLVNO == item.DLVNO).length > 0) {
+                                    var iRefDlvNo = _aRefDlvNo.findIndex(i => i.DLVNO == item.DLVNO);
+                                    item.REFDLVNO = _aRefDlvNo[iRefDlvNo].REFDLVNO;
+                                } else {
+                                    item.REFDLVNO = "";
+                                }
+                                
                             })
 
                             var aFilterTab = [];
@@ -427,6 +438,36 @@ sap.ui.define([
                 })
             },
 
+            getRefDlvNo() {
+                var oModel = _this.getOwnerComponent().getModel();
+
+                oModel.read('/RefDlvNoSet', {
+                    success: function (data, response) {
+                        console.log("RefDlvNoSet", data)
+                        if (data.results.length > 0) {
+                            var aRefDlvNo = [];
+                            data.results.forEach(item => {
+                                if (aRefDlvNo.filter(x => x.DLVNO == item.DLVNO) == 0) {
+                                    var oRefDlvNo = {
+                                        DLVNO: item.DLVNO,
+                                        REFDLVNO: item.REFDLVNO
+                                    }
+                                    aRefDlvNo.push(oRefDlvNo);
+                                } else {
+                                    var iIdx = aRefDlvNo.findIndex(x => x.DLVNO == item.DLVNO);
+                                    aRefDlvNo[iIdx].REFDLVNO = aRefDlvNo[iIdx].REFDLVNO + "," + item.REFDLVNO
+                                }
+                            });
+
+                            _aRefDlvNo = aRefDlvNo;
+                        }
+                    },
+                    error: function (err) { 
+                        console.log("error", err)
+                    }
+                })
+            },
+
             onAddOutDelHdr() {
                 this._router.navTo("RouteInterplantTransferDC", {
                     sbu: _this.getView().getModel("ui").getData().activeSbu,
@@ -511,10 +552,13 @@ sap.ui.define([
                 var aFilterGrp = [];
                 var aFilterCol = [];
 
+                console.log("onFilterBySmart", pFilters);
                 if (pFilters.length > 0 && pFilters[0].aFilters) {
                     pFilters[0].aFilters.forEach(x => {
                         if (Object.keys(x).includes("aFilters")) {
+                            //if ()
                             x.aFilters.forEach(y => {
+                                console.log("aFilters", y, this._aColumns[pModel])
                                 var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == y.sPath.toUpperCase())[0].name;
                                 aFilter.push(new Filter(sName, FilterOperator.Contains, y.oValue1));
 

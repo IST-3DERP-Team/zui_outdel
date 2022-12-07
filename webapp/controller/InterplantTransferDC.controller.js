@@ -301,6 +301,8 @@ sap.ui.define([
             },
 
             getHeader() {
+                _this.showLoadingDialog("Loading...");
+
                 var oModel = this.getOwnerComponent().getModel();
                 var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
                 var sFilter = "DLVNO eq '" + sDlvNo + "'";
@@ -356,9 +358,10 @@ sap.ui.define([
                         _this.getMatDoc();
 
                         _this.setHeaderValue(true);
-                        
+                        _this.closeLoadingDialog();
                     },
                     error: function (err) {
+                        _this.closeLoadingDialog();
                     }
                 })
             },
@@ -564,7 +567,76 @@ sap.ui.define([
             },
 
             onDeleteHeader() {
+                _this.showLoadingDialog("Deleting...");
 
+                MessageBox.confirm(_oCaption.INFO_PROCEED_DELETE, {
+                    actions: ["Yes", "No"],
+                    onClose: function (sAction) {
+                        if (sAction === "Yes") {
+                            var sEntitySet = "/DlvHeaderTblSet(DLVNO='" + _oHeader.DLVNO + "')";
+                            var param = {
+                                DELETED: "X"
+                            };
+
+                            oModel.update(sEntitySet, param, {
+                                method: "PUT",
+                                success: function(data, oResponse) {
+                                    console.log(sEntitySet, data, oResponse);
+                                    MessageBox.information(_oHeader.DLVNO + " is now deleted.")
+                                    _this.onRefreshHeader();
+                                },
+                                error: function(err) {
+                                    console.log("error", err)
+                                    _this.closeLoadingDialog();
+                                }
+                            });
+                        }
+                    }
+                });
+            },
+
+            onPostHeader() {
+                _this.showLoadingDialog("Posting...");
+
+                if (_oHeader.status == "04") {
+                    MessageBox.warning(_oCaption.WARN_NOT_STATUS_GR_POSTED);
+                    _this.closeLoadingDialog();
+                    return;
+                }
+
+                if (_this.getView().getModel("dlvDtlHU").getData().results.length == 0) {
+                    MessageBox.warning(_oCaption.WARN_NO_DATA_DLVDTLHU);
+                    _this.closeLoadingDialog();
+                    return;
+                }
+
+                var oModelRFC = _this.getOwnerComponent().getModel("ZGW_3DERP_RFC_SRV");
+                var oParam = {};
+
+                oParam["N_GetNumberParam"] = [{
+                    iv_dlvno: _oHeader.dlvNo,
+                    iv_userid: _startUpInfo.id,
+                    N_POST901_RETURN: []
+                }];
+
+                oModelRFC.create("/GoodsMvt_Post901Set ", oParam, {
+                    method: "POST",
+                    success: function(oResult, oResponse) {
+                        console.log("GoodsMvt_Post901Set", oResult, oResponse);
+
+                        MessageBox.information(oResult.N_POST901_RETURN.results[0].Message);
+                        _this.closeLoadingDialog();
+                        _this.getHeader();
+                    },
+                    error: function(err) {
+                        sap.m.MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
+                        _this.closeLoadingDialog();
+                    }
+                });
+            },
+
+            onRefreshHeader() {
+                _this.getHeader();
             },
 
             setHeaderValue(pWithValue) {
@@ -1058,6 +1130,9 @@ sap.ui.define([
                 // oDDTextParam.push({CODE: "INFO_NO_DELETE_MODIFIED"});
                 // oDDTextParam.push({CODE: "INFO_USE_GMC_REQ"});
                 // oDDTextParam.push({CODE: "INFO_ALREADY_EXIST"});
+                oDDTextParam.push({CODE: "INFO_PROCEED_DELETE"});
+                oDDTextParam.push({CODE: "WARN_NOT_STATUS_GR_POSTED"});
+                oDDTextParam.push({CODE: "WARN_NO_DATA_DLVDTLHU"});
                 oDDTextParam.push({CODE: "INFO_PROCEED_DELETE"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
