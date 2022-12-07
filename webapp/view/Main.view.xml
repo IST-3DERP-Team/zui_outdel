@@ -9,6 +9,14 @@
     xmlns:core="sap.ui.core"
     height="100%">
     <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false">
+        <dependents>
+            <core:CommandExecution id="CE_NEW" command="New" enabled="true" execute=".onAddOutDelHdr" />
+            <core:CommandExecution id="CE_EDIT" command="Edit" enabled="true" execute=".onEditOutDelHdr" />
+            <!-- <core:CommandExecution id="CE_DELETE" command="Delete" enabled="true" execute=".onDelete" />
+            <core:CommandExecution id="CE_SAVE" command="Save" enabled="true" execute=".onSave" />
+            <core:CommandExecution id="CE_CANCEL" command="Cancel" enabled="true" execute=".onCancel" /> -->
+            <core:CommandExecution id="CE_REFRESH" command="Refresh" enabled="true" execute=".onRefreshOutDelHdr" />
+        </dependents>
         <content>
             <VBox id="vbOutDel" fitContainer="true">
                 <sfb:SmartFilterBar id="sfbOutDel" entitySet="ZVB_3DERP_OUTDELFILTER" enableBasicSearch="true" search="onSearch" 
@@ -97,7 +105,6 @@
                     enableColumnFreeze="true"
                     enableCellFilter="true"
                     selectionMode="Single"
-                    selectionBehavior="RowOnly"
                     firstVisibleRowChanged="onFirstVisibleRowChanged"
                     cellClick="onCellClick"
                     sort="onSorted"

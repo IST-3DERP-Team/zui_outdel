@@ -21,6 +21,8 @@ sap.ui.define([
         var _oCaption = {};
         var _dlvNo = "";
         var _aRefDlvNo = [];
+        var _aFilters; 
+        var _sFilterGlobal;
 
         // shortcut for sap.ui.table.SortOrder
         var SortOrder = library.SortOrder;
@@ -290,6 +292,8 @@ sap.ui.define([
                 var sFilterGlobal = "";
                 if (oEvent) sFilterGlobal = oEvent.getSource()._oBasicSearchField.mProperties.value;
                 
+                _aFilters = aFilters;
+                _sFilterGlobal = sFilterGlobal;
                 this.getOutDelHdr(aFilters, sFilterGlobal);
 
                 this.byId("btnAddOutDelHdr").setEnabled(true);
@@ -299,6 +303,8 @@ sap.ui.define([
             },
 
             getOutDelHdr(pFilters, pFilterGlobal) {
+                _this.showLoadingDialog("Loading...");
+
                 var oModel = this.getOwnerComponent().getModel();
                 var oTable = _this.getView().byId("outDelHdrTab");
 
@@ -420,6 +426,10 @@ sap.ui.define([
                             }
 
                             _this.setRowReadMode("outDelDtl");
+                        } else {
+                            _this.getView().setModel(new JSONModel({
+                                results: []
+                            }), "outDelDtl");
                         }
 
                         var oTable = _this.getView().byId("outDelDtlTab");
@@ -485,6 +495,15 @@ sap.ui.define([
                 } else {
                     MessageBox.information(_oCaption.INFO_NO_SELECTED);
                 }
+            },
+
+            onRefreshOutDelHdr() {
+                _this.getOutDelHdr(_aFilters, _sFilterGlobal);
+            },
+
+            onRefreshOutDelDtl() {
+                _this.showLoadingDialog("Loading...");
+                _this.getOutDelDtl();
             },
 
             onCellClickOutDelHdr(oEvent) {
@@ -556,7 +575,7 @@ sap.ui.define([
                 if (pFilters.length > 0 && pFilters[0].aFilters) {
                     pFilters[0].aFilters.forEach(x => {
                         if (Object.keys(x).includes("aFilters")) {
-                            //if ()
+                            
                             x.aFilters.forEach(y => {
                                 console.log("aFilters", y, this._aColumns[pModel])
                                 var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == y.sPath.toUpperCase())[0].name;

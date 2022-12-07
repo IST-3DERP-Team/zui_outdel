@@ -48,7 +48,8 @@ sap.ui.define([
                 this.getView().setModel(new JSONModel({
                     activeSbu: oEvent.getParameter("arguments").sbu,
                     activeDlvNo: oEvent.getParameter("arguments").dlvNo,
-                    editModeHeader: false
+                    editModeHeader: false,
+                    editModeHeader2: false
                 }), "ui");
 
                 // Get Resources
@@ -110,11 +111,64 @@ sap.ui.define([
                     updatedTm: ""
                 }
 
+                _this.getView().setModel(new JSONModel({
+                    results: []
+                }), "dlvDtlHU");
+
+                this._tableRendered = "";
+                var oTableEventDelegate = {
+                    onkeyup: function(oEvent){
+                        _this.onKeyUp(oEvent);
+                    },
+
+                    onAfterRendering: function(oEvent) {
+                        _this.onAfterTableRendering(oEvent);
+                    }
+                };
+
+                this.byId("dlvDtlHUTab").addEventDelegate(oTableEventDelegate);
+                this.byId("dlvDtlTab").addEventDelegate(oTableEventDelegate);
+                this.byId("statOvwTab").addEventDelegate(oTableEventDelegate);
+                this.byId("matDocTab").addEventDelegate(oTableEventDelegate);
+
                 setTimeout(() => {
                     _this.onChangeHeader();
                 }, 1500);
                 
                 _this.closeLoadingDialog();
+            },
+
+            onKeyUp(oEvent) {
+                if ((oEvent.key == "ArrowUp" || oEvent.key == "ArrowDown") && oEvent.srcControl.sParentAggregationName == "rows") {
+                    var oTable = this.byId(oEvent.srcControl.sId).oParent;
+
+                    var sModel = "";
+                    if (oTable.getId().indexOf("dlvDtlHUTab") >= 0) sModel = "dlvDtlHU";
+                    else if (oTable.getId().indexOf("dlvDtlTab") >= 0) sModel = "dlvDtl";
+                    else if (oTable.getId().indexOf("statOvwTab") >= 0) sModel = "statOvw";
+                    else if (oTable.getId().indexOf("matDocTab") >= 0) sModel = "matDoc";
+
+                    if (this.byId(oEvent.srcControl.sId).getBindingContext(sModel)) {
+                        var sRowPath = this.byId(oEvent.srcControl.sId).getBindingContext(sModel).sPath;
+
+                        oTable.getModel(sModel).getData().results.forEach(row => row.ACTIVE = "");
+                        oTable.getModel(sModel).setProperty(sRowPath + "/ACTIVE", "X");
+
+                        oTable.getRows().forEach(row => {
+                            if (row.getBindingContext(sModel) && row.getBindingContext(sModel).sPath.replace("/results/", "") === sRowPath.replace("/results/", "")) {
+                                row.addStyleClass("activeRow");
+                            }
+                            else row.removeStyleClass("activeRow")
+                        })
+                    }
+                }
+            },
+
+            onAfterTableRendering: function(oEvent) {
+                if (this._tableRendered !== "") {
+                    this.setActiveRowHighlight(this._tableRendered.replace("Tab", ""));
+                    this._tableRendered = "";
+                }
             },
 
             getColumns: async function() {
@@ -149,7 +203,7 @@ sap.ui.define([
 
                 var oJSONColumnsModel = new JSONModel();
                 var vSBU = this.getView().getModel("ui").getData().activeSbu;
-                console.log("getDynamicColumns", arg1, arg2, arg3, vSBU)
+                
                 var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
                 oModel.setHeaders({
                     sbu: vSBU,
@@ -160,7 +214,7 @@ sap.ui.define([
                 oModel.read("/ColumnsSet", {
                     success: function (oData, oResponse) {
                         oJSONColumnsModel.setData(oData);
-
+                        console.log("getDynamicColumns",modCode,oData)
                         if (oData.results.length > 0) {
                             if (modCode === 'OUTDELDLVDTLHUMOD') {
                                 var aColumns = _this.setTableColumns(oColumns["dlvDtlHU"], oData.results);                      
@@ -173,6 +227,11 @@ sap.ui.define([
                                 _this.addColumns(_this.byId("dlvDtlTab"), aColumns["columns"], "dlvDtl");
                             }
                             else if (modCode === 'OUTDELSTATOVWMOD') {
+                                oData.results.forEach(col => {
+                                    if (col.ColumnName == "COMPLETE")
+                                    col.DataType =  "BOOLEAN";
+                                })
+
                                 var aColumns = _this.setTableColumns(oColumns["statOvw"], oData.results);                         
                                 _this._aColumns["statOvw"] = aColumns["columns"];
                                 _this.addColumns(_this.byId("statOvwTab"), aColumns["columns"], "statOvw");
@@ -315,7 +374,7 @@ sap.ui.define([
                         console.log("DlvHeaderTblSet read", data);
                         var oDlvHdr = data.results[0];
                         _oHeader.dlvNo = oDlvHdr.DLVNO;
-                        _oHeader.mvtType = oDlvHdr.MVTTYPE;
+                        _oHeader.mvtType = oDlvHdr.BWART;
                         _oHeader.status = oDlvHdr.STATUSCD;
                         _oHeader.docDt = (oDlvHdr.DOCDT ? sapDateFormat.format(new Date(oDlvHdr.DOCDT)) : "");
                         _oHeader.reqDt = (oDlvHdr.PLANDLVDT ? sapDateFormat.format(new Date(oDlvHdr.PLANDLVDT)) : "");
@@ -336,21 +395,26 @@ sap.ui.define([
                         _oHeader.mbl = oDlvHdr.MBL;
                         _oHeader.noPack = oDlvHdr.TOTALPKG;
                         _oHeader.createdBy = oDlvHdr.CREATEDBY;
-                        _oHeader.createdDt = (oDlvHdr.CREATEDDT ? sapDateFormat.format(new Date(oDlvHdr.CREATEDDT)) : "");
-
+                        _oHeader.createdDt = (oDlvHdr.CREATEDDT ? sapDateFormat.format(new Date(oDlvHdr.CREATEDDT)) + " " + 
+                            _this.formatTime(oDlvHdr.CREATEDTM) : "");
+                        
                         _oHeader.forwarder = oDlvHdr.FORWRDR;
                         _oHeader.carrier = oDlvHdr.CARRIER;
                         _oHeader.refDocNo = oDlvHdr.REFDOC;
                         _oHeader.refDocDt = (oDlvHdr.REFDOCDT ? sapDateFormat.format(new Date(oDlvHdr.REFDOCDT)) : "");
                         _oHeader.deleted = (oDlvHdr.DELETED == "X" ? true : false);
                         _oHeader.updatedBy = oDlvHdr.UPDATEDBY;
-                        _oHeader.updatedDt = (oDlvHdr.UPDATEDDT ? sapDateFormat.format(new Date(oDlvHdr.UPDATEDDT)) : "");
+                        _oHeader.updatedDt = (oDlvHdr.UPDATEDDT ? sapDateFormat.format(new Date(oDlvHdr.UPDATEDDT)) + " " +
+                            _this.formatTime(oDlvHdr.UPDATEDTM) : "");
 
                         _oHeader.dlvType = oDlvHdr.DLVTYP;
                         _oHeader.whseCd = oDlvHdr.WHSECD;
                         _oHeader.storAreaCd = oDlvHdr.STORAREACD;
                         _oHeader.createdTm = oDlvHdr.CREATEDTM;
                         _oHeader.updatedTm = oDlvHdr.UPDATEDTM;
+
+                        _this.getResources("SLocSet", "issSloc", "PLANTCD eq '" + _oHeader.issPlant + "'");
+                        _this.getResources("SLocSet", "rcvSloc", "PLANTCD eq '" + _oHeader.rcvPlant + "'");
 
                         _this.getDlvDtlHU();
                         _this.getDlvDtl();
@@ -508,7 +572,16 @@ sap.ui.define([
                         console.log("StatOvwSet", data)
                         if (data.results.length > 0) {
                             data.results.forEach(item => {
+                                item.COMPLETE = item.COMPLETE === "X" ? true : false;
 
+                                if (item.STARTDT !== null)
+                                    item.STARTDT = sapDateFormat.format(item.STARTDT) + " " + _this.formatTime(item.STARTTM);
+
+                                if (item.ENDDT !== null)
+                                    item.ENDDT = sapDateFormat.format(item.ENDDT) + " " + _this.formatTime(item.ENDTM);
+
+                                if (item.UPDATEDDT !== null)
+                                    item.UPDATEDDT = sapDateFormat.format(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
                             });
 
                             var oJSONModel = new JSONModel();
@@ -539,7 +612,11 @@ sap.ui.define([
                         console.log("MatDocSet", data)
                         if (data.results.length > 0) {
                             data.results.forEach(item => {
-
+                                if (item.DOCDT !== null)
+                                        item.DOCDT = sapDateFormat.format(item.DOCDT);
+    
+                                if (item.POSTDT !== null)
+                                    item.POSTDT = sapDateFormat.format(item.POSTDT);
                             });
 
                             var oJSONModel = new JSONModel();
@@ -563,16 +640,31 @@ sap.ui.define([
             },
 
             onEditHeader() {
+                if (_oHeader.status == "04") {
+                    MessageBox.warning(_oCaption.WARN_EDIT_NOT_ALLOW);
+                    return;
+                }
+
                 _this.setControlEditMode("header", true)
             },
 
             onDeleteHeader() {
-                _this.showLoadingDialog("Deleting...");
+                if (_oHeader.deleted) {
+                    MessageBox.warning(_oCaption.WARN_ALREADY_DELETED);
+                    return;
+                }
+
+                if (_oHeader.status == "04") {
+                    MessageBox.warning(_oCaption.WARN_DELETE_NOT_ALLOW);
+                    return;
+                }
 
                 MessageBox.confirm(_oCaption.INFO_PROCEED_DELETE, {
                     actions: ["Yes", "No"],
                     onClose: function (sAction) {
                         if (sAction === "Yes") {
+                            _this.showLoadingDialog("Deleting...");
+
                             var sEntitySet = "/DlvHeaderTblSet(DLVNO='" + _oHeader.DLVNO + "')";
                             var param = {
                                 DELETED: "X"
@@ -813,6 +905,11 @@ sap.ui.define([
             },
 
             onCreateDlvDtlHU() {
+                if (_oHeader.status != "00") {
+                    MessageBox.warning(_oCaption.WARN_ADD_NOT_ALLOW);
+                    return;
+                }
+
                 this._router.navTo("RouteDeliveryItem", {
                     sbu: _this.getView().getModel("ui").getData().activeSbu,
                     dlvNo: _oHeader.dlvNo,
@@ -822,6 +919,11 @@ sap.ui.define([
             },
 
             onDeleteDlvDtlHU() {
+                if (_oHeader.status != "00") {
+                    MessageBox.warning(_oCaption.WARN_DELETE_NOT_ALLOW);
+                    return;
+                }
+
                 var oTable = this.byId("dlvDtlHUTab");
                 var aSelIdx = oTable.getSelectedIndices();
 
@@ -834,6 +936,7 @@ sap.ui.define([
                     actions: ["Yes", "No"],
                     onClose: function (sAction) {
                         if (sAction === "Yes") {
+                            _this.showLoadingDialog("Deleting...");
 
                             var oModel = _this.getOwnerComponent().getModel();
                             var aData = _this.getView().getModel("dlvDtlHU").getData().results;
@@ -846,15 +949,12 @@ sap.ui.define([
                                     method: "DELETE",
                                     success: function(data, oResponse) {
                                         console.log(sEntitySet, data, oResponse)
-
-                                        // iIdx++;
-                                        // if (iIdx === aSelIdx.length) {
-                                        //     _this.onSaveDlvDtl();
-                                        // }
-
+                                        _this.onRefreshHeader();
+                                        _this.closeLoadingDialog();
                                     },
                                     error: function(err) {
                                         console.log("error", err)
+                                        _this.closeLoadingDialog();
                                     }
                                 });
                                 
@@ -987,6 +1087,16 @@ sap.ui.define([
                     this.setReqField("header", pEditable);
                     this.getView().getModel("ui").setProperty("/editModeHeader", pEditable);
 
+                    if (pEditable) {
+                        if (_this.getView().getModel("dlvDtlHU").getData().results.length > 0) {
+                            this.getView().getModel("ui").setProperty("/editModeHeader2", false);
+                        } else {
+                            this.getView().getModel("ui").setProperty("/editModeHeader2", pEditable);
+                        }
+                    } else {
+                        this.getView().getModel("ui").setProperty("/editModeHeader2", pEditable);
+                    }
+
                     // Detail
                     this.byId("btnCreateDlvDtlHU").setEnabled(!pEditable);
                     this.byId("btnDeleteDlvDtlHU").setEnabled(!pEditable);
@@ -1079,6 +1189,114 @@ sap.ui.define([
                 return (new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...time)).toLocaleTimeString();
             },
 
+            onFirstVisibleRowChanged: function (oEvent) {
+                var oTable = oEvent.getSource();
+                var sModel;
+
+                if (oTable.getId().indexOf("dlvDtlHUTab") >= 0) {
+                    sModel = "dlvDtlHU";
+                }
+                else if (oTable.getId().indexOf("dlvDtlTab") >= 0) {
+                    sModel = "dlvDtl";
+                }
+                else if (oTable.getId().indexOf("statOvwTab") >= 0) {
+                    sModel = "statOvw";
+                }
+                else if (oTable.getId().indexOf("matDocTab") >= 0) {
+                    sModel = "matDoc";
+                }
+
+                console.log("onFirstVisibleRowChanged", sModel)
+
+                setTimeout(() => {
+                    var oData = oTable.getModel(sModel).getData().results;
+                    var iStartIndex = oTable.getBinding("rows").iLastStartIndex;
+                    var iLength = oTable.getBinding("rows").iLastLength + iStartIndex;
+
+                    if (oTable.getBinding("rows").aIndices.length > 0) {
+                        for (var i = iStartIndex; i < iLength; i++) {
+                            var iDataIndex = oTable.getBinding("rows").aIndices.filter((fItem, fIndex) => fIndex === i);
+
+                            if (oData[iDataIndex].ACTIVE === "X") oTable.getRows()[iStartIndex === 0 ? i : i - iStartIndex].addStyleClass("activeRow");
+                            else oTable.getRows()[iStartIndex === 0 ? i : i - iStartIndex].removeStyleClass("activeRow");
+                        }
+                    }
+                    else {
+                        for (var i = iStartIndex; i < iLength; i++) {
+                            if (oData[i].ACTIVE === "X") oTable.getRows()[iStartIndex === 0 ? i : i - iStartIndex].addStyleClass("activeRow");
+                            else oTable.getRows()[iStartIndex === 0 ? i : i - iStartIndex].removeStyleClass("activeRow");
+                        }
+                    }
+                }, 1);
+            },
+
+            onColumnUpdated: function (oEvent) {
+                var oTable = oEvent.getSource();
+                var sModel;
+
+                if (oTable.getId().indexOf("dlvDtlHUTab") >= 0) {
+                    sModel = "dlvDtlHU";
+                }
+                else if (oTable.getId().indexOf("dlvDtlTab") >= 0) {
+                    sModel = "dlvDtl";
+                }
+                else if (oTable.getId().indexOf("statOvwTab") >= 0) {
+                    sModel = "statOvw";
+                }
+                else if (oTable.getId().indexOf("matDocTab") >= 0) {
+                    sModel = "matDoc";
+                }
+
+                this.setActiveRowHighlight(sModel);
+            },
+
+            setActiveRowHighlight(arg) {
+                var oTable = this.byId(arg + "Tab");
+
+                setTimeout(() => {
+                    var iActiveRowIndex = oTable.getModel(arg).getData().results.findIndex(item => item.ACTIVE === "X");
+                    oTable.getRows().forEach((row, idx) => {
+                        if (row.getBindingContext(arg) && +row.getBindingContext(arg).sPath.replace("/results/", "") === iActiveRowIndex) {
+                            row.addStyleClass("activeRow");
+                        }
+                        else {
+                            row.removeStyleClass("activeRow");
+                        }
+                    })
+                }, 2);
+            },
+
+            onCellClick: function(oEvent) {
+                if (oEvent.getParameters().rowBindingContext) {
+                    var oTable = oEvent.getSource(); //this.byId("ioMatListTab");
+                    var sRowPath = oEvent.getParameters().rowBindingContext.sPath;
+                    var sModel;
+
+                    if (oTable.getId().indexOf("dlvDtlHUTab") >= 0) {
+                        sModel = "dlvDtlHU";
+                    }
+                    else if (oTable.getId().indexOf("dlvDtlTab") >= 0) {
+                        sModel = "dlvDtl";
+                    }
+                    else if (oTable.getId().indexOf("statOvwTab") >= 0) {
+                        sModel = "statOvw";
+                    }
+                    else if (oTable.getId().indexOf("matDocTab") >= 0) {
+                        sModel = "matDoc";
+                    }
+
+                    oTable.getModel(sModel).getData().results.forEach(row => row.ACTIVE = "");
+                    oTable.getModel(sModel).setProperty(sRowPath + "/ACTIVE", "X");
+
+                    oTable.getRows().forEach(row => {
+                        if (row.getBindingContext(sModel) && row.getBindingContext(sModel).sPath.replace("/results/", "") === sRowPath.replace("/results/", "")) {
+                            row.addStyleClass("activeRow");
+                        }
+                        else row.removeStyleClass("activeRow");
+                    })
+                }
+            },
+
             getCaption() {
                 var oJSONModel = new JSONModel();
                 var oDDTextParam = [];
@@ -1124,16 +1342,15 @@ sap.ui.define([
                 // oDDTextParam.push({CODE: "INFO_INVALID_SAVE"});
                 // oDDTextParam.push({CODE: "WARN_NO_DATA_MODIFIED"});
                 // oDDTextParam.push({CODE: "INFO_SEL_ONE_COL"});
-                // oDDTextParam.push({CODE: "INFO_LAYOUT_SAVE"});
+                oDDTextParam.push({CODE: "WARN_DELETE_NOT_ALLOW"});
                 // oDDTextParam.push({CODE: "INFO_CREATE_DATA_NOT_ALLOW"});
                 oDDTextParam.push({CODE: "INFO_NO_RECORD_SELECT"});
-                // oDDTextParam.push({CODE: "INFO_NO_DELETE_MODIFIED"});
-                // oDDTextParam.push({CODE: "INFO_USE_GMC_REQ"});
-                // oDDTextParam.push({CODE: "INFO_ALREADY_EXIST"});
+                oDDTextParam.push({CODE: "WARN_ALREADY_DELETED"});
+                oDDTextParam.push({CODE: "WARN_EDIT_NOT_ALLOW"});
+                oDDTextParam.push({CODE: "WARN_ADD_NOT_ALLOW"});
                 oDDTextParam.push({CODE: "INFO_PROCEED_DELETE"});
                 oDDTextParam.push({CODE: "WARN_NOT_STATUS_GR_POSTED"});
                 oDDTextParam.push({CODE: "WARN_NO_DATA_DLVDTLHU"});
-                oDDTextParam.push({CODE: "INFO_PROCEED_DELETE"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",
