@@ -64,6 +64,10 @@ sap.ui.define([
 
                 _this.getDlvDtlHU();
 
+                _this.getView().setModel(new JSONModel({
+                    results: []
+                }), "dlvItem");
+
                 this._tableRendered = "";
                 var oTableEventDelegate = {
                     onkeyup: function(oEvent){
@@ -362,74 +366,82 @@ sap.ui.define([
                     iMaxSeqNo = Math.max(...aDlvDtlHU.map(x => x.SEQNO));
                 }
 
+                var aOrigSelIdx = [];
                 aSelIdx.forEach(i => {
+                    aOrigSelIdx.push(oTable.getBinding("rows").aIndices[i]);
+                })
+
+                aOrigSelIdx.forEach(i => {
                     var oData = aData[i];
                     var sEntitySet = "/DlvDetailHUTblSet(DLVNO='" + oData.DLVNO + "',DLVITEM='" + oData.DLVITEM + "',SEQNO='" + oData.SEQNO + "')";
                     var param = {
                         DLVASGND: sDlvNo
                     }
 
-                    oModel.update(sEntitySet, param, {
-                        method: "PUT",
-                        success: function(data, oResponse) {
-                            console.log(sEntitySet, data, oResponse)
-
-                            var oDataCreate = oData; //aData[iIdx];
-                            // DlvTem
-                            var iDlvItem = parseInt(oDataCreate.DLVITEM);
-                            if (iMaxDlvItem == 0) iMaxDlvItem = iDlvItem;
-                            else if (iMaxDlvItem > iDlvItem) iMaxDlvItem += 1;
-                            else iMaxDlvItem = iDlvItem + 1;
-
-                            // SeqNo
-                            var iSeqNo = parseInt(oDataCreate.SEQNO);
-                            if (iMaxSeqNo == 0) iMaxSeqNo = iSeqNo;
-                            else if (iMaxSeqNo > iSeqNo) iMaxSeqNo += 1;
-                            else iMaxSeqNo = iSeqNo + 1;
-
-                            var paramCreate = {
-                                DLVNO: sDlvNo,
-                                DLVITEM: iMaxDlvItem.toString(), //.toString().padStart(5, '0'),
-                                SEQNO: iMaxSeqNo.toString(), //.toString().padStart(4, '0'),
-                                PLANTCD: oDataCreate.PLANT,
-                                SLOC: oDataCreate.SLOC,
-                                MATNO: oDataCreate.MATNO,
-                                BATCH: oDataCreate.BATCH,
-                                PKGNO: oDataCreate.PACKNO,
-                                HUID: oDataCreate.HUID,
-                                DLVQTYORD: oDataCreate.REQQTY,
-                                DLVQTYBSE: oDataCreate.REQQTYBASE,
-                                ORDUOM: oDataCreate.UOM,
-                                BASEUOM: oDataCreate.BASEUOM,
-                                ACTQTYORD: oDataCreate.ACTQTY,
-                                ACTQTYBSE: oDataCreate.ACTQTYBASE
-                            };
-
-                            console.log("paramCreate", paramCreate);
-                            oModel.create("/DlvDetailHUTblSet", paramCreate, {
-                                method: "POST",
-                                success: function(data, oResponse) {
-                                    console.log("DlvDetailHUTblSet create", data)
-                                },
-                                error: function(err) {
-                                    console.log("error", err)
+                    setTimeout(() => {
+                        oModel.update(sEntitySet, param, {
+                            method: "PUT",
+                            success: function(data, oResponse) {
+                                console.log(sEntitySet, data, oResponse)
+    
+                                var oDataCreate = oData; //aData[iIdx];
+                                // DlvTem
+                                var iDlvItem = parseInt(oDataCreate.DLVITEM);
+                                if (iMaxDlvItem == 0) iMaxDlvItem = iDlvItem;
+                                else if (iMaxDlvItem > iDlvItem) iMaxDlvItem += 1;
+                                else iMaxDlvItem = iDlvItem + 1;
+    
+                                // SeqNo
+                                var iSeqNo = parseInt(oDataCreate.SEQNO);
+                                if (iMaxSeqNo == 0) iMaxSeqNo = iSeqNo;
+                                else if (iMaxSeqNo > iSeqNo) iMaxSeqNo += 1;
+                                else iMaxSeqNo = iSeqNo + 1;
+    
+                                var paramCreate = {
+                                    DLVNO: sDlvNo,
+                                    DLVITEM: iMaxDlvItem.toString(), //.toString().padStart(5, '0'),
+                                    SEQNO: iMaxSeqNo.toString(), //.toString().padStart(4, '0'),
+                                    PLANTCD: oDataCreate.PLANT,
+                                    SLOC: oDataCreate.SLOC,
+                                    MATNO: oDataCreate.MATNO,
+                                    BATCH: oDataCreate.BATCH,
+                                    PKGNO: oDataCreate.PACKNO,
+                                    HUID: oDataCreate.HUID,
+                                    DLVQTYORD: oDataCreate.REQQTY,
+                                    DLVQTYBSE: oDataCreate.REQQTYBASE,
+                                    ORDUOM: oDataCreate.UOM,
+                                    BASEUOM: oDataCreate.BASEUOM,
+                                    ACTQTYORD: oDataCreate.ACTQTY,
+                                    ACTQTYBSE: oDataCreate.ACTQTYBASE
+                                };
+    
+                                console.log("paramCreate", paramCreate);
+                                oModel.create("/DlvDetailHUTblSet", paramCreate, {
+                                    method: "POST",
+                                    success: function(data, oResponse) {
+                                        console.log("DlvDetailHUTblSet create", data)
+                                    },
+                                    error: function(err) {
+                                        console.log("error", err)
+                                    }
+                                });
+    
+    
+                                iIdx++;
+                                if (iIdx === aOrigSelIdx.length) {
+                                    _this.onSaveDlvDtl();
                                 }
-                            });
-
-
-                            iIdx++;
-                            if (iIdx === aSelIdx.length) {
-                                _this.onSaveDlvDtl();
+    
+                            },
+                            error: function(err) {
+                                console.log("error", err)
                             }
-
-                        },
-                        error: function(err) {
-                            console.log("error", err)
-                        }
-                    });
+                        });
+                    }, 100);
+                    
                 })
 
-                //console.log("onAdd", aSelIdx)
+                //console.log("onAdd", aOrigSelIdx)
 
 
                 // this._router.navTo("RouteInterplantTransferDC", {

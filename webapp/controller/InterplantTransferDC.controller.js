@@ -21,6 +21,7 @@ sap.ui.define([
         var _oCaption = {};
         var _startUpInfo;
         var _oHeader = {};
+        var _sHeaderMode = "";
 
         // shortcut for sap.ui.table.SortOrder
         var SortOrder = library.SortOrder;
@@ -355,8 +356,13 @@ sap.ui.define([
                     this.byId("cmbRcvSloc").setPlaceholder("");
                 }
 
-                if (_this.getView().getModel("ui").getData().activeDlvNo == "empty") _this.getNumber();
-                else _this.getHeader();
+                if (_this.getView().getModel("ui").getData().activeDlvNo == "empty") {
+                    _sHeaderMode = "NEW";
+                    _this.getNumber();
+                } else {
+                    _sHeaderMode = "EDIT";
+                    _this.getHeader();
+                }
             },
 
             getHeader() {
@@ -493,24 +499,22 @@ sap.ui.define([
                     success: function (data, response) {
                         console.log("DlvDetailHUSet", data)
 
-                        if (data.results.length > 0) {
-                            data.results.forEach(item => {
+                        data.results.forEach(item => {
 
-                                item.DELETED = item.DELETED === "X" ? true : false;
+                            item.DELETED = item.DELETED === "X" ? true : false;
 
-                                if (item.CREATEDDT !== null)
-                                    item.CREATEDDT = sapDateFormat.format(item.CREATEDDT) + " " + _this.formatTime(item.CREATEDTM);
+                            if (item.CREATEDDT !== null)
+                                item.CREATEDDT = sapDateFormat.format(item.CREATEDDT) + " " + _this.formatTime(item.CREATEDTM);
 
-                                if (item.UPDATEDDT !== null)
-                                    item.UPDATEDDT = sapDateFormat.format(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
-                            })
+                            if (item.UPDATEDDT !== null)
+                                item.UPDATEDDT = sapDateFormat.format(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
+                        })
 
-                            var oJSONModel = new sap.ui.model.json.JSONModel();
-                            oJSONModel.setData(data);
-                            _this.getView().setModel(oJSONModel, "dlvDtlHU");
+                        var oJSONModel = new sap.ui.model.json.JSONModel();
+                        oJSONModel.setData(data);
+                        _this.getView().setModel(oJSONModel, "dlvDtlHU");
 
-                            _this.setRowReadMode("dlvDtlHU");
-                        }
+                        _this.setRowReadMode("dlvDtlHU");
 
                         _this.closeLoadingDialog();
                     },
@@ -532,24 +536,22 @@ sap.ui.define([
                     },
                     success: function (data, response) {
                         console.log("DlvDetailSet", data)
-                        if (data.results.length > 0) {
-                            data.results.forEach(item => {
+                        data.results.forEach(item => {
 
-                                item.DELETED = item.DELETED === "X" ? true : false;
+                            item.DELETED = item.DELETED === "X" ? true : false;
 
-                                if (item.CREATEDDT !== null)
-                                    item.CREATEDDT = sapDateFormat.format(item.CREATEDDT) + " " + _this.formatTime(item.CREATEDTM);
+                            if (item.CREATEDDT !== null)
+                                item.CREATEDDT = sapDateFormat.format(item.CREATEDDT) + " " + _this.formatTime(item.CREATEDTM);
 
-                                if (item.UPDATEDDT !== null)
-                                    item.UPDATEDDT = sapDateFormat.format(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
-                            })
+                            if (item.UPDATEDDT !== null)
+                                item.UPDATEDDT = sapDateFormat.format(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
+                        })
 
-                            var oJSONModel = new sap.ui.model.json.JSONModel();
-                            oJSONModel.setData(data);
-                            _this.getView().setModel(oJSONModel, "dlvDtl");
+                        var oJSONModel = new sap.ui.model.json.JSONModel();
+                        oJSONModel.setData(data);
+                        _this.getView().setModel(oJSONModel, "dlvDtl");
 
-                            _this.setRowReadMode("dlvDtl");
-                        }
+                        _this.setRowReadMode("dlvDtl");
 
                         _this.closeLoadingDialog();
                     },
@@ -570,26 +572,24 @@ sap.ui.define([
                     },
                     success: function (data, response) {
                         console.log("StatOvwSet", data)
-                        if (data.results.length > 0) {
-                            data.results.forEach(item => {
-                                item.COMPLETE = item.COMPLETE === "X" ? true : false;
+                        data.results.forEach(item => {
+                            item.COMPLETE = item.COMPLETE === "X" ? true : false;
 
-                                if (item.STARTDT !== null)
-                                    item.STARTDT = sapDateFormat.format(item.STARTDT) + " " + _this.formatTime(item.STARTTM);
+                            if (item.STARTDT !== null)
+                                item.STARTDT = sapDateFormat.format(item.STARTDT) + " " + _this.formatTime(item.STARTTM);
 
-                                if (item.ENDDT !== null)
-                                    item.ENDDT = sapDateFormat.format(item.ENDDT) + " " + _this.formatTime(item.ENDTM);
+                            if (item.ENDDT !== null)
+                                item.ENDDT = sapDateFormat.format(item.ENDDT) + " " + _this.formatTime(item.ENDTM);
 
-                                if (item.UPDATEDDT !== null)
-                                    item.UPDATEDDT = sapDateFormat.format(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
-                            });
+                            if (item.UPDATEDDT !== null)
+                                item.UPDATEDDT = sapDateFormat.format(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
+                        });
 
-                            var oJSONModel = new JSONModel();
-                            oJSONModel.setData(data);
-                            _this.getView().setModel(oJSONModel, "statOvw");
+                        var oJSONModel = new JSONModel();
+                        oJSONModel.setData(data);
+                        _this.getView().setModel(oJSONModel, "statOvw");
 
-                            _this.setRowReadMode("statOvw");
-                        }
+                        _this.setRowReadMode("statOvw");
 
                         _this.closeLoadingDialog();
                     },
@@ -610,21 +610,19 @@ sap.ui.define([
                     },
                     success: function (data, response) {
                         console.log("MatDocSet", data)
-                        if (data.results.length > 0) {
-                            data.results.forEach(item => {
-                                if (item.DOCDT !== null)
-                                        item.DOCDT = sapDateFormat.format(item.DOCDT);
-    
-                                if (item.POSTDT !== null)
-                                    item.POSTDT = sapDateFormat.format(item.POSTDT);
-                            });
+                        data.results.forEach(item => {
+                            if (item.DOCDT !== null)
+                                    item.DOCDT = sapDateFormat.format(item.DOCDT);
 
-                            var oJSONModel = new JSONModel();
-                            oJSONModel.setData(data);
-                            _this.getView().setModel(oJSONModel, "matDoc");
+                            if (item.POSTDT !== null)
+                                item.POSTDT = sapDateFormat.format(item.POSTDT);
+                        });
 
-                            _this.setRowReadMode("matDoc");
-                        }
+                        var oJSONModel = new JSONModel();
+                        oJSONModel.setData(data);
+                        _this.getView().setModel(oJSONModel, "matDoc");
+
+                        _this.setRowReadMode("matDoc");
 
                         _this.closeLoadingDialog();
                     },
@@ -665,16 +663,18 @@ sap.ui.define([
                         if (sAction === "Yes") {
                             _this.showLoadingDialog("Deleting...");
 
-                            var sEntitySet = "/DlvHeaderTblSet(DLVNO='" + _oHeader.DLVNO + "')";
+                            var sEntitySet = "/DlvHeaderTblSet(DLVNO='" + _oHeader.dlvNo + "')";
                             var param = {
                                 DELETED: "X"
                             };
 
+                            var oModel = _this.getOwnerComponent().getModel();
+                            console.log("onDeleteHeader param", sEntitySet, param)
                             oModel.update(sEntitySet, param, {
                                 method: "PUT",
                                 success: function(data, oResponse) {
                                     console.log(sEntitySet, data, oResponse);
-                                    MessageBox.information(_oHeader.DLVNO + " is now deleted.")
+                                    MessageBox.information(_oHeader.dlvNo + " is now deleted.")
                                     _this.onRefreshHeader();
                                 },
                                 error: function(err) {
@@ -688,8 +688,6 @@ sap.ui.define([
             },
 
             onPostHeader() {
-                _this.showLoadingDialog("Posting...");
-
                 if (_oHeader.status == "04") {
                     MessageBox.warning(_oCaption.WARN_NOT_STATUS_GR_POSTED);
                     _this.closeLoadingDialog();
@@ -702,27 +700,37 @@ sap.ui.define([
                     return;
                 }
 
-                var oModelRFC = _this.getOwnerComponent().getModel("ZGW_3DERP_RFC_SRV");
-                var oParam = {};
+                MessageBox.confirm(_oCaption.INFO_PROCEED_POST, {
+                    actions: ["Yes", "No"],
+                    onClose: function (sAction) {
+                        if (sAction === "Yes") {
+                            _this.showLoadingDialog("Posting...");
 
-                oParam["N_GetNumberParam"] = [{
-                    iv_dlvno: _oHeader.dlvNo,
-                    iv_userid: _startUpInfo.id,
-                    N_POST901_RETURN: []
-                }];
+                            var oModelRFC = _this.getOwnerComponent().getModel("ZGW_3DERP_RFC_SRV");
+                            var oParam = {};
 
-                oModelRFC.create("/GoodsMvt_Post901Set ", oParam, {
-                    method: "POST",
-                    success: function(oResult, oResponse) {
-                        console.log("GoodsMvt_Post901Set", oResult, oResponse);
+                            oParam = {
+                                iv_dlvno: _oHeader.dlvNo,
+                                iv_userid: _startUpInfo.id,
+                                N_POST901_RETURN: []
+                            };
 
-                        MessageBox.information(oResult.N_POST901_RETURN.results[0].Message);
-                        _this.closeLoadingDialog();
-                        _this.getHeader();
-                    },
-                    error: function(err) {
-                        sap.m.MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
-                        _this.closeLoadingDialog();
+                            console.log("GoodsMvt_Post901Set param", oParam);
+                            oModelRFC.create("/GoodsMvt_Post901Set", oParam, {
+                                method: "POST",
+                                success: function(oResult, oResponse) {
+                                    console.log("GoodsMvt_Post901Set", oResult, oResponse);
+
+                                    MessageBox.information(oResult.N_POST901_RETURN.results[0].Message);
+                                    _this.closeLoadingDialog();
+                                    _this.getHeader();
+                                },
+                                error: function(err) {
+                                    sap.m.MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
+                                    _this.closeLoadingDialog();
+                                }
+                            });
+                        }
                     }
                 });
             },
@@ -867,28 +875,37 @@ sap.ui.define([
                     REFDOCDT = sapDateFormat.format(new Date(_this.byId("dpRefDocDt").getValue())) + "T00:00:00";
 
                 console.log("DlvHeaderTbl param", param)
-                oModel.create("/DlvHeaderTblSet", param, {
-                    method: "POST",
-                    success: function(data, oResponse) {
-                        console.log("DlvHeaderTbl create", data)
-                        _this.getHeader();
-                    },
-                    error: function(err) {
-                        console.log("error", err)
-                        // var oError = JSON.parse(err.responseText);
-                        // var sError = oError.error.message.value;
 
-                        // sError = sError.replace("Property", "Column");
-                        // sError = sError.replace("at offset '20'", "");
+                if (_sHeaderMode == "NEW") {
+                    oModel.create("/DlvHeaderTblSet", param, {
+                        method: "POST",
+                        success: function(data, oResponse) {
+                            console.log("DlvHeaderTbl create", data)
+                            MessageBox.information(_oCaption.INFO_SAVE_SUCCESS);
+                            _this.getHeader();
+                        },
+                        error: function(err) {
+                            console.log("error", err)
+                            _this.closeLoadingDialog();
+                        }
+                    });
+                } else if (_sHeaderMode == "EDIT") {
+                    var sEntitySet = "/DlvHeaderTblSet(DLVNO='" + _oHeader.dlvNo + "')";
 
-                        // MessageBox.error(sError,
-                        // {
-                        //     styleClass: bCompact ? "sapUiSizeCompact" : ""
-                        // });
-
-                        // _this.closeLoadingDialog();
-                    }
-                });
+                    console.log("DlvHeaderTblSeT param", sEntitySet, param)
+                    oModel.update(sEntitySet, param, {
+                        method: "PUT",
+                        success: function(data, oResponse) {
+                            console.log(sEntitySet, data, oResponse);
+                            MessageBox.information(_oCaption.INFO_SAVE_SUCCESS);
+                            _this.getHeader();
+                        },
+                        error: function(err) {
+                            console.log("error", err)
+                            _this.closeLoadingDialog();
+                        }
+                    });
+                }
 
                 this.setControlEditMode("header", false);
             },
@@ -940,24 +957,31 @@ sap.ui.define([
 
                             var oModel = _this.getOwnerComponent().getModel();
                             var aData = _this.getView().getModel("dlvDtlHU").getData().results;
+                            var iIdx = 0;
             
                             aSelIdx.forEach(i => {
                                 var oData = aData[i];     
                                 var sEntitySet = "/DlvDetailHUTblSet(DLVNO='" + oData.DLVNO + "',DLVITEM='" + oData.DLVITEM + "',SEQNO='" + oData.SEQNO + "')";
                                 console.log("sEntitySet", sEntitySet)
-                                oModel.remove(sEntitySet, {
-                                    method: "DELETE",
-                                    success: function(data, oResponse) {
-                                        console.log(sEntitySet, data, oResponse)
-                                        _this.onRefreshHeader();
-                                        _this.closeLoadingDialog();
-                                    },
-                                    error: function(err) {
-                                        console.log("error", err)
-                                        _this.closeLoadingDialog();
-                                    }
-                                });
-                                
+
+                                setTimeout(() => {
+                                    oModel.remove(sEntitySet, {
+                                        method: "DELETE",
+                                        success: function(data, oResponse) {
+                                            console.log(sEntitySet, data, oResponse)
+
+                                            iIdx++;
+                                            if (iIdx === aSelIdx.length) {
+                                                _this.onRefreshHeader();
+                                                _this.closeLoadingDialog();
+                                            }
+                                        },
+                                        error: function(err) {
+                                            console.log("error", err)
+                                            _this.closeLoadingDialog();
+                                        }
+                                    });
+                                }, 100);
                             });
                         }
                     }
@@ -1341,9 +1365,9 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "CONFIRM_DISREGARD_CHANGE"});
                 // oDDTextParam.push({CODE: "INFO_INVALID_SAVE"});
                 // oDDTextParam.push({CODE: "WARN_NO_DATA_MODIFIED"});
-                // oDDTextParam.push({CODE: "INFO_SEL_ONE_COL"});
+                oDDTextParam.push({CODE: "INFO_SAVE_SUCCESS"});
                 oDDTextParam.push({CODE: "WARN_DELETE_NOT_ALLOW"});
-                // oDDTextParam.push({CODE: "INFO_CREATE_DATA_NOT_ALLOW"});
+                oDDTextParam.push({CODE: "INFO_PROCEED_POST"});
                 oDDTextParam.push({CODE: "INFO_NO_RECORD_SELECT"});
                 oDDTextParam.push({CODE: "WARN_ALREADY_DELETED"});
                 oDDTextParam.push({CODE: "WARN_EDIT_NOT_ALLOW"});
