@@ -932,7 +932,7 @@ sap.ui.define([
                     dlvNo: _oHeader.dlvNo,
                     issPlant: _oHeader.issPlant,
                     rcvPlant: _oHeader.rcvPlant
-                }, true);
+                });
             },
 
             onDeleteDlvDtlHU() {
@@ -1359,6 +1359,8 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "DELETED"});
                 oDDTextParam.push({CODE: "UPDATEDBY"});
                 oDDTextParam.push({CODE: "UPDATEDDT"});
+
+                oDDTextParam.push({CODE: "POST"});
 
                 // MessageBox
                 // oDDTextParam.push({CODE: "INFO_NO_SELECTED"});

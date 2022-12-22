@@ -91,7 +91,7 @@ sap.ui.define([
                     _this._router.navTo("RouteInterplantTransferDC", {
                         sbu: _this.getView().getModel("ui").getData().activeSbu,
                         dlvNo: _dlvNo
-                    }, true);
+                    });
                 });
 
                 this.closeLoadingDialog();

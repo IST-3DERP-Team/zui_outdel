@@ -9,12 +9,13 @@ sap.ui.define([
     "sap/ui/table/library",
     "sap/m/TablePersoController",
     'sap/m/MessageToast',
-	'sap/m/SearchField'
+	'sap/m/SearchField',
+    "sap/ui/core/routing/History"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-     function (Controller, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, TablePersoController, MessageToast, SearchField) {
+     function (Controller, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, TablePersoController, MessageToast, SearchField, History) {
         "use strict";
 
         var _this;
@@ -39,7 +40,6 @@ sap.ui.define([
                 var oModel = _this.getOwnerComponent().getModel("ZVB_3DERP_OUTDELHUFILTER_CDS");
                 var oSmartFilter = _this.getView().byId("sfbDlvItem");
                 oSmartFilter.setModel(oModel);
-                console.log("initializeComponent",oModel)
                 
                 // Initialize router
                 var oComponent = this.getOwnerComponent();
@@ -59,8 +59,15 @@ sap.ui.define([
             },
 
             initializeComponent() {
-                _this.byId("btnAdd").setEnabled(false);
-                _this.byId("btnCancel").setEnabled(false);
+                // _this.byId("btnAdd").setEnabled(false);
+                // _this.byId("btnCancel").setEnabled(false);
+
+                var oFilterBar = _this.byId("sfbDlvItem");
+                var oFilterData = oFilterBar.getFilterData();
+                
+                if (oFilterData) {
+                    oFilterBar.setFilterData({}, true);
+                }
 
                 _this.getDlvDtlHU();
 
@@ -387,9 +394,10 @@ sap.ui.define([
                                 var oDataCreate = oData; //aData[iIdx];
                                 // DlvTem
                                 var iDlvItem = parseInt(oDataCreate.DLVITEM);
-                                if (iMaxDlvItem == 0) iMaxDlvItem = iDlvItem;
+                                iMaxDlvItem = iDlvItem;
+                                /*if (iMaxDlvItem == 0) iMaxDlvItem = iDlvItem;
                                 else if (iMaxDlvItem > iDlvItem) iMaxDlvItem += 1;
-                                else iMaxDlvItem = iDlvItem + 1;
+                                else iMaxDlvItem = iDlvItem + 1;*/
     
                                 // SeqNo
                                 var iSeqNo = parseInt(oDataCreate.SEQNO);
@@ -404,14 +412,14 @@ sap.ui.define([
                                     PLANTCD: oDataCreate.PLANT,
                                     SLOC: oDataCreate.SLOC,
                                     MATNO: oDataCreate.MATNO,
-                                    BATCH: oDataCreate.BATCH,
+                                    BATCH: oDataCreate.NEWBATCH,
                                     PKGNO: oDataCreate.PACKNO,
                                     HUID: oDataCreate.HUID,
-                                    DLVQTYORD: oDataCreate.REQQTY,
-                                    DLVQTYBSE: oDataCreate.REQQTYBASE,
-                                    ORDUOM: oDataCreate.UOM,
+                                    DLVQTYORD: oDataCreate.ACTQTYBASE,
+                                    DLVQTYBSE: oDataCreate.ACTQTYBASE,
+                                    ORDUOM: oDataCreate.BASEUOM,
                                     BASEUOM: oDataCreate.BASEUOM,
-                                    ACTQTYORD: oDataCreate.ACTQTY,
+                                    ACTQTYORD: oDataCreate.ACTQTYBASE,
                                     ACTQTYBSE: oDataCreate.ACTQTYBASE
                                 };
     
@@ -548,11 +556,20 @@ sap.ui.define([
             },
 
             onClose() {
-                var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
-                this._router.navTo("RouteInterplantTransferDC", {
-                    sbu: _this.getView().getModel("ui").getData().activeSbu,
-                    dlvNo: sDlvNo
-                }, true);
+                var oHistory = History.getInstance();
+			    var sPreviousHash = oHistory.getPreviousHash();
+
+                if (sPreviousHash !== undefined) {
+                    window.history.go(-1);
+                } else {
+                    var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                    var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
+
+                    oRouter.navTo("RouteInterplantTransferDC", {
+                        sbu: _this.getView().getModel("ui").getData().activeSbu,
+                        dlvNo: sDlvNo
+                    });
+                }
             },
 
             onCellClickOutDelHdr(oEvent) {

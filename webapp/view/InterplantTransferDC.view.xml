@@ -17,7 +17,7 @@
                     <ToolbarSpacer />
                     <Button id="btnEditHeader" type="Ghost" icon="sap-icon://edit" press="onEditHeader" visible="true"/>
                     <Button id="btnDeleteHeader" type="Ghost" icon="sap-icon://delete" press="onDeleteHeader" visible="true"/> 
-                    <Button id="btnPostHeader" type="Ghost" icon="sap-icon://settings" press="onPostHeader" visible="true"/> 
+                    <Button id="btnPostHeader" type="Ghost" icon="sap-icon://settings" press="onPostHeader" visible="true" tooltip="{ddtext>/POST}"/> 
                     <Button id="btnRefreshHeader" type="Ghost" icon="sap-icon://refresh" press="onRefreshHeader" visible="true"/> 
                     <Button id="btnPrintHeader" type="Ghost" icon="sap-icon://print" press="onPrintHeader" visible="true"/> 
                     <Button id="btnSaveHeader" type="Ghost" icon="sap-icon://save" press="onSaveHeader" visible="false"/> 
