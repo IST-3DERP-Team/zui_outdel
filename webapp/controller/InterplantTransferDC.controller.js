@@ -22,6 +22,7 @@ sap.ui.define([
         var _startUpInfo;
         var _oHeader = {};
         var _sHeaderMode = "";
+        var _sNoRangeCd = "";
 
         // shortcut for sap.ui.table.SortOrder
         var SortOrder = library.SortOrder;
@@ -358,7 +359,8 @@ sap.ui.define([
 
                 if (_this.getView().getModel("ui").getData().activeDlvNo == "empty") {
                     _sHeaderMode = "NEW";
-                    _this.getNumber();
+                    _this.onAddHeader()
+                    //_this.getNumber();
                 } else {
                     _sHeaderMode = "EDIT";
                     _this.getHeader();
@@ -436,55 +438,50 @@ sap.ui.define([
                 })
             },
 
-            getNumber() {
+            getNumber(pSaveParam) {
                 var oModel = this.getOwnerComponent().getModel();
-                var sNoRangeCd = "";
+                var oModelRFC = _this.getOwnerComponent().getModel("ZGW_3DERP_RFC_SRV");
+                var oParamGetNumber = {};
 
-                oModel.read('/DlvHeaderNewSet', {
-                    success: function (data, response) {
-                        console.log("DlvHeaderNewSet", data)
-                        if (data.results.length > 0) {
-                            _oHeader.dlvType = data.results[0].DLVTYPE;
-                            _oHeader.mvtType = data.results[0].MVTTYPE;
-                            _oHeader.status = data.results[0].STATUSCD;
-                            _oHeader.statusDesc = data.results[0].STATUSDESC;
-                            sNoRangeCd = data.results[0].NORANGECD;
+                oParamGetNumber["N_GetNumberParam"] = [{
+                    IUserid: _startUpInfo.id,
+                    INorangecd: _sNoRangeCd,
+                    IKeycd: ""
+                }];
+                oParamGetNumber["N_GetNumberReturn"] = [];
 
-                            var oModelRFC = _this.getOwnerComponent().getModel("ZGW_3DERP_RFC_SRV");
-                            var oParamGetNumber = {};
+                oModelRFC.create("/GetNumberSet", oParamGetNumber, {
+                    method: "POST",
+                    success: function(oResult, oResponse) {
+                        console.log("GetNumberSet", oResult, oResponse);
 
-                            oParamGetNumber["N_GetNumberParam"] = [{
-                                IUserid: _startUpInfo.id,
-                                INorangecd: sNoRangeCd,
-                                IKeycd: ""
-                            }];
-                            oParamGetNumber["N_GetNumberReturn"] = [];
+                        if (oResult.EReturnno.length > 0) {
+                            _this.getView().getModel("ui").setProperty("/activeDlvNo", oResult.EReturnno);
+                            _oHeader.dlvNo = oResult.EReturnno;
 
-                            oModelRFC.create("/GetNumberSet", oParamGetNumber, {
+                            pSaveParam.DLVNO = _oHeader.dlvNo;
+                            oModel.create("/DlvHeaderTblSet", pSaveParam, {
                                 method: "POST",
-                                success: function(oResult, oResponse) {
-                                    console.log("GetNumberSet", oResult, oResponse);
-
-                                    if (oResult.EReturnno.length > 0) {
-                                        _this.getView().getModel("ui").setProperty("/activeDlvNo", oResult.EReturnno);
-                                        _oHeader.dlvNo = oResult.EReturnno;
-                                        _this.onAddHeader()
-                                    } else {
-                                        var sMessage = oResult.N_GetNumberReturn.results[0].Type + ' - ' + oResult.N_GetNumberReturn.results[0].Message;
-                                        sap.m.MessageBox.error(sMessage);
-                                    }
+                                success: function(data, oResponse) {
+                                    console.log("DlvHeaderTbl create", data)
+                                    sap.m.MessageBox.information(_oCaption.INFO_SAVE_SUCCESS);
+                                    _this.getHeader();
                                 },
                                 error: function(err) {
-                                    sap.m.MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
+                                    console.log("error", err)
                                     _this.closeLoadingDialog();
                                 }
                             });
+                        } else {
+                            var sMessage = oResult.N_GetNumberReturn.results[0].Type + ' - ' + oResult.N_GetNumberReturn.results[0].Message;
+                            sap.m.MessageBox.error(sMessage);
                         }
                     },
-                    error: function (err) { 
-                        console.log("error", err)
+                    error: function(err) {
+                        sap.m.MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
+                        _this.closeLoadingDialog();
                     }
-                })
+                });
             },
 
             getDlvDtlHU() {
@@ -633,8 +630,26 @@ sap.ui.define([
             },
 
             onAddHeader() {
-                _this.setHeaderValue(false);
-                _this.setControlEditMode("header", true)
+                var oModel = this.getOwnerComponent().getModel();
+
+                oModel.read('/DlvHeaderNewSet', {
+                    success: function (data, response) {
+                        console.log("DlvHeaderNewSet", data)
+                        if (data.results.length > 0) {
+                            _oHeader.dlvType = data.results[0].DLVTYPE;
+                            _oHeader.mvtType = data.results[0].MVTTYPE;
+                            _oHeader.status = data.results[0].STATUSCD;
+                            _oHeader.statusDesc = data.results[0].STATUSDESC;
+                            _sNoRangeCd = data.results[0].NORANGECD;
+
+                            _this.setHeaderValue(false);
+                            _this.setControlEditMode("header", true)
+                        }
+                    },
+                    error: function (err) { 
+                        console.log("error", err)
+                    }
+                })
             },
 
             onEditHeader() {
@@ -877,18 +892,19 @@ sap.ui.define([
                 console.log("DlvHeaderTbl param", param)
 
                 if (_sHeaderMode == "NEW") {
-                    oModel.create("/DlvHeaderTblSet", param, {
-                        method: "POST",
-                        success: function(data, oResponse) {
-                            console.log("DlvHeaderTbl create", data)
-                            MessageBox.information(_oCaption.INFO_SAVE_SUCCESS);
-                            _this.getHeader();
-                        },
-                        error: function(err) {
-                            console.log("error", err)
-                            _this.closeLoadingDialog();
-                        }
-                    });
+                    _this.getNumber(param);
+                    // oModel.create("/DlvHeaderTblSet", param, {
+                    //     method: "POST",
+                    //     success: function(data, oResponse) {
+                    //         console.log("DlvHeaderTbl create", data)
+                    //         MessageBox.information(_oCaption.INFO_SAVE_SUCCESS);
+                    //         _this.getHeader();
+                    //     },
+                    //     error: function(err) {
+                    //         console.log("error", err)
+                    //         _this.closeLoadingDialog();
+                    //     }
+                    // });
                 } else if (_sHeaderMode == "EDIT") {
                     var sEntitySet = "/DlvHeaderTblSet(DLVNO='" + _oHeader.dlvNo + "')";
 
@@ -915,7 +931,11 @@ sap.ui.define([
                     actions: ["Yes", "No"],
                     onClose: function (sAction) {
                         if (sAction == "Yes") {
-                            _this.setControlEditMode("header", false);
+                            if (_sHeaderMode == "NEW") {
+                                _this._router.navTo("RouteMain", {}, true);
+                            } else if (_sHeaderMode == "EDIT") {
+                                _this.setControlEditMode("header", false);
+                            }
                         }
                     }
                 });

@@ -482,7 +482,7 @@ sap.ui.define([
                 this._router.navTo("RouteInterplantTransferDC", {
                     sbu: _this.getView().getModel("ui").getData().activeSbu,
                     dlvNo: "empty"
-                }, true);
+                });
             },
 
             onEditOutDelHdr() {
@@ -491,7 +491,7 @@ sap.ui.define([
                     this._router.navTo("RouteInterplantTransferDC", {
                         sbu: _this.getView().getModel("ui").getData().activeSbu,
                         dlvNo: sDlvNo
-                    }, true);
+                    });
                 } else {
                     MessageBox.information(_oCaption.INFO_NO_SELECTED);
                 }
