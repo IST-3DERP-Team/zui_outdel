@@ -556,20 +556,29 @@ sap.ui.define([
             },
 
             onClose() {
-                var oHistory = History.getInstance();
-			    var sPreviousHash = oHistory.getPreviousHash();
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
 
-                if (sPreviousHash !== undefined) {
-                    window.history.go(-1);
-                } else {
-                    var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                    var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
+                oRouter.navTo("RouteInterplantTransferDC", {
+                    sbu: _this.getView().getModel("ui").getData().activeSbu,
+                    dlvNo: sDlvNo
+                }, true);
+                
+                // var oHistory = History.getInstance();
+			    // var sPreviousHash = oHistory.getPreviousHash();
 
-                    oRouter.navTo("RouteInterplantTransferDC", {
-                        sbu: _this.getView().getModel("ui").getData().activeSbu,
-                        dlvNo: sDlvNo
-                    });
-                }
+                // if (sPreviousHash !== undefined) {
+
+                //     window.history.go(-1);
+                // } else {
+                //     var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                //     var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
+
+                //     oRouter.navTo("RouteInterplantTransferDC", {
+                //         sbu: _this.getView().getModel("ui").getData().activeSbu,
+                //         dlvNo: sDlvNo
+                //     });
+                // }
             },
 
             onCellClickOutDelHdr(oEvent) {
