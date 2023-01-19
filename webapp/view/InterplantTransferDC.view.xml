@@ -23,10 +23,10 @@
                     <Button id="btnSaveHeader" type="Ghost" icon="sap-icon://save" press="onSaveHeader" visible="false"/> 
                     <Button id="btnCancelHeader" type="Ghost" icon="sap-icon://sys-cancel" press="onCancelHeader" visible="false"/> 
                 </Toolbar>
-                <uiL:Splitter height="100%" orientation="Vertical">                     
-                    <uiL:Splitter>
-                        <uiL:layoutData><uiL:SplitterLayoutData size="40%" /></uiL:layoutData>
-                        <uiL:contentAreas>
+                <!-- <uiL:Splitter height="100%" orientation="Vertical">                   -->
+                    <!-- <uiL:Splitter> -->
+                        <!-- <uiL:layoutData><uiL:SplitterLayoutData size="40%"/></uiL:layoutData> -->
+                        <!-- <uiL:contentAreas> -->
                             <f:Form id="frmHeader" editable="true" class="sapUiNoContentPadding" width="100%">
                                 <f:layout>
                                     <f:ResponsiveGridLayout columnsL="4" singleContainerFullSize="false" />
@@ -265,12 +265,15 @@
                                         </f:formElements>
                                     </f:FormContainer>
                                 </f:formContainers>
+                                <!-- <f:layoutData>
+                                    <FlexItemData growFactor="1" baseSize="0%"/>
+                                </f:layoutData> -->
                             </f:Form>
-                        </uiL:contentAreas>
+                        <!-- </uiL:contentAreas>
                     </uiL:Splitter> 
-                    <uiL:Splitter>
-                        <uiL:layoutData><uiL:SplitterLayoutData size="55%" /></uiL:layoutData>
-                        <uiL:contentAreas>
+                    <uiL:Splitter> -->
+                        <!-- <uiL:layoutData><uiL:SplitterLayoutData size="55%"/></uiL:layoutData> -->
+                        <!-- <uiL:contentAreas> -->
                             <IconTabBar id="itbDetails" 
                                 headerMode="Inline"
                                 expanded="{device>/isNoPhone}" 
@@ -417,13 +420,16 @@
                                         </uiT:Table>
                                     </IconTabFilter>
                                 </items>
+                                <layoutData>
+                                    <FlexItemData growFactor="1" baseSize="0%"/>
+                                </layoutData>
                             </IconTabBar>
-                        </uiL:contentAreas>
+                        <!-- </uiL:contentAreas>
                     </uiL:Splitter>
                     <uiL:layoutData>
                         <FlexItemData id="fidTabMain" growFactor="1" baseSize="0%"/>
-                    </uiL:layoutData>
-                </uiL:Splitter>
+                    </uiL:layoutData> -->
+                <!-- </uiL:Splitter> -->
             </VBox>
         </content>
     </Page>

@@ -557,28 +557,30 @@ sap.ui.define([
 
             onClose() {
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                // var oComponent = _this.getOwnerComponent();
+                // var oRouter = oComponent.getRouter();
+
                 var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
 
-                oRouter.navTo("RouteInterplantTransferDC", {
-                    sbu: _this.getView().getModel("ui").getData().activeSbu,
-                    dlvNo: sDlvNo
-                }, true);
+                // oRouter.navTo("RouteInterplantTransferDC", {
+                //     sbu: _this.getView().getModel("ui").getData().activeSbu,
+                //     dlvNo: sDlvNo
+                // }, true);
                 
-                // var oHistory = History.getInstance();
-			    // var sPreviousHash = oHistory.getPreviousHash();
+                var oHistory = History.getInstance();
+			    var sPreviousHash = oHistory.getPreviousHash();
 
-                // if (sPreviousHash !== undefined) {
+                if (sPreviousHash !== undefined) {
+                    window.history.go(-1);
+                } else {
+                    var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                    var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
 
-                //     window.history.go(-1);
-                // } else {
-                //     var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                //     var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
-
-                //     oRouter.navTo("RouteInterplantTransferDC", {
-                //         sbu: _this.getView().getModel("ui").getData().activeSbu,
-                //         dlvNo: sDlvNo
-                //     });
-                // }
+                    oRouter.navTo("RouteInterplantTransferDC", {
+                        sbu: _this.getView().getModel("ui").getData().activeSbu,
+                        dlvNo: sDlvNo
+                    }, true);
+                }
             },
 
             onCellClickOutDelHdr(oEvent) {

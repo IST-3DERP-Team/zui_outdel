@@ -430,6 +430,7 @@ sap.ui.define([
                         _this.getMatDoc();
 
                         _this.setHeaderValue(true);
+                        _this.setControlEditMode("header", false);
                         _this.closeLoadingDialog();
                     },
                     error: function (err) {
@@ -571,6 +572,9 @@ sap.ui.define([
                         console.log("StatOvwSet", data)
                         data.results.forEach(item => {
                             item.COMPLETE = item.COMPLETE === "X" ? true : false;
+
+                            var oStatus = _this.getView().getModel("status").getData().results.filter(x => x.STATUS == item.DLVSTATCD)[0];
+                            item.DLVSTATCD = item.DLVSTATCD + " - (" + oStatus.DESCRIP + ")";
 
                             if (item.STARTDT !== null)
                                 item.STARTDT = sapDateFormat.format(item.STARTDT) + " " + _this.formatTime(item.STARTTM);
@@ -1048,7 +1052,7 @@ sap.ui.define([
                 oModel.read(oEntitySet, {
                     urlParameters: oFilter,
                     success: function (data, response) {
-                        //console.log("getResources success", pModel, data, pFilter)
+                        //console.log("getResources", pEntitySet, pModel, data, pFilter)
                         oJSONModel.setData(data);
                         _this.getView().setModel(oJSONModel, pModel);
 
