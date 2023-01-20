@@ -461,7 +461,6 @@ sap.ui.define([
             },            
 
             onSaveDlvDtl() {
-                console.log("onSaveDlvDtl")
                 var oModel = this.getOwnerComponent().getModel();
                 var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
 
