@@ -392,6 +392,7 @@ sap.ui.define([
                                 console.log(sEntitySet, data, oResponse)
     
                                 var oDataCreate = oData; //aData[iIdx];
+                                
                                 // DlvTem
                                 var iDlvItem = parseInt(oDataCreate.DLVITEM);
                                 iMaxDlvItem = iDlvItem;
@@ -415,6 +416,7 @@ sap.ui.define([
                                     BATCH: oDataCreate.NEWBATCH,
                                     PKGNO: oDataCreate.PACKNO,
                                     HUID: oDataCreate.HUID,
+                                    HUITEM: oDataCreate.HUITEM,
                                     DLVQTYORD: oDataCreate.ACTQTYBASE,
                                     DLVQTYBSE: oDataCreate.ACTQTYBASE,
                                     ORDUOM: oDataCreate.BASEUOM,
