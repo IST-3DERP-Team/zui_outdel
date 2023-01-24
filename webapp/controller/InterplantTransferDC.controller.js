@@ -63,6 +63,12 @@ sap.ui.define([
                 this.getResources("ShipModeSet", "shipMode", "");
 
                 _this.initializeComponent();
+
+                if (sap.ui.getCore().byId("backBtn")) {
+                    sap.ui.getCore().byId("backBtn").mEventRegistry.press[0].fFunction = function(oEvent) {
+                        _this.onNavBack();
+                    }
+                }
             },
 
             initializeComponent() {
@@ -570,6 +576,8 @@ sap.ui.define([
                     },
                     success: function (data, response) {
                         console.log("StatOvwSet", data)
+                        data.results.sort((a,b) => (a.DLVSTATCD > b.DLVSTATCD ? 1 : -1));
+
                         data.results.forEach(item => {
                             item.COMPLETE = item.COMPLETE === "X" ? true : false;
 
@@ -1018,6 +1026,11 @@ sap.ui.define([
                 else if (pModel == "dlvDtl") _this.getDlvDtl();
                 else if (pModel == "statOvw") _this.getStatOvw();
                 else if (pModel == "matDoc") _this.getMatDoc();
+            },
+
+            onNavBack() {
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                oRouter.navTo("RouteMain", {}, true);
             },
 
             setRowReadMode(arg) {

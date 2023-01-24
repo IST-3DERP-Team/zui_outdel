@@ -81,14 +81,17 @@
                             <Button id="btnAddOutDelHdr" 
                                 icon="sap-icon://add"
                                 press="onAddOutDelHdr"
+                                text="{ddtext>/ADD}"
                                 visible="true"/>
                             <Button id="btnEditOutDelHdr" 
                                 icon="sap-icon://edit"
                                 press="onEditOutDelHdr"
+                                text="{ddtext>/EDIT}"
                                 visible="true"/>
                             <Button id="btnRefreshOutDelHdr" 
                                 icon="sap-icon://refresh"
                                 press="onRefreshOutDelHdr" 
+                                text="{ddtext>/REFRESH}"
                                 visible="true" />
                         </Toolbar>
                     </uiT:extension>
@@ -123,6 +126,7 @@
                             <Button id="btnRefreshOutDelDtl" 
                                 icon="sap-icon://refresh"
                                 press="onRefreshOutDelDtl" 
+                                text="{ddtext>/REFRESH}"
                                 visible="true" />
                         </Toolbar>
                     </uiT:extension>

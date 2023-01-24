@@ -10,7 +10,7 @@
     xmlns:f="sap.ui.layout.form"
     height="100%">
 
-    <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false">
+    <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false" showNavButton="true" navButtonPress="onNavBack">
         <content>
             <VBox id="vbMain" fitContainer="true">
                 <Toolbar id="TB1" style="Clear">

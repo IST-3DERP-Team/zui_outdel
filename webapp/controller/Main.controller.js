@@ -755,6 +755,11 @@ sap.ui.define([
                 // Label
                 oDDTextParam.push({CODE: "DLVDTL"});
 
+                // Buttons
+                oDDTextParam.push({CODE: "ADD"});
+                oDDTextParam.push({CODE: "EDIT"});
+                oDDTextParam.push({CODE: "REFRESH"});
+
                 // MessageBox
                 oDDTextParam.push({CODE: "INFO_NO_SELECTED"});
                 // oDDTextParam.push({CODE: "CONFIRM_DISREGARD_CHANGE"});

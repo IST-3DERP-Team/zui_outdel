@@ -56,6 +56,12 @@ sap.ui.define([
                 }), "ui");
 
                 _this.initializeComponent();
+
+                if (sap.ui.getCore().byId("backBtn")) {
+                    sap.ui.getCore().byId("backBtn").mEventRegistry.press[0].fFunction = function(oEvent) {
+                        _this.onNavBack();
+                    }
+                }
             },
 
             initializeComponent() {
@@ -556,6 +562,10 @@ sap.ui.define([
                 });
             },
 
+            onNavBack() {
+                _this.onClose();
+            },
+
             onClose() {
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                 // var oComponent = _this.getOwnerComponent();
@@ -563,25 +573,25 @@ sap.ui.define([
 
                 var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
 
-                // oRouter.navTo("RouteInterplantTransferDC", {
-                //     sbu: _this.getView().getModel("ui").getData().activeSbu,
-                //     dlvNo: sDlvNo
-                // }, true);
+                oRouter.navTo("RouteInterplantTransferDC", {
+                    sbu: _this.getView().getModel("ui").getData().activeSbu,
+                    dlvNo: sDlvNo
+                }, true);
                 
-                var oHistory = History.getInstance();
-			    var sPreviousHash = oHistory.getPreviousHash();
+                // var oHistory = History.getInstance();
+			    // var sPreviousHash = oHistory.getPreviousHash();
 
-                if (sPreviousHash !== undefined) {
-                    window.history.go(-1);
-                } else {
-                    var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                    var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
+                // if (sPreviousHash !== undefined) {
+                //     window.history.go(-1);
+                // } else {
+                //     var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                //     var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
 
-                    oRouter.navTo("RouteInterplantTransferDC", {
-                        sbu: _this.getView().getModel("ui").getData().activeSbu,
-                        dlvNo: sDlvNo
-                    }, true);
-                }
+                //     oRouter.navTo("RouteInterplantTransferDC", {
+                //         sbu: _this.getView().getModel("ui").getData().activeSbu,
+                //         dlvNo: sDlvNo
+                //     }, true);
+                // }
             },
 
             onCellClickOutDelHdr(oEvent) {
@@ -642,13 +652,15 @@ sap.ui.define([
                 var aFilterGrp = [];
                 var aFilterCol = [];
 
-                if (pFilters.length > 0 && pFilters[0].aFilters) {
+                if (pFilters[0].aFilters.filter(x => Object.keys(x).includes("aFilters") == true).length > 0) {
                     pFilters[0].aFilters.forEach(x => {
+                        console.log("pFilters", pFilters[0])
+                        
                         if (Object.keys(x).includes("aFilters")) {
                             x.aFilters.forEach(y => {
                                 var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == y.sPath.toUpperCase())[0].name;
-                                aFilter.push(new Filter(sName, FilterOperator.Contains, y.oValue1));
-
+                                aFilter.push(new Filter(sName, FilterOperator.EQ, y.oValue1));
+    
                                 //if (!aFilterCol.includes(sName)) aFilterCol.push(sName);
                             });
                             var oFilterGrp = new Filter(aFilter, false);
@@ -656,24 +668,26 @@ sap.ui.define([
                             aFilter = [];
                         } else {
                             var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == x.sPath.toUpperCase())[0].name;
-                            aFilter.push(new Filter(sName, FilterOperator.Contains, x.oValue1));
+                            aFilter.push(new Filter(sName, FilterOperator.EQ, x.oValue1));
                             var oFilterGrp = new Filter(aFilter, false);
                             aFilterGrp.push(oFilterGrp);
                             aFilter = [];
-
+    
                             //if (!aFilterCol.includes(sName)) aFilterCol.push(sName);
                         }
                     });
-                } /*else {
-                    var sName = pFilters[0].sPath;
-                    aFilter.push(new Filter(sName, FilterOperator.EQ,  pFilters[0].oValue1));
+                } else {
+                    pFilters[0].aFilters.forEach(x => {
+                        var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == x.sPath.toUpperCase())[0].name;
+                        aFilter.push(new Filter(sName, FilterOperator.EQ, x.oValue1));
+                    });
                     var oFilterGrp = new Filter(aFilter, false);
                     aFilterGrp.push(oFilterGrp);
                     aFilter = [];
-                }*/
+                }
 
                 if (pFilterGlobal) {
-                    this._aColumns[pModel].forEach(item => {
+                    this._aFilterableColumns[pModel].forEach(item => {
                         var sDataType = this._aColumns[pModel].filter(col => col.name === item.name)[0].type;
                         if (sDataType === "Edm.Boolean") aFilter.push(new Filter(item.name, FilterOperator.EQ, pFilterGlobal));
                         else aFilter.push(new Filter(item.name, FilterOperator.Contains, pFilterGlobal));
@@ -683,11 +697,12 @@ sap.ui.define([
                     aFilterGrp.push(oFilterGrp);
                     aFilter = [];
                 }
-
+                
                 oFilter = new Filter(aFilterGrp, true);
 
                 this.byId(pModel + "Tab").getBinding("rows").filter(oFilter, "Application");
 
+                
                 if (pFilterTab.length > 0) {
                     pFilterTab.forEach(item => {
                         var iColIdx = _this._aColumns[pModel].findIndex(x => x.name == item.sPath);
@@ -695,6 +710,60 @@ sap.ui.define([
                             item.oValue1);
                     });
                 }
+
+                // if (pFilters.length > 0 && pFilters[0].aFilters) {
+                //     pFilters[0].aFilters.forEach(x => {
+                //         if (Object.keys(x).includes("aFilters")) {
+                //             x.aFilters.forEach(y => {
+                //                 var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == y.sPath.toUpperCase())[0].name;
+                //                 aFilter.push(new Filter(sName, FilterOperator.Contains, y.oValue1));
+
+                //                 //if (!aFilterCol.includes(sName)) aFilterCol.push(sName);
+                //             });
+                //             var oFilterGrp = new Filter(aFilter, false);
+                //             aFilterGrp.push(oFilterGrp);
+                //             aFilter = [];
+                //         } else {
+                //             var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == x.sPath.toUpperCase())[0].name;
+                //             aFilter.push(new Filter(sName, FilterOperator.Contains, x.oValue1));
+                //             var oFilterGrp = new Filter(aFilter, false);
+                //             aFilterGrp.push(oFilterGrp);
+                //             aFilter = [];
+
+                //             //if (!aFilterCol.includes(sName)) aFilterCol.push(sName);
+                //         }
+                //     });
+                // } /*else {
+                //     var sName = pFilters[0].sPath;
+                //     aFilter.push(new Filter(sName, FilterOperator.EQ,  pFilters[0].oValue1));
+                //     var oFilterGrp = new Filter(aFilter, false);
+                //     aFilterGrp.push(oFilterGrp);
+                //     aFilter = [];
+                // }*/
+
+                // if (pFilterGlobal) {
+                //     this._aColumns[pModel].forEach(item => {
+                //         var sDataType = this._aColumns[pModel].filter(col => col.name === item.name)[0].type;
+                //         if (sDataType === "Edm.Boolean") aFilter.push(new Filter(item.name, FilterOperator.EQ, pFilterGlobal));
+                //         else aFilter.push(new Filter(item.name, FilterOperator.Contains, pFilterGlobal));
+                //     })
+
+                //     var oFilterGrp = new Filter(aFilter, false);
+                //     aFilterGrp.push(oFilterGrp);
+                //     aFilter = [];
+                // }
+
+                // oFilter = new Filter(aFilterGrp, true);
+
+                // this.byId(pModel + "Tab").getBinding("rows").filter(oFilter, "Application");
+
+                // if (pFilterTab.length > 0) {
+                //     pFilterTab.forEach(item => {
+                //         var iColIdx = _this._aColumns[pModel].findIndex(x => x.name == item.sPath);
+                //         _this.getView().byId(pModel + "Tab").filter(_this.getView().byId(pModel + "Tab").getColumns()[iColIdx], 
+                //             item.oValue1);
+                //     });
+                // }
             },
 
             showLoadingDialog(arg) {
