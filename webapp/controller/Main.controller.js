@@ -43,10 +43,23 @@ sap.ui.define([
                     activeDlvNo: ""
                 }), "ui")
 
+                // var oComponent = this.getOwnerComponent();
+                // this._router = oComponent.getRouter();
+
+                // // Initialize router
                 var oComponent = this.getOwnerComponent();
                 this._router = oComponent.getRouter();
+                this._router.getRoute("RouteMain").attachPatternMatched(this._routePatternMatched, this);
 
                 this.initializeComponent();
+            },
+
+            _routePatternMatched: function (oEvent) {
+                if (sap.ui.getCore().byId("backBtn")) {
+                    sap.ui.getCore().byId("backBtn").mEventRegistry.press[0].fFunction = function(oEvent) {
+                        _this.onNavBack();
+                    }
+                }
             },
 
             initializeComponent() {
@@ -504,6 +517,13 @@ sap.ui.define([
             onRefreshOutDelDtl() {
                 _this.showLoadingDialog("Loading...");
                 _this.getOutDelDtl();
+            },
+
+            onNavBack() {
+                var oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");  
+                oCrossAppNavigator.toExternal({  
+                    target: { shellHash: "#Shell-home" }  
+                }); 
             },
 
             onCellClickOutDelHdr(oEvent) {
