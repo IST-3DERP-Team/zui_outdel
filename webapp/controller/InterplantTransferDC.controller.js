@@ -432,8 +432,8 @@ sap.ui.define([
 
                         _this.getDlvDtlHU();
                         _this.getDlvDtl();
-                        _this.getStatOvw();
                         _this.getMatDoc();
+                        _this.getStatOvw();
 
                         _this.setHeaderValue(true);
                         _this.setControlEditMode("header", false);

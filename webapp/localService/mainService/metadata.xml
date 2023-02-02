@@ -163,6 +163,7 @@
                     <PropertyRef Name="MATDOCYEAR"/>
                 </Key>
                 <Property Name="DLVNO" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Dlv No" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="REVERSED" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Deleted" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="MATDOCNO" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Material Doc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="MATDOCYEAR" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Mat. Doc. Year" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="ITEMNO" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Mat. Doc.Item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
