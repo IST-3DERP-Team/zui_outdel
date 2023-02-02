@@ -665,7 +665,7 @@ sap.ui.define([
             },
 
             onEditHeader() {
-                if (_oHeader.status == "04") {
+                if (_oHeader.status == "54") {
                     MessageBox.warning(_oCaption.WARN_EDIT_NOT_ALLOW);
                     return;
                 }
@@ -679,7 +679,7 @@ sap.ui.define([
                     return;
                 }
 
-                if (_oHeader.status == "04") {
+                if (_oHeader.status == "54") {
                     MessageBox.warning(_oCaption.WARN_DELETE_NOT_ALLOW);
                     return;
                 }
@@ -715,7 +715,7 @@ sap.ui.define([
             },
 
             onPostHeader() {
-                if (_oHeader.status == "04") {
+                if (_oHeader.status == "54") {
                     MessageBox.warning(_oCaption.WARN_NOT_STATUS_GR_POSTED);
                     _this.closeLoadingDialog();
                     return;
@@ -954,7 +954,7 @@ sap.ui.define([
             },
 
             onCreateDlvDtlHU() {
-                if (_oHeader.status != "00") {
+                if (_oHeader.status != "50") {
                     MessageBox.warning(_oCaption.WARN_ADD_NOT_ALLOW);
                     return;
                 }
@@ -968,7 +968,7 @@ sap.ui.define([
             },
 
             onDeleteDlvDtlHU() {
-                if (_oHeader.status != "00") {
+                if (_oHeader.status != "50") {
                     MessageBox.warning(_oCaption.WARN_DELETE_NOT_ALLOW);
                     return;
                 }
