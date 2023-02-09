@@ -32,8 +32,8 @@
                         </sfb:ControlConfiguration>
                     </sfb:controlConfiguration>
                     <sfb:controlConfiguration>
-                        <sfb:ControlConfiguration id="filterDlvNo" key="DLVNO" groupId="_BASIC" label="{ddtext>/DLVNO}" controlType="dropDownList" 
-                            displayBehaviour="idOnly" mandatory="notMandatory" index="2">
+                        <sfb:ControlConfiguration id="filterDlvNo" key="DLVNO" groupId="_BASIC" label="{ddtext>/DLVNO}"
+                            preventInitialDataFetchInValueHelpDialog="false" displayBehaviour="idOnly" mandatory="notMandatory" index="2">
                         </sfb:ControlConfiguration>
                     </sfb:controlConfiguration>
                     <sfb:controlConfiguration>
@@ -47,8 +47,8 @@
                         </sfb:ControlConfiguration>
                     </sfb:controlConfiguration>
                     <sfb:controlConfiguration>
-                        <sfb:ControlConfiguration id="filterRefDlvNo" key="REFDLVNO" groupId="_BASIC" label="{ddtext>/REFDLVNO}" controlType="dropDownList" 
-                            displayBehaviour="idOnly" mandatory="notMandatory" index="5">
+                        <sfb:ControlConfiguration id="filterRefDlvNo" key="REFDLVNO" groupId="_BASIC" label="{ddtext>/REFDLVNO}"
+                            preventInitialDataFetchInValueHelpDialog="false" displayBehaviour="idOnly" mandatory="notMandatory" index="5">
                         </sfb:ControlConfiguration>
                     </sfb:controlConfiguration>
                     <sfb:layoutData>
