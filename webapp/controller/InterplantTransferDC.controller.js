@@ -1029,8 +1029,35 @@ sap.ui.define([
             },
 
             onNavBack() {
-                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                oRouter.navTo("RouteMain", {}, true);
+                // var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                // oRouter.navTo("RouteMain", {}, true);
+
+                _this.showLoadingDialog("Loading...");
+
+                var oModelLock = _this.getOwnerComponent().getModel("ZGW_3DERP_LOCK_SRV");
+                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+
+                var oParamLock = {
+                    Dlvno: sDlvNo,
+                    Lock_Unlock_Ind: "",
+                    N_LOCK_UNLOCK_DLVHDR_RET: [],
+                    N_LOCK_UNLOCK_DLVHDR_MSG: []
+                }
+
+                oModelLock.create("/Lock_Unlock_DlvHdrSet", oParamLock, {
+                    method: "POST",
+                    success: function(data, oResponse) {
+                        console.log("Lock_Unlock_DlvHdrSet", data);
+                        _this.closeLoadingDialog();
+
+                        var oRouter = sap.ui.core.UIComponent.getRouterFor(_this);
+                        oRouter.navTo("RouteMain", {}, true);
+                    },
+                    error: function(err) {
+                        MessageBox.error(err);
+                        _this.closeLoadingDialog();
+                    }
+                }); 
             },
 
             setRowReadMode(arg) {

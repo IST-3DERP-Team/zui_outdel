@@ -101,10 +101,12 @@ sap.ui.define([
                 oTable.attachBrowserEvent('dblclick', function (e) {
                     e.preventDefault();
 
-                    _this._router.navTo("RouteInterplantTransferDC", {
-                        sbu: _this.getView().getModel("ui").getData().activeSbu,
-                        dlvNo: _dlvNo
-                    });
+                    // _this._router.navTo("RouteInterplantTransferDC", {
+                    //     sbu: _this.getView().getModel("ui").getData().activeSbu,
+                    //     dlvNo: _dlvNo
+                    // });
+
+                    _this.onLockOutDel();
                 });
 
                 this.closeLoadingDialog();
@@ -499,15 +501,17 @@ sap.ui.define([
             },
 
             onEditOutDelHdr() {
-                if (this.getView().getModel("ui").getData().activeDlvNo) {
-                    var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
-                    this._router.navTo("RouteInterplantTransferDC", {
-                        sbu: _this.getView().getModel("ui").getData().activeSbu,
-                        dlvNo: sDlvNo
-                    });
-                } else {
-                    MessageBox.information(_oCaption.INFO_NO_SELECTED);
-                }
+                // if (this.getView().getModel("ui").getData().activeDlvNo) {
+                //     var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
+                //     this._router.navTo("RouteInterplantTransferDC", {
+                //         sbu: _this.getView().getModel("ui").getData().activeSbu,
+                //         dlvNo: sDlvNo
+                //     });
+                // } else {
+                //     MessageBox.information(_oCaption.INFO_NO_SELECTED);
+                // }
+
+                _this.onLockOutDel();
             },
 
             onRefreshOutDelHdr() {
@@ -524,6 +528,49 @@ sap.ui.define([
                 oCrossAppNavigator.toExternal({  
                     target: { shellHash: "#Shell-home" }  
                 }); 
+            },
+
+            onLockOutDel() {
+                if (this.getView().getModel("ui").getData().activeDlvNo) {
+                    _this.showLoadingDialog("Loading...");
+
+                    var oModelLock = this.getOwnerComponent().getModel("ZGW_3DERP_LOCK_SRV");
+                    var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
+
+                    var oParamLock = {
+                        Dlvno: sDlvNo,
+                        Lock_Unlock_Ind: "X",
+                        IV_Count: 300,
+                        N_LOCK_UNLOCK_DLVHDR_RET: [],
+                        N_LOCK_UNLOCK_DLVHDR_MSG: []
+                    }
+
+                    oModelLock.create("/Lock_Unlock_DlvHdrSet", oParamLock, {
+                        method: "POST",
+                        success: function(data, oResponse) {
+                            console.log("Lock_Unlock_DlvHdrSet", data);
+
+                            if (data.N_LOCK_UNLOCK_DLVHDR_MSG.results.filter(x => x.Type != "S").length == 0) {
+                                _this.closeLoadingDialog();
+                                
+                                _this._router.navTo("RouteInterplantTransferDC", {
+                                    sbu: _this.getView().getModel("ui").getData().activeSbu,
+                                    dlvNo: sDlvNo
+                                });
+                            } else {
+                                var oFilter = data.N_LOCK_UNLOCK_DLVHDR_MSG.results.filter(x => x.Type != "S")[0];
+                                MessageBox.warning(oFilter.Message);
+                                
+                            }
+                        },
+                        error: function(err) {
+                            MessageBox.error(err);
+                            _this.closeLoadingDialog();
+                        }
+                    });
+                } else {
+                    MessageBox.information(_oCaption.INFO_NO_SELECTED);
+                }
             },
 
             onCellClickOutDelHdr(oEvent) {
