@@ -944,6 +944,7 @@ sap.ui.define([
                     onClose: function (sAction) {
                         if (sAction == "Yes") {
                             if (_sHeaderMode == "NEW") {
+                                _this.setControlEditMode("header", false);
                                 _this._router.navTo("RouteMain", {}, true);
                             } else if (_sHeaderMode == "EDIT") {
                                 _this.setControlEditMode("header", false);
@@ -1160,7 +1161,8 @@ sap.ui.define([
             },
 
             setControlEditMode(pType, pEditable) {
-                //if (sap.ushell.Container) sap.ushell.Container.setDirtyFlag(pEditable);
+                
+                if (sap.ushell.Container) sap.ushell.Container.setDirtyFlag(pEditable);
 
                 if (pType == "header") {
                     // Header
