@@ -1,5 +1,5 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller",
+    "./BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
@@ -14,7 +14,7 @@ sap.ui.define([
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-     function (Controller, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, TablePersoController, MessageToast, SearchField) {
+     function (BaseController, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, TablePersoController, MessageToast, SearchField) {
         "use strict";
         
         var _this;
@@ -23,6 +23,7 @@ sap.ui.define([
         var _oHeader = {};
         var _sHeaderMode = "";
         var _sNoRangeCd = "";
+        var _bAppChange;
 
         // shortcut for sap.ui.table.SortOrder
         var SortOrder = library.SortOrder;
@@ -31,10 +32,9 @@ sap.ui.define([
         var sapDateTimeFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "yyyy-MM-dd HH24:MI:SS" });
         var sapTimeFormat = sap.ui.core.format.DateFormat.getTimeInstance({pattern: "KK:mm:ss a"}); //sap.ui.core.format.DateFormat.getDateInstance({pattern : "PThh'H'mm'M'ss'S'"});
 
-        return Controller.extend("zuioutdel.controller.InterplantTransferDC", {
+        return BaseController.extend("zuioutdel.controller.InterplantTransferDC", {
             onInit: function () {
                 _this = this;
-                _this.showLoadingDialog("Loading...");
 
                 this._aColumns = {};
                 this.getCaption();
@@ -48,19 +48,11 @@ sap.ui.define([
 
             _routePatternMatched: function (oEvent) {
                 this.getView().setModel(new JSONModel({
-                    activeSbu: oEvent.getParameter("arguments").sbu,
+                    sbu: oEvent.getParameter("arguments").sbu,
                     activeDlvNo: oEvent.getParameter("arguments").dlvNo,
                     editModeHeader: false,
                     editModeHeader2: false
                 }), "ui");
-
-                // Get Resources
-                var sbu = oEvent.getParameter("arguments").sbu;
-
-                this.getResources("Status001Set", "status", "");
-                this.getResources("PlantSet", "issPlant", "SBU eq '" + sbu + "' and DCIND eq 'X'");
-                this.getResources("PlantSet", "rcvPlant", "SBU eq '" + sbu + "' and DCIND eq ''");
-                this.getResources("ShipModeSet", "shipMode", "");
 
                 _this.initializeComponent();
 
@@ -72,11 +64,28 @@ sap.ui.define([
             },
 
             initializeComponent() {
+                var sSbu = _this.getView().getModel("ui").getProperty("/sbu");
+
+                this.onInitBase(_this, sSbu);
+                this.getAppAction();
+
+                setTimeout(() => {
+                    _bAppChange = _this.getView().getModel("base").getProperty("/appChange");
+                    this.setControlAppAction(_bAppChange);
+                }, 100);
+
+                _this.showLoadingDialog("Loading...");
+
                 var oModelStartUp= new sap.ui.model.json.JSONModel();
                 oModelStartUp.loadData("/sap/bc/ui2/start_up").then(() => {
                     _startUpInfo = oModelStartUp.oData
                     console.log(oModelStartUp, oModelStartUp.oData);
                 });
+
+                this.getResources("Status001Set", "status", "");
+                this.getResources("PlantSet", "issPlant", "SBU eq '" + sSbu + "' and DCIND eq 'X'");
+                this.getResources("PlantSet", "rcvPlant", "SBU eq '" + sSbu + "' and DCIND eq ''");
+                this.getResources("ShipModeSet", "shipMode", "");
 
                 _oHeader = {
                     dlvNo: "",
@@ -142,7 +151,7 @@ sap.ui.define([
                 setTimeout(() => {
                     _this.onChangeHeader();
                 }, 1500);
-                
+
                 _this.closeLoadingDialog();
             },
 
@@ -210,7 +219,7 @@ sap.ui.define([
                 var tabName = arg3;
 
                 var oJSONColumnsModel = new JSONModel();
-                var vSBU = this.getView().getModel("ui").getData().activeSbu;
+                var vSBU = this.getView().getModel("ui").getData().sbu;
                 
                 var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
                 oModel.setHeaders({
@@ -961,7 +970,7 @@ sap.ui.define([
                 }
 
                 this._router.navTo("RouteDeliveryItem", {
-                    sbu: _this.getView().getModel("ui").getData().activeSbu,
+                    sbu: _this.getView().getModel("ui").getData().sbu,
                     dlvNo: _oHeader.dlvNo,
                     issPlant: _oHeader.issPlant,
                     rcvPlant: _oHeader.rcvPlant
@@ -1033,32 +1042,37 @@ sap.ui.define([
                 // var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                 // oRouter.navTo("RouteMain", {}, true);
 
-                _this.showLoadingDialog("Loading...");
+                if (_bAppChange) {
+                    _this.showLoadingDialog("Loading...");
 
-                var oModelLock = _this.getOwnerComponent().getModel("ZGW_3DERP_LOCK_SRV");
-                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
-
-                var oParamLock = {
-                    Dlvno: sDlvNo,
-                    Lock_Unlock_Ind: "",
-                    N_LOCK_UNLOCK_DLVHDR_RET: [],
-                    N_LOCK_UNLOCK_DLVHDR_MSG: []
-                }
-
-                oModelLock.create("/Lock_Unlock_DlvHdrSet", oParamLock, {
-                    method: "POST",
-                    success: function(data, oResponse) {
-                        console.log("Lock_Unlock_DlvHdrSet", data);
-                        _this.closeLoadingDialog();
-
-                        var oRouter = sap.ui.core.UIComponent.getRouterFor(_this);
-                        oRouter.navTo("RouteMain", {}, true);
-                    },
-                    error: function(err) {
-                        MessageBox.error(err);
-                        _this.closeLoadingDialog();
+                    var oModelLock = _this.getOwnerComponent().getModel("ZGW_3DERP_LOCK_SRV");
+                    var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+    
+                    var oParamLock = {
+                        Dlvno: sDlvNo,
+                        Lock_Unlock_Ind: "",
+                        N_LOCK_UNLOCK_DLVHDR_RET: [],
+                        N_LOCK_UNLOCK_DLVHDR_MSG: []
                     }
-                }); 
+    
+                    oModelLock.create("/Lock_Unlock_DlvHdrSet", oParamLock, {
+                        method: "POST",
+                        success: function(data, oResponse) {
+                            console.log("Lock_Unlock_DlvHdrSet", data);
+                            _this.closeLoadingDialog();
+    
+                            var oRouter = sap.ui.core.UIComponent.getRouterFor(_this);
+                            oRouter.navTo("RouteMain", {}, true);
+                        },
+                        error: function(err) {
+                            MessageBox.error(err);
+                            _this.closeLoadingDialog();
+                        }
+                    }); 
+                } else {
+                    var oRouter = sap.ui.core.UIComponent.getRouterFor(_this);
+                    oRouter.navTo("RouteMain", {}, true);
+                }
             },
 
             setRowReadMode(arg) {
@@ -1162,115 +1176,123 @@ sap.ui.define([
 
             setControlEditMode(pType, pEditable) {
                 
-                if (sap.ushell.Container) sap.ushell.Container.setDirtyFlag(pEditable);
+                if (_bAppChange) {
+                    if (sap.ushell.Container) sap.ushell.Container.setDirtyFlag(pEditable);
 
-                if (pType == "header") {
-                    // Header
-                    this.byId("btnEditHeader").setVisible(!pEditable);
-                    this.byId("btnDeleteHeader").setVisible(!pEditable);
-                    this.byId("btnPostHeader").setVisible(!pEditable);
-                    this.byId("btnRefreshHeader").setVisible(!pEditable);
-                    this.byId("btnPrintHeader").setVisible(!pEditable);
-                    this.byId("btnSaveHeader").setVisible(pEditable);
-                    this.byId("btnCancelHeader").setVisible(pEditable);
+                    if (pType == "header") {
+                        // Header
+                        this.byId("btnEditHeader").setVisible(!pEditable);
+                        this.byId("btnDeleteHeader").setVisible(!pEditable);
+                        this.byId("btnPostHeader").setVisible(!pEditable);
+                        this.byId("btnRefreshHeader").setVisible(!pEditable);
+                        this.byId("btnPrintHeader").setVisible(!pEditable);
+                        this.byId("btnSaveHeader").setVisible(pEditable);
+                        this.byId("btnCancelHeader").setVisible(pEditable);
 
-                    this.setReqField("header", pEditable);
-                    this.getView().getModel("ui").setProperty("/editModeHeader", pEditable);
+                        this.setReqField("header", pEditable);
+                        this.getView().getModel("ui").setProperty("/editModeHeader", pEditable);
 
-                    if (pEditable) {
-                        if (_this.getView().getModel("dlvDtlHU").getData().results.length > 0) {
-                            this.getView().getModel("ui").setProperty("/editModeHeader2", false);
+                        if (pEditable) {
+                            if (_this.getView().getModel("dlvDtlHU").getData().results.length > 0) {
+                                this.getView().getModel("ui").setProperty("/editModeHeader2", false);
+                            } else {
+                                this.getView().getModel("ui").setProperty("/editModeHeader2", pEditable);
+                            }
                         } else {
                             this.getView().getModel("ui").setProperty("/editModeHeader2", pEditable);
                         }
+
+                        // Detail
+                        this.byId("btnCreateDlvDtlHU").setEnabled(!pEditable);
+                        this.byId("btnDeleteDlvDtlHU").setEnabled(!pEditable);
+                        this.byId("btnRefreshDlvDtlHU").setEnabled(!pEditable);
+                        this.byId("btnRefreshDlvDtl").setEnabled(!pEditable);
+                        this.byId("btnRefreshStatOvw").setEnabled(!pEditable);
+                        this.byId("btnRefreshMatDoc").setEnabled(!pEditable);
+                    } 
+                    // else if (pType == "detail") {
+                    //     // Header
+                    //     this.byId("btnCreateHeader").setEnabled(!pEditable);
+                    //     this.byId("btnEditHeader").setEnabled(!pEditable);
+                    //     this.byId("btnCloseHeader").setEnabled(!pEditable);
+
+                    //     // Detail
+                    //     this.byId("btnCreateDetail").setVisible(!pEditable);
+                    //     this.byId("btnEditDetail").setVisible(!pEditable);
+                    //     this.byId("btnDeleteDetail").setVisible(!pEditable);
+                    //     this.byId("btnAddRowDetail").setVisible(pEditable);
+                    //     this.byId("btnRemoveRowDetail").setVisible(pEditable);
+                    //     this.byId("btnSaveDetail").setVisible(pEditable);
+                    //     this.byId("btnCancelDetail").setVisible(pEditable);
+
+                    //     this.setReqField("detail", pEditable);
+                    //     if (!pEditable) this.setRowReadMode("detail");
+                    // } else {
+                    //     if (pType == "remarks") {
+
+                    //         this.byId("btnCreateRemarks").setVisible(!pEditable);
+                    //         this.byId("btnEditRemarks").setVisible(!pEditable);
+                    //         this.byId("btnDeleteRemarks").setVisible(!pEditable);
+                    //         this.byId("btnAddRowRemarks").setVisible(pEditable);
+                    //         this.byId("btnRemoveRowRemarks").setVisible(pEditable);
+                    //         this.byId("btnSaveRemarks").setVisible(pEditable);
+                    //         this.byId("btnCancelRemarks").setVisible(pEditable);
+
+                    //     } else if (pType == "packInstruct") {
+
+                    //         this.byId("btnCreatePackInstruct").setVisible(!pEditable);
+                    //         this.byId("btnEditPackInstruct").setVisible(!pEditable);
+                    //         this.byId("btnDeletePackInstruct").setVisible(!pEditable);
+                    //         this.byId("btnAddRowPackInstruct").setVisible(pEditable);
+                    //         this.byId("btnRemoveRowPackInstruct").setVisible(pEditable);
+                    //         this.byId("btnSavePackInstruct").setVisible(pEditable);
+                    //         this.byId("btnCancelPackInstruct").setVisible(pEditable);
+
+                    //     }
+
+                    //     // Remarks and Packing Instructions
+                    //     this.setReqField(pType, pEditable);
+                    //     if (!pEditable) this.setRowReadMode(pType);
+
+                    //     // Icon Tab Bar
+                    //     var oIconTabBar = this.byId("itbHeaderText");
+                    //     if (pEditable) {
+                    //         oIconTabBar.getItems().filter(item => item.getProperty("key") !== oIconTabBar.getSelectedKey())
+                    //             .forEach(item => item.setProperty("enabled", false));
+                    //     } else {
+                    //         oIconTabBar.getItems().forEach(item => item.setProperty("enabled", true));
+                    //     }
+                    // }
+
+                    // Icon Tab Bar
+                    var oIconTabBar = this.byId("itbDetails");
+                    if (pEditable) {
+                        oIconTabBar.getItems().filter(item => item.getProperty("key") !== oIconTabBar.getSelectedKey())
+                            .forEach(item => item.setProperty("enabled", false));
                     } else {
-                        this.getView().getModel("ui").setProperty("/editModeHeader2", pEditable);
+                        oIconTabBar.getItems().forEach(item => item.setProperty("enabled", true));
                     }
-
-                    // Detail
-                    this.byId("btnCreateDlvDtlHU").setEnabled(!pEditable);
-                    this.byId("btnDeleteDlvDtlHU").setEnabled(!pEditable);
-                    this.byId("btnRefreshDlvDtlHU").setEnabled(!pEditable);
-                    this.byId("btnRefreshDlvDtl").setEnabled(!pEditable);
-                    this.byId("btnRefreshStatOvw").setEnabled(!pEditable);
-                    this.byId("btnRefreshMatDoc").setEnabled(!pEditable);
-                } 
-                // else if (pType == "detail") {
-                //     // Header
-                //     this.byId("btnCreateHeader").setEnabled(!pEditable);
-                //     this.byId("btnEditHeader").setEnabled(!pEditable);
-                //     this.byId("btnCloseHeader").setEnabled(!pEditable);
-
-                //     // Detail
-                //     this.byId("btnCreateDetail").setVisible(!pEditable);
-                //     this.byId("btnEditDetail").setVisible(!pEditable);
-                //     this.byId("btnDeleteDetail").setVisible(!pEditable);
-                //     this.byId("btnAddRowDetail").setVisible(pEditable);
-                //     this.byId("btnRemoveRowDetail").setVisible(pEditable);
-                //     this.byId("btnSaveDetail").setVisible(pEditable);
-                //     this.byId("btnCancelDetail").setVisible(pEditable);
-
-                //     this.setReqField("detail", pEditable);
-                //     if (!pEditable) this.setRowReadMode("detail");
-                // } else {
-                //     if (pType == "remarks") {
-
-                //         this.byId("btnCreateRemarks").setVisible(!pEditable);
-                //         this.byId("btnEditRemarks").setVisible(!pEditable);
-                //         this.byId("btnDeleteRemarks").setVisible(!pEditable);
-                //         this.byId("btnAddRowRemarks").setVisible(pEditable);
-                //         this.byId("btnRemoveRowRemarks").setVisible(pEditable);
-                //         this.byId("btnSaveRemarks").setVisible(pEditable);
-                //         this.byId("btnCancelRemarks").setVisible(pEditable);
-
-                //     } else if (pType == "packInstruct") {
-
-                //         this.byId("btnCreatePackInstruct").setVisible(!pEditable);
-                //         this.byId("btnEditPackInstruct").setVisible(!pEditable);
-                //         this.byId("btnDeletePackInstruct").setVisible(!pEditable);
-                //         this.byId("btnAddRowPackInstruct").setVisible(pEditable);
-                //         this.byId("btnRemoveRowPackInstruct").setVisible(pEditable);
-                //         this.byId("btnSavePackInstruct").setVisible(pEditable);
-                //         this.byId("btnCancelPackInstruct").setVisible(pEditable);
-
-                //     }
-
-                //     // Remarks and Packing Instructions
-                //     this.setReqField(pType, pEditable);
-                //     if (!pEditable) this.setRowReadMode(pType);
-
-                //     // Icon Tab Bar
-                //     var oIconTabBar = this.byId("itbHeaderText");
-                //     if (pEditable) {
-                //         oIconTabBar.getItems().filter(item => item.getProperty("key") !== oIconTabBar.getSelectedKey())
-                //             .forEach(item => item.setProperty("enabled", false));
-                //     } else {
-                //         oIconTabBar.getItems().forEach(item => item.setProperty("enabled", true));
-                //     }
-                // }
-
-                // Icon Tab Bar
-                var oIconTabBar = this.byId("itbDetails");
-                if (pEditable) {
-                    oIconTabBar.getItems().filter(item => item.getProperty("key") !== oIconTabBar.getSelectedKey())
-                        .forEach(item => item.setProperty("enabled", false));
-                } else {
-                    oIconTabBar.getItems().forEach(item => item.setProperty("enabled", true));
                 }
             },
 
-            showLoadingDialog(arg) {
-                if (!_this._LoadingDialog) {
-                    _this._LoadingDialog = sap.ui.xmlfragment("zuioutdel.view.fragments.LoadingDialog", _this);
-                    _this.getView().addDependent(_this._LoadingDialog);
-                } 
-                
-                _this._LoadingDialog.setTitle(arg);
-                _this._LoadingDialog.open();
-            },
+            setControlAppAction(pChange) {
 
-            closeLoadingDialog() {
-                _this._LoadingDialog.close();
+                // Header
+                this.byId("btnEditHeader").setVisible(pChange);
+                this.byId("btnDeleteHeader").setVisible(pChange);
+                this.byId("btnPostHeader").setVisible(pChange);
+                this.byId("btnRefreshHeader").setVisible(true);
+                this.byId("btnPrintHeader").setVisible(true);
+                this.byId("btnSaveHeader").setVisible(false);
+                this.byId("btnCancelHeader").setVisible(false);
+
+                // Detail
+                this.byId("btnCreateDlvDtlHU").setVisible(pChange);
+                this.byId("btnDeleteDlvDtlHU").setVisible(pChange);
+                this.byId("btnRefreshDlvDtlHU").setVisible(true);
+                this.byId("btnRefreshDlvDtl").setVisible(true);
+                this.byId("btnRefreshStatOvw").setVisible(true);
+                this.byId("btnRefreshMatDoc").setVisible(true);
             },
 
             formatTime(pTime) {

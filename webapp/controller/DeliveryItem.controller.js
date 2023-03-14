@@ -1,5 +1,5 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller",
+    "./BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
@@ -15,7 +15,7 @@ sap.ui.define([
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-     function (Controller, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, TablePersoController, MessageToast, SearchField, History) {
+     function (BaseController, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, TablePersoController, MessageToast, SearchField, History) {
         "use strict";
 
         var _this;
@@ -28,10 +28,9 @@ sap.ui.define([
         var sapDateTimeFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "yyyy-MM-dd HH24:MI:SS" });
         var sapTimeFormat = sap.ui.core.format.DateFormat.getTimeInstance({pattern: "KK:mm:ss a"});
 
-        return Controller.extend("zuioutdel.controller.DeliveryItem", {
+        return BaseController.extend("zuioutdel.controller.DeliveryItem", {
             onInit: function () {
                 _this = this;
-                _this.showLoadingDialog("Loading...");
 
                 this._aColumns = {};
                 this.getCaption();
@@ -49,7 +48,7 @@ sap.ui.define([
 
             _routePatternMatched: function (oEvent) {
                 this.getView().setModel(new JSONModel({
-                    activeSbu: oEvent.getParameter("arguments").sbu,
+                    sbu: oEvent.getParameter("arguments").sbu,
                     activeDlvNo: oEvent.getParameter("arguments").dlvNo,
                     activeIssPlant: oEvent.getParameter("arguments").issPlant,
                     activeRcvPlant: oEvent.getParameter("arguments").rcvPlant,
@@ -67,6 +66,11 @@ sap.ui.define([
             initializeComponent() {
                 // _this.byId("btnAdd").setEnabled(false);
                 // _this.byId("btnCancel").setEnabled(false);
+
+                var sSbu = _this.getView().getModel("ui").getProperty("/sbu");
+                this.onInitBase(_this, sSbu);
+
+                _this.showLoadingDialog("Loading...");
 
                 var oFilterBar = _this.byId("sfbDlvItem");
                 var oFilterData = oFilterBar.getFilterData();
@@ -145,7 +149,7 @@ sap.ui.define([
                 var tabName = arg3;
 
                 var oJSONColumnsModel = new JSONModel();
-                var vSBU = this.getView().getModel("ui").getData().activeSbu;
+                var vSBU = this.getView().getModel("ui").getData().sbu;
 
                 var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
                 oModel.setHeaders({
@@ -461,7 +465,7 @@ sap.ui.define([
 
 
                 // this._router.navTo("RouteInterplantTransferDC", {
-                //     sbu: _this.getView().getModel("ui").getData().activeSbu,
+                //     sbu: _this.getView().getModel("ui").getData().sbu,
                 //     dlvNo: _this.getView().getModel("ui").getData().activeDlvNo
                 // }, true);
             },            
@@ -574,7 +578,7 @@ sap.ui.define([
                 var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
 
                 oRouter.navTo("RouteInterplantTransferDC", {
-                    sbu: _this.getView().getModel("ui").getData().activeSbu,
+                    sbu: _this.getView().getModel("ui").getData().sbu,
                     dlvNo: sDlvNo
                 }, true);
                 
@@ -588,7 +592,7 @@ sap.ui.define([
                 //     var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
 
                 //     oRouter.navTo("RouteInterplantTransferDC", {
-                //         sbu: _this.getView().getModel("ui").getData().activeSbu,
+                //         sbu: _this.getView().getModel("ui").getData().sbu,
                 //         dlvNo: sDlvNo
                 //     }, true);
                 // }
@@ -764,20 +768,6 @@ sap.ui.define([
                 //             item.oValue1);
                 //     });
                 // }
-            },
-
-            showLoadingDialog(arg) {
-                if (!_this._LoadingDialog) {
-                    _this._LoadingDialog = sap.ui.xmlfragment("zuioutdel.view.fragments.LoadingDialog", _this);
-                    _this.getView().addDependent(_this._LoadingDialog);
-                } 
-                
-                _this._LoadingDialog.setTitle(arg);
-                _this._LoadingDialog.open();
-            },
-
-            closeLoadingDialog() {
-                _this._LoadingDialog.close();
             },
 
             formatTime(pTime) {

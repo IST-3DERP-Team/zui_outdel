@@ -1,5 +1,5 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller",
+    "./BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
@@ -14,7 +14,7 @@ sap.ui.define([
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, TablePersoController, MessageToast, SearchField) {
+    function (BaseController, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, TablePersoController, MessageToast, SearchField) {
         "use strict";
         
         var _this;
@@ -31,17 +31,11 @@ sap.ui.define([
         var sapDateTimeFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "yyyy-MM-dd HH24:MI:SS" });
         var sapTimeFormat = sap.ui.core.format.DateFormat.getTimeInstance({pattern: "KK:mm:ss a"}); //sap.ui.core.format.DateFormat.getDateInstance({pattern : "PThh'H'mm'M'ss'S'"});
 
-        return Controller.extend("zuioutdel.controller.Main", {
+        return BaseController.extend("zuioutdel.controller.Main", {
             onInit: function () {
                 _this = this;
-                _this.showLoadingDialog("Loading...");
 
                 this._aColumns = {};
-                
-                this.getView().setModel(new JSONModel({
-                    activeSbu: "VER",
-                    activeDlvNo: ""
-                }), "ui")
 
                 // var oComponent = this.getOwnerComponent();
                 // this._router = oComponent.getRouter();
@@ -63,6 +57,16 @@ sap.ui.define([
             },
 
             initializeComponent() {
+                this.getView().setModel(new JSONModel({
+                    sbu: "VER",
+                    activeDlvNo: ""
+                }), "ui");
+
+                this.onInitBase(_this, _this.getView().getModel("ui").getData().sbu);
+                this.getAppAction();
+
+                _this.showLoadingDialog("Loading...");
+
                 this.getRefDlvNo();
                 this.getCaption();
                 this.getColumns();
@@ -102,7 +106,7 @@ sap.ui.define([
                     e.preventDefault();
 
                     // _this._router.navTo("RouteInterplantTransferDC", {
-                    //     sbu: _this.getView().getModel("ui").getData().activeSbu,
+                    //     sbu: _this.getView().getModel("ui").getData().sbu,
                     //     dlvNo: _dlvNo
                     // });
 
@@ -176,7 +180,7 @@ sap.ui.define([
                 var tabName = arg3;
 
                 var oJSONColumnsModel = new JSONModel();
-                var vSBU = this.getView().getModel("ui").getData().activeSbu;
+                var vSBU = this.getView().getModel("ui").getData().sbu;
 
                 var oModel = this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
                 oModel.setHeaders({
@@ -495,7 +499,7 @@ sap.ui.define([
 
             onAddOutDelHdr() {
                 this._router.navTo("RouteInterplantTransferDC", {
-                    sbu: _this.getView().getModel("ui").getData().activeSbu,
+                    sbu: _this.getView().getModel("ui").getData().sbu,
                     dlvNo: "empty"
                 });
             },
@@ -504,7 +508,7 @@ sap.ui.define([
                 // if (this.getView().getModel("ui").getData().activeDlvNo) {
                 //     var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
                 //     this._router.navTo("RouteInterplantTransferDC", {
-                //         sbu: _this.getView().getModel("ui").getData().activeSbu,
+                //         sbu: _this.getView().getModel("ui").getData().sbu,
                 //         dlvNo: sDlvNo
                 //     });
                 // } else {
@@ -532,42 +536,49 @@ sap.ui.define([
 
             onLockOutDel() {
                 if (this.getView().getModel("ui").getData().activeDlvNo) {
-                    _this.showLoadingDialog("Loading...");
-
-                    var oModelLock = this.getOwnerComponent().getModel("ZGW_3DERP_LOCK_SRV");
                     var sDlvNo = this.getView().getModel("ui").getData().activeDlvNo;
+                    var bAppChange = _this.getView().getModel("base").getProperty("/appChange");
 
-                    var oParamLock = {
-                        Dlvno: sDlvNo,
-                        Lock_Unlock_Ind: "X",
-                        IV_Count: 300,
-                        N_LOCK_UNLOCK_DLVHDR_RET: [],
-                        N_LOCK_UNLOCK_DLVHDR_MSG: []
-                    }
-
-                    oModelLock.create("/Lock_Unlock_DlvHdrSet", oParamLock, {
-                        method: "POST",
-                        success: function(data, oResponse) {
-                            console.log("Lock_Unlock_DlvHdrSet", data);
-
-                            if (data.N_LOCK_UNLOCK_DLVHDR_MSG.results.filter(x => x.Type != "S").length == 0) {
-                                _this.closeLoadingDialog();
-                                
-                                _this._router.navTo("RouteInterplantTransferDC", {
-                                    sbu: _this.getView().getModel("ui").getData().activeSbu,
-                                    dlvNo: sDlvNo
-                                });
-                            } else {
-                                var oFilter = data.N_LOCK_UNLOCK_DLVHDR_MSG.results.filter(x => x.Type != "S")[0];
-                                MessageBox.warning(oFilter.Message);
-                                
-                            }
-                        },
-                        error: function(err) {
-                            MessageBox.error(err);
-                            _this.closeLoadingDialog();
+                    if (bAppChange) {
+                        _this.showLoadingDialog("Loading...");
+                        var oModelLock = this.getOwnerComponent().getModel("ZGW_3DERP_LOCK_SRV");
+    
+                        var oParamLock = {
+                            Dlvno: sDlvNo,
+                            Lock_Unlock_Ind: "X",
+                            IV_Count: 300,
+                            N_LOCK_UNLOCK_DLVHDR_RET: [],
+                            N_LOCK_UNLOCK_DLVHDR_MSG: []
                         }
-                    });
+    
+                        oModelLock.create("/Lock_Unlock_DlvHdrSet", oParamLock, {
+                            method: "POST",
+                            success: function(data, oResponse) {
+                                console.log("Lock_Unlock_DlvHdrSet", data);
+                                _this.closeLoadingDialog();
+
+                                if (data.N_LOCK_UNLOCK_DLVHDR_MSG.results.filter(x => x.Type != "S").length == 0) {
+                                    _this._router.navTo("RouteInterplantTransferDC", {
+                                        sbu: _this.getView().getModel("ui").getData().sbu,
+                                        dlvNo: sDlvNo
+                                    });
+                                } else {
+                                    var oFilter = data.N_LOCK_UNLOCK_DLVHDR_MSG.results.filter(x => x.Type != "S")[0];
+                                    MessageBox.warning(oFilter.Message);
+                                    
+                                }
+                            },
+                            error: function(err) {
+                                MessageBox.error(err);
+                                _this.closeLoadingDialog();
+                            }
+                        });
+                    } else {
+                        _this._router.navTo("RouteInterplantTransferDC", {
+                            sbu: _this.getView().getModel("ui").getData().sbu,
+                            dlvNo: sDlvNo
+                        });
+                    }
                 } else {
                     MessageBox.information(_oCaption.INFO_NO_SELECTED);
                 }
@@ -694,20 +705,6 @@ sap.ui.define([
                             item.oValue1);
                     });
                 }
-            },
-
-            showLoadingDialog(arg) {
-                if (!_this._LoadingDialog) {
-                    _this._LoadingDialog = sap.ui.xmlfragment("zuioutdel.view.fragments.LoadingDialog", _this);
-                    _this.getView().addDependent(_this._LoadingDialog);
-                } 
-                
-                _this._LoadingDialog.setTitle(arg);
-                _this._LoadingDialog.open();
-            },
-
-            closeLoadingDialog() {
-                _this._LoadingDialog.close();
             },
 
             formatTime(pTime) {
