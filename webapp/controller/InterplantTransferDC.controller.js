@@ -19,6 +19,7 @@ sap.ui.define([
         
         var _this;
         var _oCaption = {};
+        var _aColumns = {};
         var _startUpInfo;
         var _oHeader = {};
         var _sHeaderMode = "";
@@ -36,7 +37,7 @@ sap.ui.define([
             onInit: function () {
                 _this = this;
 
-                this._aColumns = {};
+                //this._aColumns = {};
                 this.getCaption();
                 this.getColumns();
 
@@ -231,16 +232,15 @@ sap.ui.define([
                 oModel.read("/ColumnsSet", {
                     success: function (oData, oResponse) {
                         oJSONColumnsModel.setData(oData);
-                        console.log("getDynamicColumns",modCode,oData)
                         if (oData.results.length > 0) {
                             if (modCode === 'OUTDELDLVDTLHUMOD') {
                                 var aColumns = _this.setTableColumns(oColumns["dlvDtlHU"], oData.results);                      
-                                _this._aColumns["dlvDtlHU"] = aColumns["columns"];
+                                _aColumns["dlvDtlHU"] = aColumns["columns"];
                                 _this.addColumns(_this.byId("dlvDtlHUTab"), aColumns["columns"], "dlvDtlHU");
                             }
                             else if (modCode === 'OUTDELDLVDTLMOD') {
                                 var aColumns = _this.setTableColumns(oColumns["dlvDtl"], oData.results);                         
-                                _this._aColumns["dlvDtl"] = aColumns["columns"];
+                                _aColumns["dlvDtl"] = aColumns["columns"];
                                 _this.addColumns(_this.byId("dlvDtlTab"), aColumns["columns"], "dlvDtl");
                             }
                             else if (modCode === 'OUTDELSTATOVWMOD') {
@@ -250,12 +250,12 @@ sap.ui.define([
                                 })
 
                                 var aColumns = _this.setTableColumns(oColumns["statOvw"], oData.results);                         
-                                _this._aColumns["statOvw"] = aColumns["columns"];
+                                _aColumns["statOvw"] = aColumns["columns"];
                                 _this.addColumns(_this.byId("statOvwTab"), aColumns["columns"], "statOvw");
                             }
                             else if (modCode === 'OUTDELMATDOCMOD') {
                                 var aColumns = _this.setTableColumns(oColumns["matDoc"], oData.results);                         
-                                _this._aColumns["matDoc"] = aColumns["columns"];
+                                _aColumns["matDoc"] = aColumns["columns"];
                                 _this.addColumns(_this.byId("matDocTab"), aColumns["columns"], "matDoc");
                             }
                         }
@@ -565,7 +565,7 @@ sap.ui.define([
                         _this.getView().setModel(oJSONModel, "dlvDtl");
 
                         _this.setRowReadMode("dlvDtl");
-
+                        
                         _this.closeLoadingDialog();
                     },
                     error: function (err) { 
@@ -908,7 +908,7 @@ sap.ui.define([
                 if (_this.byId("dpETA").getValue()) 
                     param.ETA = sapDateFormat.format(new Date(_this.byId("dpETA").getValue())) + "T00:00:00";
                 if (_this.byId("dpRefDocDt").getValue()) 
-                    REFDOCDT = sapDateFormat.format(new Date(_this.byId("dpRefDocDt").getValue())) + "T00:00:00";
+                    param.REFDOCDT = sapDateFormat.format(new Date(_this.byId("dpRefDocDt").getValue())) + "T00:00:00";
 
                 console.log("DlvHeaderTbl param", param)
 
@@ -1078,7 +1078,7 @@ sap.ui.define([
             setRowReadMode(arg) {
                 var oTable = this.byId(arg + "Tab");
                 oTable.getColumns().forEach((col, idx) => {                    
-                    this._aColumns[arg].filter(item => item.label === col.getLabel().getText())
+                    _aColumns[arg].filter(item => item.label === col.getLabel().getText())
                         .forEach(ci => {
                             if (ci.type === "STRING" || ci.type === "NUMBER") {
                                 col.setTemplate(new sap.m.Text({
@@ -1164,7 +1164,7 @@ sap.ui.define([
                             col.getLabel().setText(col.getLabel().getText().replaceAll("*", ""));
                         }
 
-                        this._aColumns[pType].filter(item => item.label === col.getLabel().getText())
+                        _aColumns[pType].filter(item => item.label === col.getLabel().getText())
                             .forEach(ci => {
                                 if (ci.required) {
                                     col.getLabel().removeStyleClass("requiredField");

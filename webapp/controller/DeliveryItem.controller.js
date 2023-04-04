@@ -20,6 +20,7 @@ sap.ui.define([
 
         var _this;
         var _oCaption = {};
+        var _aColumns = {};
 
         // shortcut for sap.ui.table.SortOrder
         var SortOrder = library.SortOrder;
@@ -32,7 +33,7 @@ sap.ui.define([
             onInit: function () {
                 _this = this;
 
-                this._aColumns = {};
+                //this._aColumns = {};
                 this.getCaption();
                 this.getColumns();
 
@@ -165,7 +166,7 @@ sap.ui.define([
                         if (oData.results.length > 0) {
                             if (modCode === 'OUTDELDLVITEMMOD') {
                                 var aColumns = _this.setTableColumns(oColumns["dlvItem"], oData.results);                          
-                                _this._aColumns["dlvItem"] = aColumns["columns"];
+                                _aColumns["dlvItem"] = aColumns["columns"];
                                 _this.addColumns(_this.byId("dlvItemTab"), aColumns["columns"], "dlvItem");
                             }
                         }
@@ -630,7 +631,7 @@ sap.ui.define([
             setRowReadMode(arg) {
                 var oTable = this.byId(arg + "Tab");
                 oTable.getColumns().forEach((col, idx) => {                    
-                    this._aColumns[arg].filter(item => item.label === col.getLabel().getText())
+                    _aColumns[arg].filter(item => item.label === col.getLabel().getText())
                         .forEach(ci => {
                             if (ci.type === "STRING" || ci.type === "NUMBER") {
                                 col.setTemplate(new sap.m.Text({
@@ -656,43 +657,45 @@ sap.ui.define([
                 var aFilterGrp = [];
                 var aFilterCol = [];
 
-                if (pFilters[0].aFilters.filter(x => Object.keys(x).includes("aFilters") == true).length > 0) {
-                    pFilters[0].aFilters.forEach(x => {
-                        console.log("pFilters", pFilters[0])
-                        
-                        if (Object.keys(x).includes("aFilters")) {
-                            x.aFilters.forEach(y => {
-                                var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == y.sPath.toUpperCase())[0].name;
-                                aFilter.push(new Filter(sName, FilterOperator.EQ, y.oValue1));
-    
+                if (pFilters.length > 0) {
+                    if (pFilters[0].aFilters.filter(x => Object.keys(x).includes("aFilters") == true).length > 0) {
+                        pFilters[0].aFilters.forEach(x => {
+                            console.log("pFilters", pFilters[0])
+                            
+                            if (Object.keys(x).includes("aFilters")) {
+                                x.aFilters.forEach(y => {
+                                    var sName = _aColumns[pModel].filter(item => item.name.toUpperCase() == y.sPath.toUpperCase())[0].name;
+                                    aFilter.push(new Filter(sName, FilterOperator.EQ, y.oValue1));
+        
+                                    //if (!aFilterCol.includes(sName)) aFilterCol.push(sName);
+                                });
+                                var oFilterGrp = new Filter(aFilter, false);
+                                aFilterGrp.push(oFilterGrp);
+                                aFilter = [];
+                            } else {
+                                var sName = _aColumns[pModel].filter(item => item.name.toUpperCase() == x.sPath.toUpperCase())[0].name;
+                                aFilter.push(new Filter(sName, FilterOperator.EQ, x.oValue1));
+                                var oFilterGrp = new Filter(aFilter, false);
+                                aFilterGrp.push(oFilterGrp);
+                                aFilter = [];
+        
                                 //if (!aFilterCol.includes(sName)) aFilterCol.push(sName);
-                            });
-                            var oFilterGrp = new Filter(aFilter, false);
-                            aFilterGrp.push(oFilterGrp);
-                            aFilter = [];
-                        } else {
-                            var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == x.sPath.toUpperCase())[0].name;
+                            }
+                        });
+                    } else {
+                        pFilters[0].aFilters.forEach(x => {
+                            var sName = _aColumns[pModel].filter(item => item.name.toUpperCase() == x.sPath.toUpperCase())[0].name;
                             aFilter.push(new Filter(sName, FilterOperator.EQ, x.oValue1));
-                            var oFilterGrp = new Filter(aFilter, false);
-                            aFilterGrp.push(oFilterGrp);
-                            aFilter = [];
-    
-                            //if (!aFilterCol.includes(sName)) aFilterCol.push(sName);
-                        }
-                    });
-                } else {
-                    pFilters[0].aFilters.forEach(x => {
-                        var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == x.sPath.toUpperCase())[0].name;
-                        aFilter.push(new Filter(sName, FilterOperator.EQ, x.oValue1));
-                    });
-                    var oFilterGrp = new Filter(aFilter, false);
-                    aFilterGrp.push(oFilterGrp);
-                    aFilter = [];
+                        });
+                        var oFilterGrp = new Filter(aFilter, false);
+                        aFilterGrp.push(oFilterGrp);
+                        aFilter = [];
+                    }
                 }
 
                 if (pFilterGlobal) {
                     this._aFilterableColumns[pModel].forEach(item => {
-                        var sDataType = this._aColumns[pModel].filter(col => col.name === item.name)[0].type;
+                        var sDataType = _aColumns[pModel].filter(col => col.name === item.name)[0].type;
                         if (sDataType === "Edm.Boolean") aFilter.push(new Filter(item.name, FilterOperator.EQ, pFilterGlobal));
                         else aFilter.push(new Filter(item.name, FilterOperator.Contains, pFilterGlobal));
                     })
@@ -709,7 +712,7 @@ sap.ui.define([
                 
                 if (pFilterTab.length > 0) {
                     pFilterTab.forEach(item => {
-                        var iColIdx = _this._aColumns[pModel].findIndex(x => x.name == item.sPath);
+                        var iColIdx = _aColumns[pModel].findIndex(x => x.name == item.sPath);
                         _this.getView().byId(pModel + "Tab").filter(_this.getView().byId(pModel + "Tab").getColumns()[iColIdx], 
                             item.oValue1);
                     });
@@ -719,7 +722,7 @@ sap.ui.define([
                 //     pFilters[0].aFilters.forEach(x => {
                 //         if (Object.keys(x).includes("aFilters")) {
                 //             x.aFilters.forEach(y => {
-                //                 var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == y.sPath.toUpperCase())[0].name;
+                //                 var sName = _aColumns[pModel].filter(item => item.name.toUpperCase() == y.sPath.toUpperCase())[0].name;
                 //                 aFilter.push(new Filter(sName, FilterOperator.Contains, y.oValue1));
 
                 //                 //if (!aFilterCol.includes(sName)) aFilterCol.push(sName);
@@ -728,7 +731,7 @@ sap.ui.define([
                 //             aFilterGrp.push(oFilterGrp);
                 //             aFilter = [];
                 //         } else {
-                //             var sName = this._aColumns[pModel].filter(item => item.name.toUpperCase() == x.sPath.toUpperCase())[0].name;
+                //             var sName = _aColumns[pModel].filter(item => item.name.toUpperCase() == x.sPath.toUpperCase())[0].name;
                 //             aFilter.push(new Filter(sName, FilterOperator.Contains, x.oValue1));
                 //             var oFilterGrp = new Filter(aFilter, false);
                 //             aFilterGrp.push(oFilterGrp);
@@ -746,8 +749,8 @@ sap.ui.define([
                 // }*/
 
                 // if (pFilterGlobal) {
-                //     this._aColumns[pModel].forEach(item => {
-                //         var sDataType = this._aColumns[pModel].filter(col => col.name === item.name)[0].type;
+                //     _aColumns[pModel].forEach(item => {
+                //         var sDataType = _aColumns[pModel].filter(col => col.name === item.name)[0].type;
                 //         if (sDataType === "Edm.Boolean") aFilter.push(new Filter(item.name, FilterOperator.EQ, pFilterGlobal));
                 //         else aFilter.push(new Filter(item.name, FilterOperator.Contains, pFilterGlobal));
                 //     })
@@ -763,7 +766,7 @@ sap.ui.define([
 
                 // if (pFilterTab.length > 0) {
                 //     pFilterTab.forEach(item => {
-                //         var iColIdx = _this._aColumns[pModel].findIndex(x => x.name == item.sPath);
+                //         var iColIdx = _aColumns[pModel].findIndex(x => x.name == item.sPath);
                 //         _this.getView().byId(pModel + "Tab").filter(_this.getView().byId(pModel + "Tab").getColumns()[iColIdx], 
                 //             item.oValue1);
                 //     });
