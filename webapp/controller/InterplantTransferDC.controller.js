@@ -771,6 +771,59 @@ sap.ui.define([
                 });
             },
 
+            onReverseHeader() {
+                if (_oHeader.deleted) {
+                    MessageBox.warning(_oCaption.WARN_ALREADY_DELETED);
+                    return;
+                }
+
+                if (_oHeader.status != "54") {
+                    MessageBox.warning(_oCaption.WARN_STATUS_POSTED_REVERSE);
+                    return;
+                }
+
+                MessageBox.confirm(_oCaption.CONFIRM_PROCEED_EXECUTE, {
+                    actions: ["Yes", "No"],
+                    onClose: function (sAction) {
+                        if (sAction === "Yes") {
+                            _this.showLoadingDialog("Loading...");
+
+                            var oModelRFC = _this.getOwnerComponent().getModel("ZGW_3DERP_RFC_SRV");
+                            var oParam = {
+                                "iv_dlvno": _oHeader.dlvNo,
+                                "iv_userid": _startUpInfo.id,
+                                "iv_pstngdt": sapDateFormat.format(new Date(_this.byId("dpPostDt").getValue())) + "T00:00:00",
+                                "N_IDOD_ET_CANC": [],
+                                "N_IDOD_RETURN": []
+                            };
+
+                            console.log("IDOD_ReverseSet param", oParam);
+                            oModelRFC.create("/IDOD_ReverseSet", oParam, {
+                                method: "POST",
+                                success: function(oResult, oResponse) {
+                                    console.log("IDOD_ReverseSet", oResult, oResponse);
+
+                                    _this.closeLoadingDialog();
+                                    if (oResult.N_IDOD_ET_CANC.results.length > 0) { //oResult.N_IDOD_ET_CANC.results[0].Type == "S"
+
+                                        MessageBox.information(oResult.N_IDOD_ET_CANC.results[0].Message);
+                                        _this.getHeader();
+                                    } else if (oResult.N_IDOD_RETURN.results.length > 0) {
+                                        MessageBox.information(oResult.N_IDOD_RETURN.results[0].Message);
+                                    } else {
+                                        MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
+                                    }
+                                },
+                                error: function(err) {
+                                    MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
+                                    _this.closeLoadingDialog();
+                                }
+                            });
+                        }
+                    }
+                });
+            },
+
             onRefreshHeader() {
                 _this.getHeader();
             },
@@ -1183,7 +1236,7 @@ sap.ui.define([
                         // Header
                         this.byId("btnEditHeader").setVisible(!pEditable);
                         this.byId("btnDeleteHeader").setVisible(!pEditable);
-                        this.byId("btnPostHeader").setVisible(!pEditable);
+                        this.byId("btnSetStatusHeader").setVisible(!pEditable);
                         this.byId("btnRefreshHeader").setVisible(!pEditable);
                         this.byId("btnPrintHeader").setVisible(!pEditable);
                         this.byId("btnSaveHeader").setVisible(pEditable);
@@ -1280,7 +1333,7 @@ sap.ui.define([
                 // Header
                 this.byId("btnEditHeader").setVisible(pChange);
                 this.byId("btnDeleteHeader").setVisible(pChange);
-                this.byId("btnPostHeader").setVisible(pChange);
+                this.byId("btnSetStatusHeader").setVisible(pChange);
                 this.byId("btnRefreshHeader").setVisible(true);
                 this.byId("btnPrintHeader").setVisible(true);
                 this.byId("btnSaveHeader").setVisible(false);
@@ -1448,7 +1501,9 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "UPDATEDBY"});
                 oDDTextParam.push({CODE: "UPDATEDDT"});
 
+                oDDTextParam.push({CODE: "SETSTATUS"});
                 oDDTextParam.push({CODE: "POST"});
+                oDDTextParam.push({CODE: "REVERSE"});
 
                 // MessageBox
                 // oDDTextParam.push({CODE: "INFO_NO_SELECTED"});
@@ -1465,6 +1520,9 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "INFO_PROCEED_DELETE"});
                 oDDTextParam.push({CODE: "WARN_NOT_STATUS_GR_POSTED"});
                 oDDTextParam.push({CODE: "WARN_NO_DATA_DLVDTLHU"});
+                oDDTextParam.push({CODE: "WARN_STATUS_POSTED_REVERSE"});
+                oDDTextParam.push({CODE: "CONFIRM_PROCEED_EXECUTE"});
+                oDDTextParam.push({CODE: "INFO_EXECUTE_FAIL"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",
