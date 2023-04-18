@@ -79,14 +79,14 @@
                             <Text text="{ui>/rowCountMrpHdr} {ddtext>/ROWS}" />
                             <ToolbarSpacer/>
                             <Button id="btnAddOutDelHdr" 
-                                icon="sap-icon://add"
+                                icon="sap-icon://add-document"
                                 press="onAddOutDelHdr"
-                                text="{ddtext>/ADD}"
+                                text="{ddtext>/NEW}"
                                 visible="{base>/appChange}"/>
                             <Button id="btnEditOutDelHdr" 
                                 icon="sap-icon://edit"
                                 press="onEditOutDelHdr"
-                                text="{ddtext>/EDIT}"
+                                text="{ddtext>/DISPLAY_EDIT}"
                                 visible="{base>/appChange}"/>
                             <Button id="btnRefreshOutDelHdr" 
                                 icon="sap-icon://refresh"

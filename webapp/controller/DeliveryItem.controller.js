@@ -871,6 +871,10 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "MATTYPE"});
                 oDDTextParam.push({CODE: "IONO"});
 
+                // Buttons
+                oDDTextParam.push({CODE: "ADD"});
+                oDDTextParam.push({CODE: "CLOSE"});
+
                 // MessageBox
                 oDDTextParam.push({CODE: "INFO_NO_SELECTED"});
                 // oDDTextParam.push({CODE: "CONFIRM_DISREGARD_CHANGE"});

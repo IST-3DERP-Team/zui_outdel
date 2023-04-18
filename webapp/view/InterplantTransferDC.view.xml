@@ -15,21 +15,21 @@
             <VBox id="vbMain" fitContainer="true">
                 <Toolbar id="TB1" style="Clear">
                     <ToolbarSpacer />
-                    <Button id="btnEditHeader" type="Ghost" icon="sap-icon://edit" press="onEditHeader" visible="true"/>
-                    <Button id="btnDeleteHeader" type="Ghost" icon="sap-icon://delete" press="onDeleteHeader" visible="true"/> 
-                    <MenuButton id="btnSetStatusHeader" type="Ghost" icon="sap-icon://settings" tooltip="{ddtext>/SETSTATUS}" visible="true">
+                    <Button id="btnEditHeader" type="Ghost" icon="sap-icon://edit" press="onEditHeader" text="{ddtext>/EDIT}" visible="true"/>
+                    <Button id="btnDeleteHeader" type="Ghost" icon="sap-icon://delete" press="onDeleteHeader" text="{ddtext>/DELETE}" visible="true"/> 
+                    <MenuButton id="btnSetStatusHeader" type="Ghost" icon="sap-icon://settings" tooltip="{ddtext>/SETSTATUS}" text="{ddtext>/SETSTATUS}" visible="true">
                         <menu>
                             <Menu id="menuSetStatusHeader">
-                                <MenuItem id="menuPostHeader" text="{ddtext>/POST}" press="onPostHeader" />
-                                <MenuItem id="menuReverseHeader" text="{ddtext>/REVERSE}" press="onReverseHeader" />
+                                <MenuItem id="menuPostHeader" icon="sap-icon://complete" text="{ddtext>/POST}" press="onPostHeader" />
+                                <MenuItem id="menuReverseHeader" icon="sap-icon://undo" text="{ddtext>/REVERSE}" press="onReverseHeader" />
                             </Menu>
                         </menu>
                     </MenuButton>
                     <!-- <Button id="btnPostHeader" type="Ghost" icon="sap-icon://settings" press="onPostHeader" visible="true" tooltip="{ddtext>/POST}"/>  -->
-                    <Button id="btnRefreshHeader" type="Ghost" icon="sap-icon://refresh" press="onRefreshHeader" visible="true"/> 
-                    <Button id="btnPrintHeader" type="Ghost" icon="sap-icon://print" press="onPrintHeader" visible="true"/> 
-                    <Button id="btnSaveHeader" type="Ghost" icon="sap-icon://save" press="onSaveHeader" visible="false"/> 
-                    <Button id="btnCancelHeader" type="Ghost" icon="sap-icon://sys-cancel" press="onCancelHeader" visible="false"/> 
+                    <Button id="btnRefreshHeader" type="Ghost" icon="sap-icon://refresh" press="onRefreshHeader" text="{ddtext>/REFRESH}" visible="true"/> 
+                    <Button id="btnPrintHeader" type="Ghost" icon="sap-icon://print" press="onPrintHeader" text="{ddtext>/PRINT}" visible="false"/> 
+                    <Button id="btnSaveHeader" type="Ghost" icon="sap-icon://save" press="onSaveHeader" text="{ddtext>/SAVE}" visible="false"/> 
+                    <Button id="btnCancelHeader" type="Ghost" icon="sap-icon://sys-cancel" press="onCancelHeader" text="{ddtext>/CANCEL}" visible="false"/> 
                 </Toolbar>
                 <!-- <uiL:Splitter height="100%" orientation="Vertical">                   -->
                     <!-- <uiL:Splitter> -->
@@ -315,14 +315,17 @@
                                                     <Button id="btnCreateDlvDtlHU" 
                                                         icon="sap-icon://add"
                                                         press="onCreateDlvDtlHU"
+                                                        text="{ddtext>/ADD}"
                                                         visible="true"/>
                                                     <Button id="btnDeleteDlvDtlHU" 
                                                         icon="sap-icon://delete"
                                                         press="onDeleteDlvDtlHU" 
+                                                        text="{ddtext>/DELETE}"
                                                         visible="true" />
                                                     <Button id="btnRefreshDlvDtlHU" 
                                                         icon="sap-icon://refresh"
                                                         press="onRefresh('dlvDtlHU')" 
+                                                        text="{ddtext>/REFRESH}"
                                                         visible="true" />
                                                 </Toolbar>
                                             </uiT:extension>
@@ -355,6 +358,7 @@
                                                     <Button id="btnRefreshDlvDtl" 
                                                         icon="sap-icon://refresh"
                                                         press="onRefresh('dlvDtl')" 
+                                                        text="{ddtext>/REFRESH}"
                                                         visible="true" />
                                                 </Toolbar>
                                             </uiT:extension>
@@ -387,6 +391,7 @@
                                                     <Button id="btnRefreshStatOvw" 
                                                         icon="sap-icon://refresh"
                                                         press="onRefresh('statOvw')" 
+                                                        text="{ddtext>/REFRESH}"
                                                         visible="true" />
                                                 </Toolbar>
                                             </uiT:extension>
@@ -419,6 +424,7 @@
                                                     <Button id="btnRefreshMatDoc" 
                                                         icon="sap-icon://refresh"
                                                         press="onRefresh('matDoc')" 
+                                                        text="{ddtext>/REFRESH}"
                                                         visible="true" />
                                                 </Toolbar>
                                             </uiT:extension>

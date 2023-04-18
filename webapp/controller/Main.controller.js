@@ -820,6 +820,8 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "DLVDTL"});
 
                 // Buttons
+                oDDTextParam.push({CODE: "NEW"});
+                oDDTextParam.push({CODE: "DISPLAY_EDIT"});
                 oDDTextParam.push({CODE: "ADD"});
                 oDDTextParam.push({CODE: "EDIT"});
                 oDDTextParam.push({CODE: "REFRESH"});

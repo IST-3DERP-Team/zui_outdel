@@ -68,10 +68,12 @@
                             <Button id="btnAdd" 
                                 icon="sap-icon://add"
                                 press="onAdd"
+                                text="{ddtext>/ADD}"
                                 visible="true"/>
                             <Button id="btnCancel" 
                                 icon="sap-icon://sys-cancel"
                                 press="onCancel"
+                                text="{ddtext>/CLOSE}"
                                 visible="true"/>
                         </Toolbar>
                     </uiT:extension>

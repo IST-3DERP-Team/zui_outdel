@@ -674,6 +674,11 @@ sap.ui.define([
             },
 
             onEditHeader() {
+                if (_oHeader.deleted) {
+                    MessageBox.warning(_oCaption.WARN_ALREADY_DELETED);
+                    return;
+                }
+
                 if (_oHeader.status == "54") {
                     MessageBox.warning(_oCaption.WARN_EDIT_NOT_ALLOW);
                     return;
@@ -1044,6 +1049,11 @@ sap.ui.define([
                     return;
                 }
 
+                var aOrigSelIdx = [];
+                aSelIdx.forEach(i => {
+                    aOrigSelIdx.push(oTable.getBinding("rows").aIndices[i]);
+                })
+
                 MessageBox.confirm(_oCaption.INFO_PROCEED_DELETE, {
                     actions: ["Yes", "No"],
                     onClose: function (sAction) {
@@ -1054,7 +1064,7 @@ sap.ui.define([
                             var aData = _this.getView().getModel("dlvDtlHU").getData().results;
                             var iIdx = 0;
             
-                            aSelIdx.forEach(i => {
+                            aOrigSelIdx.forEach(i => {
                                 var oData = aData[i];     
                                 var sEntitySet = "/DlvDetailHUTblSet(DLVNO='" + oData.DLVNO + "',DLVITEM='" + oData.DLVITEM + "',SEQNO='" + oData.SEQNO + "')";
                                 console.log("sEntitySet", sEntitySet)
@@ -1066,7 +1076,7 @@ sap.ui.define([
                                             console.log(sEntitySet, data, oResponse)
 
                                             iIdx++;
-                                            if (iIdx === aSelIdx.length) {
+                                            if (iIdx === aOrigSelIdx.length) {
                                                 _this.onRefreshHeader();
                                                 _this.closeLoadingDialog();
                                             }
@@ -1238,7 +1248,7 @@ sap.ui.define([
                         this.byId("btnDeleteHeader").setVisible(!pEditable);
                         this.byId("btnSetStatusHeader").setVisible(!pEditable);
                         this.byId("btnRefreshHeader").setVisible(!pEditable);
-                        this.byId("btnPrintHeader").setVisible(!pEditable);
+                        //this.byId("btnPrintHeader").setVisible(!pEditable);
                         this.byId("btnSaveHeader").setVisible(pEditable);
                         this.byId("btnCancelHeader").setVisible(pEditable);
 
@@ -1335,7 +1345,7 @@ sap.ui.define([
                 this.byId("btnDeleteHeader").setVisible(pChange);
                 this.byId("btnSetStatusHeader").setVisible(pChange);
                 this.byId("btnRefreshHeader").setVisible(true);
-                this.byId("btnPrintHeader").setVisible(true);
+                //this.byId("btnPrintHeader").setVisible(true);
                 this.byId("btnSaveHeader").setVisible(false);
                 this.byId("btnCancelHeader").setVisible(false);
 
@@ -1504,6 +1514,16 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "SETSTATUS"});
                 oDDTextParam.push({CODE: "POST"});
                 oDDTextParam.push({CODE: "REVERSE"});
+
+                // Buttons
+                oDDTextParam.push({CODE: "ADD"});
+                oDDTextParam.push({CODE: "EDIT"});
+                oDDTextParam.push({CODE: "DELETE"});
+                oDDTextParam.push({CODE: "REFRESH"});
+                oDDTextParam.push({CODE: "SETSTATUS"});
+                oDDTextParam.push({CODE: "PRINT"});
+                oDDTextParam.push({CODE: "SAVE"});
+                oDDTextParam.push({CODE: "CANCEL"});
 
                 // MessageBox
                 // oDDTextParam.push({CODE: "INFO_NO_SELECTED"});
