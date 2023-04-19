@@ -697,6 +697,11 @@ sap.ui.define([
                     MessageBox.warning(_oCaption.WARN_DELETE_NOT_ALLOW);
                     return;
                 }
+                
+                if (_this.getView().getModel("dlvDtlHU").getData().results.length > 0) {
+                    MessageBox.warning(_oCaption.WARN_DELETE_NOT_ALLOW + "\n" + _oCaption.WARN_ALREADY_HAS_DETAIL);
+                    return;
+                }
 
                 MessageBox.confirm(_oCaption.INFO_PROCEED_DELETE, {
                     actions: ["Yes", "No"],
@@ -1178,7 +1183,19 @@ sap.ui.define([
                             if (data.results.length > 0) _this.byId("cmbIssSloc").setPlaceholder("");
                             else _this.byId("cmbIssSloc").setPlaceholder("No data for selected " + _oCaption.ISSPLANT);
                         } else if (pModel == "rcvSloc" && data.results.length > 0) {
-                            if (data.results.length > 0) _this.byId("cmbRcvSloc").setPlaceholder("");
+                            if (data.results.length > 0) {
+                                if (_this.byId("cmbIssSloc").getSelectedKey()) {
+                                    var sIssSloc = _this.byId("cmbIssSloc").getSelectedKey();
+                                    var oDataIssSloc = _this.getView().getModel("issSloc").getProperty("/results")
+                                        .filter(x => x.SLOC == sIssSloc)[0];
+                                    var oDataRcvSloc = _this.getView().getModel("rcvSloc").getProperty("/results")
+                                        .filter(x => x.MATTYPEGRP == oDataIssSloc.MATTYPEGRP)[0];
+
+                                    _this.byId("cmbRcvSloc").setSelectedKey(oDataRcvSloc.SLOC);
+                                } else {
+                                    _this.byId("cmbRcvSloc").setPlaceholder("");
+                                }
+                            }
                             else _this.byId("cmbRcvSloc").setPlaceholder("No data for selected " + _oCaption.RCVPLANT);
                         }
                     },
@@ -1543,6 +1560,7 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "WARN_STATUS_POSTED_REVERSE"});
                 oDDTextParam.push({CODE: "CONFIRM_PROCEED_EXECUTE"});
                 oDDTextParam.push({CODE: "INFO_EXECUTE_FAIL"});
+                oDDTextParam.push({CODE: "WARN_ALREADY_HAS_DETAIL"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",

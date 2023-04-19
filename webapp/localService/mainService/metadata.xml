@@ -187,6 +187,7 @@
                     <PropertyRef Name="SLOC"/>
                 </Key>
                 <Property Name="SLOC" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Stor. Loc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MATTYPEGRP" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Material Type Group" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="DESCRIP" Type="Edm.String" Nullable="false" MaxLength="16" sap:unicode="false" sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="WHSECD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Warehouse Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="STORAREACD" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Store Area Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
