@@ -70,6 +70,7 @@
                     <PropertyRef Name="DLVITEM"/>
                 </Key>
                 <Property Name="DLVNO" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Dlv No" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MATGRP" Type="Edm.String" Nullable="false" MaxLength="9" sap:unicode="false" sap:label="Material Group" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="HUITEM" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="HU Item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="REQQTYBASE" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:unit="UOM" sap:label="REQQTYBASE" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="ACTQTYBASE" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:unit="UOM" sap:label="ACTQTYBASE" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>

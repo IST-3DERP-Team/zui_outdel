@@ -25,6 +25,7 @@ sap.ui.define([
         var _sHeaderMode = "";
         var _sNoRangeCd = "";
         var _bAppChange;
+        var _matTypeGrp = "";
 
         // shortcut for sap.ui.table.SortOrder
         var SortOrder = library.SortOrder;
@@ -767,7 +768,24 @@ sap.ui.define([
                                 success: function(oResult, oResponse) {
                                     console.log("GoodsMvt_Post901Set", oResult, oResponse);
 
-                                    MessageBox.information(oResult.N_POST901_RETURN.results[0].Message);
+                                    var oModel = _this.getOwnerComponent().getModel();
+                                    var sFilter = "REFDLVNO eq '" + _oHeader.dlvNo + "'";
+                                    oModel.read('/DlvHeaderNewIDSet', {
+                                        urlParameters: {
+                                            "$filter": sFilter
+                                        },
+                                        success: function (data, response) {
+                                            console.log("DlvHeaderNewIDSet", data);
+                                            if (data.results.length > 0) {
+                                                MessageBox.information(_oCaption.INFO_ID_CREATED + " " + data.results[0].DLVNO + ".");
+                                            }
+                                        },
+                                        error: function (err) { 
+                                            console.log("error", err)
+                                        }
+                                    })
+
+                                    //MessageBox.information(oResult.N_POST901_RETURN.results[0].Message);
                                     _this.closeLoadingDialog();
                                     _this.getHeader();
                                 },
@@ -1036,7 +1054,8 @@ sap.ui.define([
                     sbu: _this.getView().getModel("ui").getData().sbu,
                     dlvNo: _oHeader.dlvNo,
                     issPlant: _oHeader.issPlant,
-                    rcvPlant: _oHeader.rcvPlant
+                    rcvPlant: _oHeader.rcvPlant,
+                    matTypeGrp: _matTypeGrp
                 });
             },
 
@@ -1192,6 +1211,7 @@ sap.ui.define([
                                         .filter(x => x.MATTYPEGRP == oDataIssSloc.MATTYPEGRP)[0];
 
                                     _this.byId("cmbRcvSloc").setSelectedKey(oDataRcvSloc.SLOC);
+                                    _matTypeGrp = oDataIssSloc.MATTYPEGRP;
                                 } else {
                                     _this.byId("cmbRcvSloc").setPlaceholder("");
                                 }
@@ -1561,6 +1581,7 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "CONFIRM_PROCEED_EXECUTE"});
                 oDDTextParam.push({CODE: "INFO_EXECUTE_FAIL"});
                 oDDTextParam.push({CODE: "WARN_ALREADY_HAS_DETAIL"});
+                oDDTextParam.push({CODE: "INFO_ID_CREATED"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",

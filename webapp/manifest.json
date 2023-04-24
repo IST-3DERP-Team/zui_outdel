@@ -269,7 +269,7 @@
                 },
                 {
                     "name": "RouteDeliveryItem",
-                    "pattern": "DeliveryItem/{sbu},{dlvNo},{issPlant},{rcvPlant}",
+                    "pattern": "DeliveryItem/{sbu},{dlvNo},{issPlant},{rcvPlant},{matTypeGrp}",
                     "greedy": false,
                     "target": [
                         "TargetDeliveryItem"

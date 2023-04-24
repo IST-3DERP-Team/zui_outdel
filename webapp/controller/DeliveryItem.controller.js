@@ -53,6 +53,7 @@ sap.ui.define([
                     activeDlvNo: oEvent.getParameter("arguments").dlvNo,
                     activeIssPlant: oEvent.getParameter("arguments").issPlant,
                     activeRcvPlant: oEvent.getParameter("arguments").rcvPlant,
+                    activeMatTypeGrp: oEvent.getParameter("arguments").matTypeGrp
                 }), "ui");
 
                 _this.initializeComponent();
@@ -73,12 +74,14 @@ sap.ui.define([
 
                 _this.showLoadingDialog("Loading...");
 
-                var oFilterBar = _this.byId("sfbDlvItem");
-                var oFilterData = oFilterBar.getFilterData();
-                
-                if (oFilterData) {
-                    oFilterBar.setFilterData({}, true);
-                }
+                setTimeout(() => {
+                    var oFilterBar = _this.byId("sfbDlvItem");
+                    var oFilterData = oFilterBar.getFilterData();
+                    
+                    if (oFilterData) {
+                        oFilterBar.setFilterData({}, true);
+                    }
+                }, 300);
 
                 _this.getDlvDtlHU();
 
@@ -98,6 +101,8 @@ sap.ui.define([
                 };
 
                 this.byId("dlvItemTab").addEventDelegate(oTableEventDelegate);
+
+                this.clearSortFilter("dlvItemTab");
 
                 this.closeLoadingDialog();
             },
@@ -290,9 +295,10 @@ sap.ui.define([
                 var sRcvPlant = _this.getView().getModel("ui").getData().activeRcvPlant;
                 var sDirectionCd = "IN";
                 var sDlvAsgnd = "";
+                var sMatTypeGrp = _this.getView().getModel("ui").getData().activeMatTypeGrp;
 
                 var sFilter = "DLVNO eq '" + sDlvNo + "' and PLANT eq '" + sIssPlant + "' and SHIPTOPLANT eq '" + sRcvPlant + 
-                    "' and DIRECTIONCD eq '" + sDirectionCd + "' and DLVASGND eq '" + sDlvAsgnd + "'"
+                    "' and DIRECTIONCD eq '" + sDirectionCd + "' and DLVASGND eq '" + sDlvAsgnd + "' and MATGRP eq '" + sMatTypeGrp + "'";
                 //console.log("getDlvItem", sFilter)
                 oModel.read('/DlvDetailHUSet', {
                     urlParameters: {
