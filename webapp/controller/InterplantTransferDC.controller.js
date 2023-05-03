@@ -590,7 +590,7 @@ sap.ui.define([
 
                         data.results.forEach(item => {
                             item.COMPLETE = item.COMPLETE === "X" ? true : false;
-
+                            console.log("status", _this.getView().getModel("status").getData().results, item.DLVSTATCD)
                             var oStatus = _this.getView().getModel("status").getData().results.filter(x => x.STATUS == item.DLVSTATCD)[0];
                             item.DLVSTATCD = item.DLVSTATCD + " - (" + oStatus.DESCRIP + ")";
 
@@ -940,6 +940,7 @@ sap.ui.define([
                 else if (!this.byId("cmbRcvPlant").getSelectedKey()) sErrMsg = _oCaption.RCVPLANT;
                 else if (!this.byId("cmbRcvSloc").getSelectedKey()) sErrMsg = _oCaption.RCVSLOC;
                 else if (!this.byId("cmbShipMode").getSelectedKey()) sErrMsg = _oCaption.MODESHIP;
+                else if (!this.byId("iptRefDocNo").getValue()) sErrMsg = _oCaption.REFDOCNO;
 
                 if (sErrMsg.length > 0) {
                     sErrMsg += " is required."
@@ -1245,7 +1246,7 @@ sap.ui.define([
 
             setReqField(pType, pEditable) {
                 if (pType == "header") {
-                    var fields = ["feDocDt", "feReqDt", "feIssPlant", "feIssSloc", "feRcvPlant", "feRcvSloc", "feShipMode"];
+                    var fields = ["feDocDt", "feReqDt", "feIssPlant", "feIssSloc", "feRcvPlant", "feRcvSloc", "feShipMode", "feRefDocNo"];
 
                     fields.forEach(id => {
                         if (pEditable) {

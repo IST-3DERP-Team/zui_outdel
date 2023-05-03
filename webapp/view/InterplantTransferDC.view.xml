@@ -241,7 +241,7 @@
                                                     <Input id="iptCarrier" editable="{ui>/editModeHeader}" />
                                                 </f:fields>
                                             </f:FormElement>
-                                            <f:FormElement label="{ddtext>/REFDOCNO}">  
+                                            <f:FormElement id="feRefDocNo" label="{ddtext>/REFDOCNO}">  
                                                 <f:fields>
                                                     <Input id="iptRefDocNo" editable="{ui>/editModeHeader}" />
                                                 </f:fields>
