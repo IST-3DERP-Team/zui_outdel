@@ -150,13 +150,6 @@ sap.ui.define([
                 }
             },
 
-            onAfterTableRendering: function(oEvent) {
-                if (this._tableRendered !== "") {
-                    this.setActiveRowHighlight(this._tableRendered.replace("Tab", ""));
-                    this._tableRendered = "";
-                }
-            },
-
             getColumns: async function() {
                 var oModelColumns = new JSONModel();
                 var sPath = jQuery.sap.getModulePath("zuioutdel", "/model/columns.json")
@@ -745,36 +738,6 @@ sap.ui.define([
                         }
                     }
                 }, 1);
-            },
-
-            onColumnUpdated: function (oEvent) {
-                var oTable = oEvent.getSource();
-                var sModel;
-
-                if (oTable.getId().indexOf("outDelHdrTab") >= 0) {
-                    sModel = "outDelHdr";
-                }
-                else if (oTable.getId().indexOf("outDelDtlTab") >= 0) {
-                    sModel = "outDelDtl";
-                }
-
-                this.setActiveRowHighlight(sModel);
-            },
-
-            setActiveRowHighlight(arg) {
-                var oTable = this.byId(arg + "Tab");
-
-                setTimeout(() => {
-                    var iActiveRowIndex = oTable.getModel(arg).getData().results.findIndex(item => item.ACTIVE === "X");
-                    oTable.getRows().forEach((row, idx) => {
-                        if (row.getBindingContext(arg) && +row.getBindingContext(arg).sPath.replace("/results/", "") === iActiveRowIndex) {
-                            row.addStyleClass("activeRow");
-                        }
-                        else {
-                            row.removeStyleClass("activeRow");
-                        }
-                    })
-                }, 2);
             },
 
             onCellClick: function(oEvent) {
