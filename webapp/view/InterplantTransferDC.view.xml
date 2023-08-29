@@ -28,6 +28,7 @@
                     <!-- <Button id="btnPostHeader" type="Ghost" icon="sap-icon://settings" press="onPostHeader" visible="true" tooltip="{ddtext>/POST}"/>  -->
                     <Button id="btnRefreshHeader" type="Ghost" icon="sap-icon://refresh" press="onRefreshHeader" text="{ddtext>/REFRESH}" visible="true"/> 
                     <Button id="btnPrintHeader" type="Ghost" icon="sap-icon://print" press="onPrintHeader" text="{ddtext>/PRINT}" visible="false"/> 
+                    <Button id="btnCloseHeader" type="Ghost" icon="sap-icon://sys-cancel" press="onCloseHeader" text="{ddtext>/CLOSE}" tooltip="{caption>/CLOSE}" visible="true"/>
                     <Button id="btnSaveHeader" type="Ghost" icon="sap-icon://save" press="onSaveHeader" text="{ddtext>/SAVE}" visible="false"/> 
                     <Button id="btnCancelHeader" type="Ghost" icon="sap-icon://sys-cancel" press="onCancelHeader" text="{ddtext>/CANCEL}" visible="false"/> 
                 </Toolbar>
@@ -71,28 +72,36 @@
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpDocDt"
-                                                        editable="{ui>/editModeHeader}"/>
+                                                        editable="{ui>/editModeHeader}"
+                                                        valueFormat="MM/dd/yyyy" 
+                                                        displayFormat="MM/dd/yyyy" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement id="feReqDt" label="{ddtext>/REQDT}">  
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpReqDt"
-                                                        editable="{ui>/editModeHeader}"/>
+                                                        editable="{ui>/editModeHeader}"
+                                                        valueFormat="MM/dd/yyyy" 
+                                                        displayFormat="MM/dd/yyyy" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/POSTDT}">  
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpPostDt"
-                                                        editable="{ui>/editModeHeader}"/>
+                                                        editable="{ui>/editModeHeader}"
+                                                        valueFormat="MM/dd/yyyy" 
+                                                        displayFormat="MM/dd/yyyy" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/ACTISSDT}">  
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpActIssDt"
-                                                        editable="{ui>/editModeHeader}"/>
+                                                        editable="{ui>/editModeHeader}"
+                                                        valueFormat="MM/dd/yyyy" 
+                                                        displayFormat="MM/dd/yyyy" />
                                                 </f:fields>
                                             </f:FormElement>
                                         </f:formElements>
@@ -163,14 +172,18 @@
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpETD"
-                                                        editable="{ui>/editModeHeader}"/>
+                                                        editable="{ui>/editModeHeader}"
+                                                        valueFormat="MM/dd/yyyy" 
+                                                        displayFormat="MM/dd/yyyy" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/ETA}">  
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpETA"
-                                                        editable="{ui>/editModeHeader}"/>
+                                                        editable="{ui>/editModeHeader}"
+                                                        valueFormat="MM/dd/yyyy" 
+                                                        displayFormat="MM/dd/yyyy" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement id="feShipMode" label="{ddtext>/MODESHIP}">  
@@ -250,7 +263,9 @@
                                                 <f:fields>
                                                     <DatePicker
                                                         id="dpRefDocDt"
-                                                        editable="{ui>/editModeHeader}"/>
+                                                        editable="{ui>/editModeHeader}"
+                                                        valueFormat="MM/dd/yyyy" 
+                                                        displayFormat="MM/dd/yyyy" />
                                                 </f:fields>
                                             </f:FormElement>
                                             <f:FormElement label="{ddtext>/DELETED}">  

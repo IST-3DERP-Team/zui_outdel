@@ -245,7 +245,7 @@ sap.ui.define([
                 // prevent internal sorting by table
                 oEvent.preventDefault();
             });
-
+console.log("TableFilter", pTable)
             TableFilter.updateColumnMenu(pTable, this);
 
             // Add Column Local Props
@@ -815,7 +815,7 @@ sap.ui.define([
 
         setActiveRowHighlight(pModel) {
             var oTable = this.byId(pModel + "Tab");
-            
+
             setTimeout(() => {
                 var iActiveRowIndex = oTable.getModel(pModel).getData().results.findIndex(item => item.ACTIVE === "X");
 
