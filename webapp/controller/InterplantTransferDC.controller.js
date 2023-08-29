@@ -678,6 +678,10 @@ sap.ui.define([
                 _this.getHeader();
             },
 
+            onCloseHeader() {
+                _this.onNavBack();
+            },
+
             setHeaderValue(pWithValue) {
                 if (pWithValue) {
 
@@ -1112,6 +1116,7 @@ sap.ui.define([
                         this.byId("btnSetStatusHeader").setVisible(!pEditable);
                         this.byId("btnRefreshHeader").setVisible(!pEditable);
                         //this.byId("btnPrintHeader").setVisible(!pEditable);
+                        this.byId("btnCloseHeader").setVisible(!pEditable);
                         this.byId("btnSaveHeader").setVisible(pEditable);
                         this.byId("btnCancelHeader").setVisible(pEditable);
 
@@ -1209,6 +1214,7 @@ sap.ui.define([
                 this.byId("btnSetStatusHeader").setVisible(pChange);
                 this.byId("btnRefreshHeader").setVisible(true);
                 //this.byId("btnPrintHeader").setVisible(true);
+                this.byId("btnCloseHeader").setVisible(true);
                 this.byId("btnSaveHeader").setVisible(false);
                 this.byId("btnCancelHeader").setVisible(false);
 
