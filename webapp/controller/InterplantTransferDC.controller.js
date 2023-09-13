@@ -20,7 +20,7 @@ sap.ui.define([
         var _this;
         var _oCaption = {};
         var _aColumns = {};
-        var _startUpInfo;
+        var _startUpInfo = {};
         var _oHeader = {};
         var _sHeaderMode = "";
         var _sNoRangeCd = "";
@@ -99,10 +99,15 @@ sap.ui.define([
 
                 _this.getColumns(_aTableProp);
 
-                var oModelStartUp= new sap.ui.model.json.JSONModel();
-                oModelStartUp.loadData("/sap/bc/ui2/start_up").then(() => {
-                    _startUpInfo = oModelStartUp.oData
-                });
+                if (sap.ushell.Container) {
+                    var oModelStartUp= new sap.ui.model.json.JSONModel();
+                    oModelStartUp.loadData("/sap/bc/ui2/start_up").then(() => {
+                        _startUpInfo = oModelStartUp.oData;
+                    });
+                }
+                else {
+                    _startUpInfo.id = "BAS_CONN";
+                }
 
                 this.getResources("Status001Set", "status", "");
                 this.getResources("PlantSet", "issPlant", "SBU eq '" + sSbu + "' and DCIND eq 'X'");
