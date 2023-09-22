@@ -595,26 +595,37 @@ sap.ui.define([
                                 success: function(oResult, oResponse) {
                                     console.log("GoodsMvt_Post901Set", oResult, oResponse);
 
-                                    var oModel = _this.getOwnerComponent().getModel();
-                                    var sFilter = "REFDLVNO eq '" + _oHeader.dlvNo + "'";
-                                    oModel.read('/DlvHeaderNewIDSet', {
-                                        urlParameters: {
-                                            "$filter": sFilter
-                                        },
-                                        success: function (data, response) {
-                                            console.log("DlvHeaderNewIDSet", data);
-                                            if (data.results.length > 0) {
-                                                MessageBox.information(_oCaption.INFO_ID_CREATED + " " + data.results[0].DLVNO + ".");
+                                    if (oResult.N_POST901_RETURN.results.length > 0 && 
+                                        oResult.N_POST901_RETURN.results[0].Type != "E") {
+                                        var oModel = _this.getOwnerComponent().getModel();
+                                        var sFilter = "REFDLVNO eq '" + _oHeader.dlvNo + "'";
+                                        oModel.read('/DlvHeaderNewIDSet', {
+                                            urlParameters: {
+                                                "$filter": sFilter
+                                            },
+                                            success: function (data, response) {
+                                                console.log("DlvHeaderNewIDSet", data);
+                                                if (data.results.length > 0) {
+                                                    MessageBox.information(_oCaption.INFO_ID_CREATED + " " + data.results[0].DLVNO + ".");
+                                                }
+                                            },
+                                            error: function (err) { 
+                                                console.log("error", err)
                                             }
-                                        },
-                                        error: function (err) { 
-                                            console.log("error", err)
-                                        }
-                                    })
+                                        })
+    
+                                        //MessageBox.information(oResult.N_POST901_RETURN.results[0].Message);
+                                        
+                                        _this.getHeader();
+                                    }
+                                    else if (oResult.N_POST901_RETURN.results.length > 0) {
+                                        MessageBox.error(oResult.N_POST901_RETURN.results[0].Message);
+                                    }
+                                    else {
+                                        MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
+                                    }
 
-                                    //MessageBox.information(oResult.N_POST901_RETURN.results[0].Message);
                                     _this.closeLoadingDialog();
-                                    _this.getHeader();
                                 },
                                 error: function(err) {
                                     sap.m.MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
