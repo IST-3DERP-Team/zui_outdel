@@ -648,7 +648,7 @@ sap.ui.define([
                     return;
                 }
 
-                MessageBox.confirm(_oCaption.CONFIRM_PROCEED_EXECUTE, {
+                MessageBox.confirm(_oCaption.CONFIRM_PROCEED_REVERSAL, {
                     actions: ["Yes", "No"],
                     onClose: function (sAction) {
                         if (sAction === "Yes") {
@@ -1314,6 +1314,7 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "WARN_NO_DATA_DLVDTLHU"});
                 oDDTextParam.push({CODE: "WARN_STATUS_POSTED_REVERSE"});
                 oDDTextParam.push({CODE: "CONFIRM_PROCEED_EXECUTE"});
+                oDDTextParam.push({CODE: "CONFIRM_PROCEED_REVERSAL"});
                 oDDTextParam.push({CODE: "INFO_EXECUTE_FAIL"});
                 oDDTextParam.push({CODE: "WARN_ALREADY_HAS_DETAIL"});
                 oDDTextParam.push({CODE: "INFO_ID_CREATED"});
