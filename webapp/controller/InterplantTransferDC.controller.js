@@ -561,18 +561,9 @@ sap.ui.define([
                 });
             },
 
-            onPostHeader() {
-                if (_oHeader.status == "54") {
-                    MessageBox.warning(_oCaption.WARN_NOT_STATUS_GR_POSTED);
-                    _this.closeLoadingDialog();
-                    return;
-                }
-
-                if (_this.getView().getModel("dlvDtlHU").getData().results.length == 0) {
-                    MessageBox.warning(_oCaption.WARN_NO_DATA_DLVDTLHU);
-                    _this.closeLoadingDialog();
-                    return;
-                }
+            onPostHeader: async function() {
+                var bValidate = await _this.validatePost();
+                if (bValidate == false) return;
 
                 MessageBox.confirm(_oCaption.INFO_PROCEED_POST, {
                     actions: ["Yes", "No"],
@@ -635,6 +626,60 @@ sap.ui.define([
                         }
                     }
                 });
+            },
+
+            validatePost: async function() {
+                if (_oHeader.status == "54") {
+                    MessageBox.warning(_oCaption.WARN_NOT_STATUS_GR_POSTED);
+                    _this.closeLoadingDialog();
+                    return false;
+                }
+
+                if (_this.getView().getModel("dlvDtlHU").getData().results.length == 0) {
+                    MessageBox.warning(_oCaption.WARN_NO_DATA_DLVDTLHU);
+                    _this.closeLoadingDialog();
+                    return false;
+                }
+
+                var oModel = _this.getOwnerComponent().getModel();
+                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+                var sFilter = "DLVNO eq '" + sDlvNo + "'";
+                var iLength = 0;
+
+                var oPromiseResult = new Promise((resolve, reject) => {
+                    oModel.read('/IOTransferSet', {
+                        urlParameters: {
+                            "$filter": sFilter
+                        },
+                        success: function (data, response) {
+                            console.log("IOTransferSet", data);
+                            resolve();
+    
+                            if (data.results.length > 0) {
+                                iLength = data.results.length;
+
+                                var oJSONModel = new sap.ui.model.json.JSONModel();
+                                oJSONModel.setData(data);
+                                _this.getView().setModel(oJSONModel, "ioTransfer");
+    
+                                _this._IOTransfer = sap.ui.xmlfragment(_this.getView().getId(), "zuioutdel.view.fragments.dialog.IOTransfer", _this);
+                                _this._IOTransfer.setModel(oJSONModel);
+                                _this.getView().addDependent(_this._IOTransfer);
+    
+                                _this._IOTransfer.addStyleClass("sapUiSizeCompact");
+                                _this._IOTransfer.open();
+                            }
+                        },
+                        error: function (err) { 
+                            console.log("error", err)
+                        }
+                    })
+                })
+
+                await oPromiseResult;
+
+                if (iLength > 0) return false;
+                else return true;
             },
 
             onReverseHeader() {
@@ -968,6 +1013,10 @@ sap.ui.define([
                 else if (pModel == "matDoc") _this.getMatDoc();
             },
 
+            onCloseIOTransfer() {
+                _this._IOTransfer.destroy(true);
+            },
+
             onNavBack() {
                 // var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                 // oRouter.navTo("RouteMain", {}, true);
@@ -1286,6 +1335,11 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "POST"});
                 oDDTextParam.push({CODE: "REVERSE"});
 
+                oDDTextParam.push({CODE: "IONO"});
+                oDDTextParam.push({CODE: "SRCPLANT"});
+                oDDTextParam.push({CODE: "DESTPLANT"});
+                oDDTextParam.push({CODE: "CLOSE"});
+
                 // Buttons
                 oDDTextParam.push({CODE: "ADD"});
                 oDDTextParam.push({CODE: "EDIT"});
@@ -1318,6 +1372,7 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "INFO_EXECUTE_FAIL"});
                 oDDTextParam.push({CODE: "WARN_ALREADY_HAS_DETAIL"});
                 oDDTextParam.push({CODE: "INFO_ID_CREATED"});
+                oDDTextParam.push({CODE: "INFO_OD_POST_IOTRANSFER"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",
