@@ -85,9 +85,13 @@ sap.ui.define([
                     this.byId("btnAddOutDelHdr").setEnabled(false);
                     this.byId("btnEditOutDelHdr").setEnabled(false);
                     this.byId("btnRefreshOutDelHdr").setEnabled(false);
+                    this.byId("btnFullScreenOutDelHdr").setEnabled(false);
+                    this.byId("btnTabLayoutOutDelHdr").setEnabled(false);
 
                     // Detail button
                     this.byId("btnRefreshOutDelDtl").setEnabled(false);
+                    this.byId("btnFullScreenOutDelDtl").setEnabled(false);
+                    this.byId("btnTabLayoutOutDelDtl").setEnabled(false);
                 }
 
                 this._tableRendered = "";
@@ -139,10 +143,17 @@ sap.ui.define([
 
                 this.getOutDelHdr(aSmartFilter, sSmartFilterGlobal);
 
+                // Header
                 this.byId("btnAddOutDelHdr").setEnabled(true);
                 this.byId("btnEditOutDelHdr").setEnabled(true);
                 this.byId("btnRefreshOutDelHdr").setEnabled(true);
+                this.byId("btnFullScreenOutDelHdr").setEnabled(true);
+                this.byId("btnTabLayoutOutDelHdr").setEnabled(true);
+
+                // Detail
                 this.byId("btnRefreshOutDelDtl").setEnabled(true);
+                this.byId("btnFullScreenOutDelDtl").setEnabled(true);
+                this.byId("btnTabLayoutOutDelDtl").setEnabled(true);
             },
 
             getOutDelHdr(pFilters, pFilterGlobal) {
@@ -156,7 +167,7 @@ sap.ui.define([
                         console.log("OutDelHeaderSet", data)
                         if (data.results.length > 0) {
 
-                            data.results.forEach(item => {
+                            data.results.forEach((item, idx) => {
                                 if (item.PLANDLVDT !== null)
                                     item.PLANDLVDT = _this.formatDate(item.PLANDLVDT)
 
@@ -188,7 +199,9 @@ sap.ui.define([
                                 } else {
                                     item.REFDLVNO = "";
                                 }
-                                
+
+                                if (idx == 0) item.ACTIVE = "X";
+                                else item.ACTIVE = "";
                             })
 
                             var aFilterTab = [];
@@ -242,12 +255,15 @@ sap.ui.define([
                         console.log("OutDelDetailSet", data)
                         if (data.results.length > 0) {
 
-                            data.results.forEach(item => {
+                            data.results.forEach((item, idx) => {
                                 if (item.CREATEDDT !== null)
                                     item.CREATEDDT = _this.formatDate(item.CREATEDDT) + " " + _this.formatTime(item.CREATEDTM);
 
                                 if (item.UPDATEDDT !== null)
                                     item.UPDATEDDT = _this.formatDate(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
+
+                                if (idx == 0) item.ACTIVE = "X";
+                                else item.ACTIVE = "";
                             })
 
                             var aFilterTab = [];
@@ -486,6 +502,88 @@ sap.ui.define([
                 }
             },
 
+            onTableResize(pGroup, pType) {
+                if (pGroup == "hdr") {
+                    if (pType === "Max") {
+                        this.byId("btnFullScreenOutDelHdr").setVisible(false);
+                        this.byId("btnExitFullScreenOutDelHdr").setVisible(true);
+
+                        this.getView().byId("outDelHdrTab").setVisible(true);
+                        this.getView().byId("outDelDtlTab").setVisible(false);
+                    }
+                    else {
+                        this.byId("btnFullScreenOutDelHdr").setVisible(true);
+                        this.byId("btnExitFullScreenOutDelHdr").setVisible(false);
+
+                        this.getView().byId("outDelHdrTab").setVisible(true);
+                        this.getView().byId("outDelDtlTab").setVisible(true);
+                    }
+                }
+                else if (pGroup == "dtl") {
+                    if (pType === "Max") {
+                        this.byId("btnFullScreenOutDelDtl").setVisible(false);
+                        this.byId("btnExitFullScreenOutDelDtl").setVisible(true);
+
+                        this.getView().byId("outDelHdrTab").setVisible(false);
+                        this.getView().byId("outDelDtlTab").setVisible(true);
+                    }
+                    else {
+                        this.byId("btnFullScreenOutDelDtl").setVisible(true);
+                        this.byId("btnExitFullScreenOutDelDtl").setVisible(false);
+
+                        this.getView().byId("outDelHdrTab").setVisible(true);
+                        this.getView().byId("outDelDtlTab").setVisible(true);
+                    }
+                }
+            },
+
+            onSaveTableLayout: function (oEvent) {
+                var ctr = 1;
+                var oTable = oEvent.getSource().oParent.oParent;
+                var oColumns = oTable.getColumns();
+                var sSBU = _this.getView().getModel("ui").getData().sbu;
+
+                var oParam = {
+                    "SBU": sSBU,
+                    "TYPE": "",
+                    "TABNAME": "",
+                    "TableLayoutToItems": []
+                };
+
+                _aTableProp.forEach(item => {
+                    if (item.tblModel == oTable.getBindingInfo("rows").model) {
+                        oParam['TYPE'] = item.modCode;
+                        oParam['TABNAME'] = item.tblSrc;
+                    }
+                });
+
+                oColumns.forEach((column) => {
+                    oParam.TableLayoutToItems.push({
+                        COLUMNNAME: column.mProperties.sortProperty,
+                        ORDER: ctr.toString(),
+                        SORTED: column.mProperties.sorted,
+                        SORTORDER: column.mProperties.sortOrder,
+                        SORTSEQ: "1",
+                        VISIBLE: column.mProperties.visible,
+                        WIDTH: column.mProperties.width.replace('px','')
+                    });
+
+                    ctr++;
+                });
+
+                var oModel = _this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
+                oModel.create("/TableLayoutSet", oParam, {
+                    method: "POST",
+                    success: function(data, oResponse) {
+                        MessageBox.information(_oCaption.INFO_LAYOUT_SAVE);
+                    },
+                    error: function(err) {
+                        MessageBox.error(err);
+                        _this.closeLoadingDialog();
+                    }
+                });                
+            },
+
             getCaption() {
                 var oJSONModel = new JSONModel();
                 var oDDTextParam = [];
@@ -512,17 +610,7 @@ sap.ui.define([
 
                 // MessageBox
                 oDDTextParam.push({CODE: "INFO_NO_SELECTED"});
-                // oDDTextParam.push({CODE: "CONFIRM_DISREGARD_CHANGE"});
-                // oDDTextParam.push({CODE: "INFO_INVALID_SAVE"});
-                // oDDTextParam.push({CODE: "WARN_NO_DATA_MODIFIED"});
-                // oDDTextParam.push({CODE: "INFO_SEL_ONE_COL"});
-                // oDDTextParam.push({CODE: "INFO_LAYOUT_SAVE"});
-                // oDDTextParam.push({CODE: "INFO_CREATE_DATA_NOT_ALLOW"});
-                // oDDTextParam.push({CODE: "INFO_NO_RECORD_SELECT"});
-                // oDDTextParam.push({CODE: "INFO_NO_DELETE_MODIFIED"});
-                // oDDTextParam.push({CODE: "INFO_USE_GMC_REQ"});
-                // oDDTextParam.push({CODE: "INFO_ALREADY_EXIST"});
-                // oDDTextParam.push({CODE: "INFO_PROCEED_DELETE"});
+                oDDTextParam.push({CODE: "INFO_LAYOUT_SAVE"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",

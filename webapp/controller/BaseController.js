@@ -95,7 +95,7 @@ sap.ui.define([
                 oModel.read("/ColumnsSet", {
                     success: function (oData, oResponse) {
                         oJSONColumnsModel.setData(oData);
-                        console.log("ColumnsSet", oData)
+                        //console.log("ColumnsSet", oData)
                         if (oData.results.length > 0) {
                             oData.results.forEach(col => {
                                 if (col.ColumnName == "COMPLETE")
@@ -245,7 +245,7 @@ sap.ui.define([
                 // prevent internal sorting by table
                 oEvent.preventDefault();
             });
-console.log("TableFilter", pTable)
+            //console.log("TableFilter", pTable)
             TableFilter.updateColumnMenu(pTable, this);
 
             // Add Column Local Props
@@ -762,6 +762,11 @@ console.log("TableFilter", pTable)
             var time = pTime.split(':');
             let now = new Date();
             return (new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...time)).toLocaleTimeString();
+        },
+
+        onSelectTab: function(oEvent) {
+            _this._tableRendered = oEvent.getSource().getSelectedKey() + "Tab";
+            _this.setActiveRowHighlight(oEvent.getSource().getSelectedKey());
         },
 
         onAfterTableRendering: function(oEvent) {

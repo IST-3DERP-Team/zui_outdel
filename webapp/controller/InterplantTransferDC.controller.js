@@ -114,6 +114,8 @@ sap.ui.define([
                 this.getResources("PlantSet", "rcvPlant", "SBU eq '" + sSbu + "' and DCIND eq ''");
                 this.getResources("ShipModeSet", "shipMode", "");
 
+                this.byId("itbDetails").setSelectedKey("dlvDtlHU");
+
                 _oHeader = {
                     dlvNo: "",
                     mvtType: "",
@@ -340,7 +342,7 @@ sap.ui.define([
                     success: function (data, response) {
                         console.log("DlvDetailHUSet", data)
 
-                        data.results.forEach(item => {
+                        data.results.forEach((item, idx) => {
 
                             item.DELETED = item.DELETED === "X" ? true : false;
 
@@ -349,11 +351,15 @@ sap.ui.define([
 
                             if (item.UPDATEDDT !== null)
                                 item.UPDATEDDT = _this.formatDate(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
+
+                            if (idx == 0) item.ACTIVE = "X";
+                            else item.ACTIVE = "";
                         })
 
                         var oJSONModel = new sap.ui.model.json.JSONModel();
                         oJSONModel.setData(data);
                         _this.getView().setModel(oJSONModel, "dlvDtlHU");
+                        _this._tableRendered = "dlvDtlHUTab";
 
                         _this.setRowReadMode("dlvDtlHU");
 
@@ -377,7 +383,7 @@ sap.ui.define([
                     },
                     success: function (data, response) {
                         console.log("DlvDetailSet", data)
-                        data.results.forEach(item => {
+                        data.results.forEach((item, idx) => {
 
                             item.DELETED = item.DELETED === "X" ? true : false;
 
@@ -386,6 +392,9 @@ sap.ui.define([
 
                             if (item.UPDATEDDT !== null)
                                 item.UPDATEDDT = _this.formatDate(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
+
+                            if (idx == 0) item.ACTIVE = "X";
+                            else item.ACTIVE = "";
                         })
 
                         var oJSONModel = new sap.ui.model.json.JSONModel();
@@ -415,7 +424,7 @@ sap.ui.define([
                         console.log("StatOvwSet", data)
                         data.results.sort((a,b) => (a.DLVSTATCD > b.DLVSTATCD ? 1 : -1));
 
-                        data.results.forEach(item => {
+                        data.results.forEach((item, idx) => {
                             item.COMPLETE = item.COMPLETE === "X" ? true : false;
                             console.log("status", _this.getView().getModel("status").getData().results, item.DLVSTATCD)
                             var oStatus = _this.getView().getModel("status").getData().results.filter(x => x.STATUS == item.DLVSTATCD)[0];
@@ -429,6 +438,9 @@ sap.ui.define([
 
                             if (item.UPDATEDDT !== null)
                                 item.UPDATEDDT = _this.formatDate(item.UPDATEDDT) + " " + _this.formatTime(item.UPDATEDTM);
+
+                            if (idx == 0) item.ACTIVE = "X";
+                            else item.ACTIVE = "";
                         });
 
                         var oJSONModel = new JSONModel();
@@ -456,12 +468,15 @@ sap.ui.define([
                     },
                     success: function (data, response) {
                         console.log("MatDocSet", data)
-                        data.results.forEach(item => {
+                        data.results.forEach((item, idx) => {
                             if (item.DOCDT !== null)
                                     item.DOCDT = _this.formatDate(item.DOCDT);
 
                             if (item.POSTDT !== null)
                                 item.POSTDT = _this.formatDate(item.POSTDT);
+
+                            if (idx == 0) item.ACTIVE = "X";
+                            else item.ACTIVE = "";
                         });
 
                         var oJSONModel = new JSONModel();
@@ -1377,7 +1392,7 @@ sap.ui.define([
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",
                     success: function(oData, oResponse) {
-                        console.log("CaptionMsgSet", oData.CaptionMsgItems.results)
+                        //console.log("CaptionMsgSet", oData.CaptionMsgItems.results)
                         oData.CaptionMsgItems.results.forEach(item => {
                             oDDTextResult[item.CODE] = item.TEXT;
                         })

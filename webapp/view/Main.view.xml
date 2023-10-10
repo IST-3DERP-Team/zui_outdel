@@ -81,17 +81,32 @@
                             <Button id="btnAddOutDelHdr" 
                                 icon="sap-icon://add-document"
                                 press="onAddOutDelHdr"
-                                text="{ddtext>/NEW}"
+                                text=""
                                 visible="{base>/appChange}"/>
                             <Button id="btnEditOutDelHdr" 
                                 icon="sap-icon://edit"
                                 press="onEditOutDelHdr"
-                                text="{ddtext>/DISPLAY_EDIT}"
+                                text=""
                                 visible="{base>/appChange}"/>
                             <Button id="btnRefreshOutDelHdr" 
                                 icon="sap-icon://refresh"
                                 press="onRefreshOutDelHdr" 
-                                text="{ddtext>/REFRESH}"
+                                text=""
+                                visible="true" />
+                            <Button id="btnFullScreenOutDelHdr" 
+                                icon="sap-icon://full-screen"
+                                press="onTableResize('hdr','Max')"
+                                tooltip="{caption>/FULLSCREEN}"
+                                visible="true" />
+                            <Button id="btnExitFullScreenOutDelHdr" 
+                                icon="sap-icon://exit-full-screen"
+                                press="onTableResize('hdr','Min')"
+                                tooltip="{caption>/EXITFULLSCREEN}"
+                                visible="false" />
+                            <Button id="btnTabLayoutOutDelHdr"
+                                icon="sap-icon://grid" 
+                                press="onSaveTableLayout"
+                                tooltip="{caption>/SAVELAYOUT}" 
                                 visible="true" />
                         </Toolbar>
                     </uiT:extension>
@@ -126,7 +141,22 @@
                             <Button id="btnRefreshOutDelDtl" 
                                 icon="sap-icon://refresh"
                                 press="onRefreshOutDelDtl" 
-                                text="{ddtext>/REFRESH}"
+                                text=""
+                                visible="true" />
+                            <Button id="btnFullScreenOutDelDtl" 
+                                icon="sap-icon://full-screen"
+                                press="onTableResize('dtl','Max')"
+                                tooltip="{caption>/FULLSCREEN}"
+                                visible="true" />
+                            <Button id="btnExitFullScreenOutDelDtl" 
+                                icon="sap-icon://exit-full-screen"
+                                press="onTableResize('dtl','Min')"
+                                tooltip="{caption>/EXITFULLSCREEN}"
+                                visible="false" />
+                            <Button id="btnTabLayoutOutDelDtl"
+                                icon="sap-icon://grid" 
+                                press="onSaveTableLayout"
+                                tooltip="{caption>/SAVELAYOUT}" 
                                 visible="true" />
                         </Toolbar>
                     </uiT:extension>

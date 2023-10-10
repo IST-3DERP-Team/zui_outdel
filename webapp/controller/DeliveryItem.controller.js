@@ -145,6 +145,11 @@ sap.ui.define([
                     success: function (data, response) {
                         console.log("DlvDetailHUSet", data)
 
+                        data.results.forEach((item, idx) => {
+                            if (idx == 0) item.ACTIVE = "X";
+                            else item.ACTIVE = "";
+                        })
+
                         var aFilterTab = [];
                         if (oTable.getBinding("rows")) {
                             aFilterTab = oTable.getBinding("rows").aFilters;
