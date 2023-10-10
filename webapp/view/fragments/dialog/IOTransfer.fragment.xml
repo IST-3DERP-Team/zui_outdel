@@ -1,52 +1,54 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:uiT="sap.ui.table">
-    <Dialog title="{ddtext>/INFO_OD_POST_IOTRANSFER}" draggable="true" escapeHandler="onCloseIOTransfer" afterClose="onCloseIOTransfer" contentWidth="45%"      >
+    <Dialog 
+        title="{ddtext>/INFO_OD_POST_IOTRANSFER}" 
+        draggable="true" 
+        contentWidth="580px"
+        resizable="true">
+        <content>
         
-    <VBox fitContainer="true">
-        <uiT:Table id="ioTransferTab" 
-            rows="{ioTransfer>/results}" 
-            visibleRowCountMode="Auto" 
-            selectionMode="Single" 
-            selectionBehavior="RowOnly">
-            <!-- <uiT:extension>
-                <Toolbar>
-                    <ToolbarSpacer/>
-                    <SearchField
-                        id="searchField"
-                        placeholder="Filter"
-                        value=""
-                        search="onFilterByGlobal"
-                        width="15rem"/>
-                </Toolbar>
-            </uiT:extension> -->
-            <uiT:columns>
-                <uiT:Column width="25%">
-                    <Label text="{ddtext>/IONO}" />
-                    <uiT:template>
-						 <Text text="{ioTransfer>IONO}" />
-                    </uiT:template>
-                </uiT:Column>
-                <uiT:Column width="35%">
-                    <Label text="{ddtext>/SRCPLANT}" />
-                    <uiT:template>
-						 <Text text="{ioTransfer>SRCPLANT}"   />
-                    </uiT:template>
-                </uiT:Column>
-                <uiT:Column width="40%">
-                    <Label text="{ddtext>/DESTPLANT}" />
-                    <uiT:template>
-						 <Text text="{ioTransfer>DESTPLANT}"   />
-                    </uiT:template>
-                </uiT:Column>
-            </uiT:columns>
-            <uiT:layoutData>
-                <FlexItemData growFactor="1" baseSize="0%" />
-            </uiT:layoutData>
-			 
-        </uiT:Table>
-		<Toolbar height="2rem">
-            <ToolbarSpacer />
+            <uiT:Table id="ioTransferTab" 
+                class="sapUiTinyMargin"
+                rows="{ioTransfer>/results}" 
+                visibleRowCountMode="Auto" 
+                selectionMode="Single" 
+                selectionBehavior="RowOnly"
+                width="560px">
+                <!-- <uiT:extension>
+                    <Toolbar>
+                        <ToolbarSpacer/>
+                        <SearchField
+                            id="searchField"
+                            placeholder="Filter"
+                            value=""
+                            search="onFilterByGlobal"
+                            width="15rem"/>
+                    </Toolbar>
+                </uiT:extension> -->
+                <uiT:columns>
+                    <uiT:Column width="150px">
+                        <Label text="{ddtext>/IONO}" />
+                        <uiT:template>
+                            <Text text="{ioTransfer>IONO}" />
+                        </uiT:template>
+                    </uiT:Column>
+                    <uiT:Column width="200px">
+                        <Label text="{ddtext>/SRCPLANT}" />
+                        <uiT:template>
+                            <Text text="{ioTransfer>SRCPLANT}"   />
+                        </uiT:template>
+                    </uiT:Column>
+                    <uiT:Column width="200px">
+                        <Label text="{ddtext>/DESTPLANT}" />
+                        <uiT:template>
+                            <Text text="{ioTransfer>DESTPLANT}"   />
+                        </uiT:template>
+                    </uiT:Column>
+                </uiT:columns>
+                
+            </uiT:Table>
+        </content>
+        <buttons>
             <Button type="Ghost" icon="sap-icon://decline" text="{ddtext>/CLOSE}" tooltip="{ddtext>/CLOSE}" press="onCloseIOTransfer"  />
-        </Toolbar>
-        </VBox>
+        </buttons>
     </Dialog>
 </core:FragmentDefinition>
