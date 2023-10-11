@@ -265,6 +265,7 @@ sap.ui.define([
         },
 
         handleTableValueHelp: async function (oEvent) {
+            console.log("handleTableValueHelp")
             var me = this;
             var oSource = oEvent.getSource();
             this._inputSource = oSource;

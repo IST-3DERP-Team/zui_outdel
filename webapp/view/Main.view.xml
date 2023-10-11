@@ -76,37 +76,40 @@
                     rowSelectionChange="onRowSelectionChangeOutDelHdr">
                     <uiT:extension>
                         <Toolbar>
-                            <Text text="{ui>/rowCountMrpHdr} {ddtext>/ROWS}" />
+                            <Text text="{ui>/rowCountOutDelHdr} {ddtext>/ITEM(S)}" />
                             <ToolbarSpacer/>
                             <Button id="btnAddOutDelHdr" 
                                 icon="sap-icon://add-document"
                                 press="onAddOutDelHdr"
                                 text=""
+                                tooltip="{ddtext>/ADD}"
                                 visible="{base>/appChange}"/>
                             <Button id="btnEditOutDelHdr" 
                                 icon="sap-icon://edit"
                                 press="onEditOutDelHdr"
                                 text=""
+                                tooltip="{ddtext>/DISPLAY_EDIT}"
                                 visible="{base>/appChange}"/>
                             <Button id="btnRefreshOutDelHdr" 
                                 icon="sap-icon://refresh"
                                 press="onRefreshOutDelHdr" 
                                 text=""
+                                tooltip="{ddtext>/REFRESH}"
                                 visible="true" />
                             <Button id="btnFullScreenOutDelHdr" 
                                 icon="sap-icon://full-screen"
                                 press="onTableResize('hdr','Max')"
-                                tooltip="{caption>/FULLSCREEN}"
+                                tooltip="{ddtext>/FULLSCREEN}"
                                 visible="true" />
                             <Button id="btnExitFullScreenOutDelHdr" 
                                 icon="sap-icon://exit-full-screen"
                                 press="onTableResize('hdr','Min')"
-                                tooltip="{caption>/EXITFULLSCREEN}"
+                                tooltip="{ddtext>/EXITFULLSCREEN}"
                                 visible="false" />
                             <Button id="btnTabLayoutOutDelHdr"
                                 icon="sap-icon://grid" 
                                 press="onSaveTableLayout"
-                                tooltip="{caption>/SAVELAYOUT}" 
+                                tooltip="{ddtext>/SAVELAYOUT}" 
                                 visible="true" />
                         </Toolbar>
                     </uiT:extension>
@@ -135,28 +138,28 @@
                     rowSelectionChange="onRowSelectionChangeOutDelDtl">
                     <uiT:extension>
                         <Toolbar>
-                            <Text text="{ddtext>/DLVDTL}" />
-                            <Text text="{ui>/rowCountMrpDtl} {ddtext>/ROWS}" />
+                            <Text text="{ui>/rowCountOutDelDtl} {ddtext>/ITEM(S)}" />
                             <ToolbarSpacer/>
                             <Button id="btnRefreshOutDelDtl" 
                                 icon="sap-icon://refresh"
                                 press="onRefreshOutDelDtl" 
                                 text=""
+                                tooltip="{ddtext>/REFRESH}"
                                 visible="true" />
                             <Button id="btnFullScreenOutDelDtl" 
                                 icon="sap-icon://full-screen"
                                 press="onTableResize('dtl','Max')"
-                                tooltip="{caption>/FULLSCREEN}"
+                                tooltip="{ddtext>/FULLSCREEN}"
                                 visible="true" />
                             <Button id="btnExitFullScreenOutDelDtl" 
                                 icon="sap-icon://exit-full-screen"
                                 press="onTableResize('dtl','Min')"
-                                tooltip="{caption>/EXITFULLSCREEN}"
+                                tooltip="{ddtext>/EXITFULLSCREEN}"
                                 visible="false" />
                             <Button id="btnTabLayoutOutDelDtl"
                                 icon="sap-icon://grid" 
                                 press="onSaveTableLayout"
-                                tooltip="{caption>/SAVELAYOUT}" 
+                                tooltip="{ddtext>/SAVELAYOUT}" 
                                 visible="true" />
                         </Toolbar>
                     </uiT:extension>

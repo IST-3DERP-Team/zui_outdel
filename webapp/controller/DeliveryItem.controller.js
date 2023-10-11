@@ -46,7 +46,8 @@ sap.ui.define([
                     activeDlvNo: oEvent.getParameter("arguments").dlvNo,
                     activeIssPlant: oEvent.getParameter("arguments").issPlant,
                     activeRcvPlant: oEvent.getParameter("arguments").rcvPlant,
-                    activeMatTypeGrp: oEvent.getParameter("arguments").matTypeGrp
+                    activeMatTypeGrp: oEvent.getParameter("arguments").matTypeGrp,
+                    rowCount: 0
                 }), "ui");
 
                 _this.initializeComponent();
@@ -159,6 +160,9 @@ sap.ui.define([
                         oJSONModel.setData(data);
                         _this.getView().setModel(oJSONModel, "dlvItem");
                         _this._tableRendered = "dlvItemTab";
+
+                        // Set row count
+                        _this.getView().getModel("ui").setProperty("/rowCount", data.results.length);
 
                         _this.onFilterBySmart("dlvItem", pFilters, pFilterGlobal, aFilterTab);
 
@@ -482,6 +486,53 @@ sap.ui.define([
                 this.clearSortFilter("outDelDtlTab");
             },
 
+            onSaveTableLayout: function (oEvent) {
+                var ctr = 1;
+                var oTable = oEvent.getSource().oParent.oParent;
+                var oColumns = oTable.getColumns();
+                var sSBU = _this.getView().getModel("ui").getData().sbu;
+
+                var oParam = {
+                    "SBU": sSBU,
+                    "TYPE": "",
+                    "TABNAME": "",
+                    "TableLayoutToItems": []
+                };
+
+                _aTableProp.forEach(item => {
+                    if (item.tblModel == oTable.getBindingInfo("rows").model) {
+                        oParam['TYPE'] = item.modCode;
+                        oParam['TABNAME'] = item.tblSrc;
+                    }
+                });
+
+                oColumns.forEach((column) => {
+                    oParam.TableLayoutToItems.push({
+                        COLUMNNAME: column.mProperties.sortProperty,
+                        ORDER: ctr.toString(),
+                        SORTED: column.mProperties.sorted,
+                        SORTORDER: column.mProperties.sortOrder,
+                        SORTSEQ: "1",
+                        VISIBLE: column.mProperties.visible,
+                        WIDTH: column.mProperties.width.replace('px','')
+                    });
+
+                    ctr++;
+                });
+
+                var oModel = _this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
+                oModel.create("/TableLayoutSet", oParam, {
+                    method: "POST",
+                    success: function(data, oResponse) {
+                        MessageBox.information(_oCaption.INFO_LAYOUT_SAVE);
+                    },
+                    error: function(err) {
+                        MessageBox.error(err);
+                        _this.closeLoadingDialog();
+                    }
+                });                
+            },
+
             getCaption() {
                 var oJSONModel = new JSONModel();
                 var oDDTextParam = [];
@@ -495,23 +546,19 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "MATTYPE"});
                 oDDTextParam.push({CODE: "IONO"});
 
+                // Label
+                oDDTextParam.push({CODE: "ITEM(S)"});
+
                 // Buttons
                 oDDTextParam.push({CODE: "ADD"});
                 oDDTextParam.push({CODE: "CLOSE"});
+                oDDTextParam.push({CODE: "SAVELAYOUT"});
 
                 // MessageBox
                 oDDTextParam.push({CODE: "INFO_NO_SELECTED"});
-                // oDDTextParam.push({CODE: "CONFIRM_DISREGARD_CHANGE"});
-                // oDDTextParam.push({CODE: "INFO_INVALID_SAVE"});
-                // oDDTextParam.push({CODE: "WARN_NO_DATA_MODIFIED"});
-                // oDDTextParam.push({CODE: "INFO_SEL_ONE_COL"});
-                // oDDTextParam.push({CODE: "INFO_LAYOUT_SAVE"});
-                // oDDTextParam.push({CODE: "INFO_CREATE_DATA_NOT_ALLOW"});
                 oDDTextParam.push({CODE: "INFO_NO_RECORD_SELECT"});
-                // oDDTextParam.push({CODE: "INFO_NO_DELETE_MODIFIED"});
-                // oDDTextParam.push({CODE: "INFO_USE_GMC_REQ"});
-                // oDDTextParam.push({CODE: "INFO_ALREADY_EXIST"});
                 oDDTextParam.push({CODE: "INFO_PROCEED_CLOSE"});
+                oDDTextParam.push({CODE: "INFO_LAYOUT_SAVE"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",

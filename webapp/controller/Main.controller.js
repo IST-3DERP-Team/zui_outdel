@@ -53,7 +53,9 @@ sap.ui.define([
             initializeComponent() {
                 this.getView().setModel(new JSONModel({
                     sbu: "VER",
-                    activeDlvNo: ""
+                    activeDlvNo: "",
+                    rowCountOutDelHdr: 0,
+                    rowCountOutDelDtl: 0,                    
                 }), "ui");
 
                 this.onInitBase(_this, _this.getView().getModel("ui").getData().sbu);
@@ -219,6 +221,9 @@ sap.ui.define([
                             _this.setRowReadMode("outDelHdr");
                         }
 
+                        // Set row count
+                        _this.getView().getModel("ui").setProperty("/rowCountOutDelHdr", data.results.length);
+
                         oTable.getColumns().forEach((col, idx) => {   
                             if (col._oSorter) {
                                 oTable.sort(col, col.mProperties.sortOrder === "Ascending" ? SortOrder.Ascending : SortOrder.Descending, true);
@@ -290,6 +295,9 @@ sap.ui.define([
                                 results: []
                             }), "outDelDtl");
                         }
+
+                        // Set row count
+                        _this.getView().getModel("ui").setProperty("/rowCountOutDelDtl", data.results.length);
 
                         var oTable = _this.getView().byId("outDelDtlTab");
                         oTable.getColumns().forEach((col, idx) => {   
@@ -600,6 +608,7 @@ sap.ui.define([
 
                 // Label
                 oDDTextParam.push({CODE: "DLVDTL"});
+                oDDTextParam.push({CODE: "ITEM(S)"});
 
                 // Buttons
                 oDDTextParam.push({CODE: "NEW"});
@@ -607,6 +616,9 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "ADD"});
                 oDDTextParam.push({CODE: "EDIT"});
                 oDDTextParam.push({CODE: "REFRESH"});
+                oDDTextParam.push({CODE: "FULLSCREEN"});
+                oDDTextParam.push({CODE: "EXITFULLSCREEN"});
+                oDDTextParam.push({CODE: "SAVELAYOUT"});
 
                 // MessageBox
                 oDDTextParam.push({CODE: "INFO_NO_SELECTED"});

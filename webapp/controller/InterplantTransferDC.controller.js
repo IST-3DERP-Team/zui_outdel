@@ -9,12 +9,13 @@ sap.ui.define([
     "sap/ui/table/library",
     "sap/m/TablePersoController",
     'sap/m/MessageToast',
-	'sap/m/SearchField'
+	'sap/m/SearchField',
+    "../js/TableValueHelp"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-     function (BaseController, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, TablePersoController, MessageToast, SearchField) {
+     function (BaseController, JSONModel, MessageBox, Filter, FilterOperator, Sorter, Device, library, TablePersoController, MessageToast, SearchField, TableValueHelp) {
         "use strict";
         
         var _this;
@@ -44,7 +45,11 @@ sap.ui.define([
                     sbu: oEvent.getParameter("arguments").sbu,
                     activeDlvNo: oEvent.getParameter("arguments").dlvNo,
                     editModeHeader: false,
-                    editModeHeader2: false
+                    editModeHeader2: false,
+                    rowCountDlvDtlHU: 0,
+                    rowCountDlvDtl: 0,
+                    rowCountStatOvw: 0,
+                    rowCountMatDoc: 0
                 }), "ui");
 
                 _this.initializeComponent();
@@ -361,6 +366,9 @@ sap.ui.define([
                         _this.getView().setModel(oJSONModel, "dlvDtlHU");
                         _this._tableRendered = "dlvDtlHUTab";
 
+                        // Set row count
+                        _this.getView().getModel("ui").setProperty("/rowCountDlvDtlHU", data.results.length);
+
                         _this.setRowReadMode("dlvDtlHU");
 
                         _this.closeLoadingDialog();
@@ -400,6 +408,9 @@ sap.ui.define([
                         var oJSONModel = new sap.ui.model.json.JSONModel();
                         oJSONModel.setData(data);
                         _this.getView().setModel(oJSONModel, "dlvDtl");
+
+                        // Set row count
+                        _this.getView().getModel("ui").setProperty("/rowCountDlvDtl", data.results.length);
 
                         _this.setRowReadMode("dlvDtl");
                         
@@ -447,6 +458,9 @@ sap.ui.define([
                         oJSONModel.setData(data);
                         _this.getView().setModel(oJSONModel, "statOvw");
 
+                        // Set row count
+                        _this.getView().getModel("ui").setProperty("/rowCountStatOvw", data.results.length);
+
                         _this.setRowReadMode("statOvw");
 
                         _this.closeLoadingDialog();
@@ -482,6 +496,9 @@ sap.ui.define([
                         var oJSONModel = new JSONModel();
                         oJSONModel.setData(data);
                         _this.getView().setModel(oJSONModel, "matDoc");
+
+                        // Set row count
+                        _this.getView().getModel("ui").setProperty("/rowCountMatDoc", data.results.length);
 
                         _this.setRowReadMode("matDoc");
 
@@ -1134,6 +1151,10 @@ sap.ui.define([
                 })
             },
 
+            onShipModeValueHelp(oEvent) {
+                TableValueHelp.handleFormValueHelp(oEvent, this);
+            },
+
             onDropdownSelectionChange(oEvent) {
 
                 var oSource = oEvent.getSource();
@@ -1217,9 +1238,20 @@ sap.ui.define([
                         this.byId("btnCreateDlvDtlHU").setEnabled(!pEditable);
                         this.byId("btnDeleteDlvDtlHU").setEnabled(!pEditable);
                         this.byId("btnRefreshDlvDtlHU").setEnabled(!pEditable);
+                        this.byId("btnFullScreenDlvDtlHU").setEnabled(!pEditable);
+                        this.byId("btnTabLayoutDlvDtlHU").setEnabled(!pEditable);
+
                         this.byId("btnRefreshDlvDtl").setEnabled(!pEditable);
+                        this.byId("btnFullScreenDlvDtl").setEnabled(!pEditable);
+                        this.byId("btnTabLayoutDlvDtl").setEnabled(!pEditable);
+
                         this.byId("btnRefreshStatOvw").setEnabled(!pEditable);
+                        this.byId("btnFullScreenStatOvw").setEnabled(!pEditable);
+                        this.byId("btnTabLayoutStatOvw").setEnabled(!pEditable);
+
                         this.byId("btnRefreshMatDoc").setEnabled(!pEditable);
+                        this.byId("btnFullScreenMatDoc").setEnabled(!pEditable);
+                        this.byId("btnTabLayoutMatDoc").setEnabled(!pEditable);
                     } 
                     // else if (pType == "detail") {
                     //     // Header
@@ -1307,6 +1339,94 @@ sap.ui.define([
                 this.byId("btnRefreshMatDoc").setVisible(true);
             },
 
+            onTableResize(pGroup, pType) {
+                if (pGroup == "hdr") {
+                }
+                else if (pGroup == "dtl") {
+                    if (pType === "Max") {
+                        this.byId("btnFullScreenDlvDtlHU").setVisible(false);
+                        this.byId("btnExitFullScreenDlvDtlHU").setVisible(true);
+
+                        this.byId("btnFullScreenDlvDtl").setVisible(false);
+                        this.byId("btnExitFullScreenDlvDtl").setVisible(true);
+
+                        this.byId("btnFullScreenStatOvw").setVisible(false);
+                        this.byId("btnExitFullScreenStatOvw").setVisible(true);
+
+                        this.byId("btnFullScreenMatDoc").setVisible(false);
+                        this.byId("btnExitFullScreenMatDoc").setVisible(true);
+
+                        this.getView().byId("tbHeader").setVisible(false);
+                        this.getView().byId("frmHeader").setVisible(false);
+                        this.getView().byId("itbDetails").setVisible(true);
+                    }
+                    else {
+                        this.byId("btnFullScreenDlvDtlHU").setVisible(true);
+                        this.byId("btnExitFullScreenDlvDtlHU").setVisible(false);
+
+                        this.byId("btnFullScreenDlvDtl").setVisible(true);
+                        this.byId("btnExitFullScreenDlvDtl").setVisible(false);
+
+                        this.byId("btnFullScreenStatOvw").setVisible(true);
+                        this.byId("btnExitFullScreenStatOvw").setVisible(false);
+
+                        this.byId("btnFullScreenMatDoc").setVisible(true);
+                        this.byId("btnExitFullScreenMatDoc").setVisible(false);
+
+                        this.getView().byId("tbHeader").setVisible(true);
+                        this.getView().byId("frmHeader").setVisible(true);
+                        this.getView().byId("itbDetails").setVisible(true);
+                    }
+                }
+            },
+
+            onSaveTableLayout: function (oEvent) {
+                var ctr = 1;
+                var oTable = oEvent.getSource().oParent.oParent;
+                var oColumns = oTable.getColumns();
+                var sSBU = _this.getView().getModel("ui").getData().sbu;
+
+                var oParam = {
+                    "SBU": sSBU,
+                    "TYPE": "",
+                    "TABNAME": "",
+                    "TableLayoutToItems": []
+                };
+
+                _aTableProp.forEach(item => {
+                    if (item.tblModel == oTable.getBindingInfo("rows").model) {
+                        oParam['TYPE'] = item.modCode;
+                        oParam['TABNAME'] = item.tblSrc;
+                    }
+                });
+
+                oColumns.forEach((column) => {
+                    oParam.TableLayoutToItems.push({
+                        COLUMNNAME: column.mProperties.sortProperty,
+                        ORDER: ctr.toString(),
+                        SORTED: column.mProperties.sorted,
+                        SORTORDER: column.mProperties.sortOrder,
+                        SORTSEQ: "1",
+                        VISIBLE: column.mProperties.visible,
+                        WIDTH: column.mProperties.width.replace('px','')
+                    });
+
+                    ctr++;
+                });
+
+                var oModel = _this.getOwnerComponent().getModel("ZGW_3DERP_COMMON_SRV");
+                oModel.create("/TableLayoutSet", oParam, {
+                    method: "POST",
+                    success: function(data, oResponse) {
+                        MessageBox.information(_oCaption.INFO_LAYOUT_SAVE);
+                    },
+                    error: function(err) {
+                        MessageBox.error(err);
+                        _this.closeLoadingDialog();
+                    }
+                });                
+            },
+
             getCaption() {
                 var oJSONModel = new JSONModel();
                 var oDDTextParam = [];
@@ -1354,6 +1474,7 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "SRCPLANT"});
                 oDDTextParam.push({CODE: "DESTPLANT"});
                 oDDTextParam.push({CODE: "CLOSE"});
+                oDDTextParam.push({CODE: "ITEM(S)"});
 
                 // Buttons
                 oDDTextParam.push({CODE: "ADD"});
@@ -1365,6 +1486,9 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "CLOSE"});
                 oDDTextParam.push({CODE: "SAVE"});
                 oDDTextParam.push({CODE: "CANCEL"});
+                oDDTextParam.push({CODE: "FULLSCREEN"});
+                oDDTextParam.push({CODE: "EXITFULLSCREEN"});
+                oDDTextParam.push({CODE: "SAVELAYOUT"});
 
                 // MessageBox
                 // oDDTextParam.push({CODE: "INFO_NO_SELECTED"});
@@ -1388,6 +1512,7 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "WARN_ALREADY_HAS_DETAIL"});
                 oDDTextParam.push({CODE: "INFO_ID_CREATED"});
                 oDDTextParam.push({CODE: "INFO_OD_POST_IOTRANSFER"});
+                oDDTextParam.push({CODE: "INFO_LAYOUT_SAVE"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",

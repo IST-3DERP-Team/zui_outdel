@@ -13,452 +13,543 @@
     <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false" showNavButton="true" navButtonPress="onNavBack">
         <content>
             <VBox id="vbMain" fitContainer="true">
-                <Toolbar id="TB1" style="Clear">
+                <Toolbar id="tbHeader" style="Clear">
                     <ToolbarSpacer />
-                    <Button id="btnEditHeader" type="Ghost" icon="sap-icon://edit" press="onEditHeader" text="" visible="true"/>
-                    <Button id="btnDeleteHeader" type="Ghost" icon="sap-icon://delete" press="onDeleteHeader" text="" visible="true"/> 
-                    <MenuButton id="btnSetStatusHeader" type="Ghost" icon="sap-icon://settings" tooltip="{ddtext>/SETSTATUS}" text="{ddtext>/SETSTATUS}" visible="true">
+                    <Button id="btnEditHeader" type="Ghost" icon="sap-icon://edit" press="onEditHeader" text="" tooltip="{ddtext>/EDIT}" visible="true"/>
+                    <Button id="btnDeleteHeader" type="Ghost" icon="sap-icon://delete" press="onDeleteHeader" text="" tooltip="{ddtext>/DELETE}" visible="true"/> 
+                    <MenuButton id="btnSetStatusHeader" type="Ghost" icon="sap-icon://settings" text="{ddtext>/SETSTATUS}" tooltip="{ddtext>/SETSTATUS}" visible="true">
                         <menu>
                             <Menu id="menuSetStatusHeader">
-                                <MenuItem id="menuPostHeader" icon="sap-icon://complete" text="{ddtext>/POST}" press="onPostHeader" />
-                                <MenuItem id="menuReverseHeader" icon="sap-icon://undo" text="{ddtext>/REVERSE}" press="onReverseHeader" />
+                                <MenuItem id="menuPostHeader" icon="sap-icon://complete" text="{ddtext>/POST}" tooltip="{ddtext>/POST}" press="onPostHeader" />
+                                <MenuItem id="menuReverseHeader" icon="sap-icon://undo" text="{ddtext>/REVERSE}" tooltip="{ddtext>/REVERSE}" press="onReverseHeader" />
                             </Menu>
                         </menu>
                     </MenuButton>
                     <!-- <Button id="btnPostHeader" type="Ghost" icon="sap-icon://settings" press="onPostHeader" visible="true" tooltip="{ddtext>/POST}"/>  -->
-                    <Button id="btnRefreshHeader" type="Ghost" icon="sap-icon://refresh" press="onRefreshHeader" text="" visible="true"/> 
-                    <Button id="btnPrintHeader" type="Ghost" icon="sap-icon://print" press="onPrintHeader" text="{ddtext>/PRINT}" visible="false"/> 
-                    <Button id="btnCloseHeader" type="Ghost" icon="sap-icon://sys-cancel" press="onCloseHeader" text="" tooltip="{caption>/CLOSE}" visible="true"/>
-                    <Button id="btnSaveHeader" type="Ghost" icon="sap-icon://save" press="onSaveHeader" text="" visible="false"/> 
-                    <Button id="btnCancelHeader" type="Ghost" icon="sap-icon://decline" press="onCancelHeader" text="" visible="false"/> 
+                    <Button id="btnRefreshHeader" type="Ghost" icon="sap-icon://refresh" press="onRefreshHeader" text="" tooltip="{ddtext>/REFRESH}" visible="true"/> 
+                    <Button id="btnPrintHeader" type="Ghost" icon="sap-icon://print" press="onPrintHeader" text="{ddtext>/PRINT}" tooltip="{ddtext>/PRINT}" visible="false"/> 
+                    <Button id="btnCloseHeader" type="Ghost" icon="sap-icon://sys-cancel" press="onCloseHeader" text="" tooltip="{ddtext>/CLOSE}" visible="true"/>
+                    <Button id="btnSaveHeader" type="Ghost" icon="sap-icon://save" press="onSaveHeader" text="" tooltip="{ddtext>/SAVE}" visible="false"/> 
+                    <Button id="btnCancelHeader" type="Ghost" icon="sap-icon://decline" press="onCancelHeader" text="" tooltip="{ddtext>/CANCEL}" visible="false"/> 
                 </Toolbar>
-                <!-- <uiL:Splitter height="100%" orientation="Vertical">                   -->
-                    <!-- <uiL:Splitter> -->
-                        <!-- <uiL:layoutData><uiL:SplitterLayoutData size="40%"/></uiL:layoutData> -->
-                        <!-- <uiL:contentAreas> -->
-                            <f:Form id="frmHeader" editable="true" class="sapUiNoContentPadding" width="100%">
-                                <f:layout>
-                                    <f:ResponsiveGridLayout columnsL="4" singleContainerFullSize="false" />
-                                </f:layout>
-                                <f:formContainers>
-                                    <f:FormContainer ariaLabelledBy="Grp1" class="sapUiNoContentPadding" >
-                                        <f:formElements>
-                                            <f:FormElement label="{ddtext>/DLVNO}">  
-                                                <f:fields>
-                                                    <Input id="iptDlvNo" editable="false" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/MVTTYPE}">  
-                                                <f:fields>
-                                                    <Input id="iptMvtType" editable="false" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/STATUS}">  
-                                                <f:fields>
-                                                    <ComboBox
-                                                        id="cmbStatus"
-                                                        showSecondaryValues= "true"
-                                                        items="{
-                                                            path: 'status>/results',
-                                                            sorter: { path: 'DLVSTATCD' }
-                                                        }"
-                                                        editable="false"
-                                                        selectionChange="onDropdownSelectionChange">
-                                                        <core:ListItem id="liStatus" key="{status>STATUS}" text="{status>STATUS} - ({status>DESCRIP})"/>
-                                                    </ComboBox>
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement id="feDocDt" label="{ddtext>/DOCDT}">  
-                                                <f:fields>
-                                                    <DatePicker
-                                                        id="dpDocDt"
-                                                        editable="{ui>/editModeHeader}"
-                                                        valueFormat="MM/dd/yyyy" 
-                                                        displayFormat="MM/dd/yyyy" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement id="feReqDt" label="{ddtext>/REQDT}">  
-                                                <f:fields>
-                                                    <DatePicker
-                                                        id="dpReqDt"
-                                                        editable="{ui>/editModeHeader}"
-                                                        valueFormat="MM/dd/yyyy" 
-                                                        displayFormat="MM/dd/yyyy" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/POSTDT}">  
-                                                <f:fields>
-                                                    <DatePicker
-                                                        id="dpPostDt"
-                                                        editable="{ui>/editModeHeader}"
-                                                        valueFormat="MM/dd/yyyy" 
-                                                        displayFormat="MM/dd/yyyy" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/ACTISSDT}">  
-                                                <f:fields>
-                                                    <DatePicker
-                                                        id="dpActIssDt"
-                                                        editable="{ui>/editModeHeader}"
-                                                        valueFormat="MM/dd/yyyy" 
-                                                        displayFormat="MM/dd/yyyy" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                        </f:formElements>
-                                    </f:FormContainer>
-                                    <f:FormContainer ariaLabelledBy="Grp2" class="sapUiNoContentPadding" >
-                                        <f:formElements>
-                                            <f:FormElement id="feIssPlant" label="{ddtext>/ISSPLANT}">  
-                                                <f:fields>
-                                                    <ComboBox
-                                                        id="cmbIssPlant"
-                                                        showSecondaryValues= "true"
-                                                        items="{
-                                                            path: 'issPlant>/results',
-                                                            sorter: { path: 'PLANTCD' }
-                                                        }"
-                                                        editable="{ui>/editModeHeader2}"
-                                                        selectionChange="onDropdownSelectionChange">
-                                                        <core:ListItem id="liIssPlant" key="{issPlant>PLANTCD}" text="{issPlant>PLANTCD} - ({issPlant>DESCRIP})"/>
-                                                    </ComboBox>
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement id="feIssSloc" label="{ddtext>/ISSSLOC}">  
-                                                <f:fields>
-                                                    <ComboBox
-                                                        id="cmbIssSloc"
-                                                        showSecondaryValues= "true"
-                                                        items="{
-                                                            path: 'issSloc>/results',
-                                                            sorter: { path: 'SLoc' }
-                                                        }"
-                                                        editable="{ui>/editModeHeader2}"
-                                                        selectionChange="onDropdownSelectionChange">
-                                                        <core:ListItem id="liIssSloc" key="{issSloc>SLOC}" text="{issSloc>SLOC} - ({issSloc>DESCRIP})"/>
-                                                    </ComboBox>
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement id="feRcvPlant" label="{ddtext>/RCVPLANT}">  
-                                                <f:fields>
-                                                    <ComboBox
-                                                        id="cmbRcvPlant"
-                                                        showSecondaryValues= "true"
-                                                        items="{
-                                                            path: 'rcvPlant>/results',
-                                                            sorter: { path: 'PLANTCD' }
-                                                        }"
-                                                        editable="{ui>/editModeHeader2}"
-                                                        selectionChange="onDropdownSelectionChange">
-                                                        <core:ListItem id="liRcvPlant" key="{rcvPlant>PLANTCD}" text="{rcvPlant>PLANTCD} - ({rcvPlant>DESCRIP})"/>
-                                                    </ComboBox>
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement id="feRcvSloc" label="{ddtext>/RCVSLOC}">  
-                                                <f:fields>
-                                                    <ComboBox
-                                                        id="cmbRcvSloc"
-                                                        showSecondaryValues= "true"
-                                                        items="{
-                                                            path: 'rcvSloc>/results',
-                                                            sorter: { path: 'SLoc' }
-                                                        }"
-                                                        editable="{ui>/editModeHeader2}"
-                                                        selectionChange="onDropdownSelectionChange">
-                                                        <core:ListItem id="liRcvSloc" key="{rcvSloc>SLOC}" text="{rcvSloc>SLOC} - ({rcvSloc>DESCRIP})"/>
-                                                    </ComboBox>
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/ETD}">  
-                                                <f:fields>
-                                                    <DatePicker
-                                                        id="dpETD"
-                                                        editable="{ui>/editModeHeader}"
-                                                        valueFormat="MM/dd/yyyy" 
-                                                        displayFormat="MM/dd/yyyy" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/ETA}">  
-                                                <f:fields>
-                                                    <DatePicker
-                                                        id="dpETA"
-                                                        editable="{ui>/editModeHeader}"
-                                                        valueFormat="MM/dd/yyyy" 
-                                                        displayFormat="MM/dd/yyyy" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement id="feShipMode" label="{ddtext>/MODESHIP}">  
-                                                <f:fields>
-                                                    <ComboBox
-                                                        id="cmbShipMode"
-                                                        showSecondaryValues= "true"
-                                                        items="{
-                                                            path: 'shipMode>/results',
-                                                            sorter: { path: 'SHIPMODE' }
-                                                        }"
-                                                        editable="{ui>/editModeHeader}"
-                                                        selectionChange="onDropdownSelectionChange">
-                                                        <core:ListItem id="liShipMode" key="{shipMode>SHIPMODE}" text="{shipMode>SHIPMODE} - ({shipMode>DESCRIP})"/>
-                                                    </ComboBox>
-                                                </f:fields>
-                                            </f:FormElement>
-                                        </f:formElements>
-                                    </f:FormContainer>
-                                    <f:FormContainer ariaLabelledBy="Grp3" class="sapUiNoContentPadding" >
-                                        <f:formElements>
-                                            <f:FormElement label="{ddtext>/VESSEL}">  
-                                                <f:fields>
-                                                    <Input id="iptVessel" editable="{ui>/editModeHeader}" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/CONTAINERNO}">  
-                                                <f:fields>
-                                                    <Input id="iptContainerNo" editable="{ui>/editModeHeader}" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/HBL}">  
-                                                <f:fields>
-                                                    <Input id="iptHBL" editable="{ui>/editModeHeader}" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/MBL}">  
-                                                <f:fields>
-                                                    <Input id="iptMBL" editable="{ui>/editModeHeader}" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/NOPACK}">  
-                                                <f:fields>
-                                                    <Input id="iptNoPack" editable="false" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/CREATEDBY}">  
-                                                <f:fields>
-                                                    <Input id="iptCreatedBy" editable="false" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/CREATEDDT}">  
-                                                <f:fields>
-                                                    <Input id="iptCreatedDt" editable="false" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                        </f:formElements>
-                                    </f:FormContainer>
-                                    <f:FormContainer ariaLabelledBy="Grp4" class="sapUiNoContentPadding" >
-                                        <f:formElements>
-                                            <f:FormElement label="{ddtext>/FORWARDER}">  
-                                                <f:fields>
-                                                    <Input id="iptForwarder" editable="{ui>/editModeHeader}" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/CARRIER}">  
-                                                <f:fields>
-                                                    <Input id="iptCarrier" editable="{ui>/editModeHeader}" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement id="feRefDocNo" label="{ddtext>/REFDOCNO}">  
-                                                <f:fields>
-                                                    <Input id="iptRefDocNo" editable="{ui>/editModeHeader}" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/REFDOCDT}">  
-                                                <f:fields>
-                                                    <DatePicker
-                                                        id="dpRefDocDt"
-                                                        editable="{ui>/editModeHeader}"
-                                                        valueFormat="MM/dd/yyyy" 
-                                                        displayFormat="MM/dd/yyyy" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/DELETED}">  
-                                                <f:fields>
-                                                    <CheckBox 
-                                                        id="chkDeleted"
-                                                        editable="false"/>
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/UPDATEDBY}">  
-                                                <f:fields>
-                                                    <Input id="iptUpdatedBy" editable="false" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                            <f:FormElement label="{ddtext>/UPDATEDDT}">  
-                                                <f:fields>
-                                                    <Input id="iptUpdatedDt" editable="false" />
-                                                </f:fields>
-                                            </f:FormElement>
-                                        </f:formElements>
-                                    </f:FormContainer>
-                                </f:formContainers>
-                                <!-- <f:layoutData>
+
+                <f:Form id="frmHeader" editable="true" class="sapUiNoContentPadding" width="100%">
+                    <f:layout>
+                        <f:ResponsiveGridLayout columnsL="4" singleContainerFullSize="false" />
+                    </f:layout>
+                    <f:formContainers>
+                        <f:FormContainer ariaLabelledBy="Grp1" class="sapUiNoContentPadding" >
+                            <f:formElements>
+                                <f:FormElement label="{ddtext>/DLVNO}">  
+                                    <f:fields>
+                                        <Input id="iptDlvNo" editable="false" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/MVTTYPE}">  
+                                    <f:fields>
+                                        <Input id="iptMvtType" editable="false" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/STATUS}">  
+                                    <f:fields>
+                                        <ComboBox
+                                            id="cmbStatus"
+                                            showSecondaryValues= "true"
+                                            items="{
+                                                path: 'status>/results',
+                                                sorter: { path: 'DLVSTATCD' }
+                                            }"
+                                            editable="false"
+                                            selectionChange="onDropdownSelectionChange">
+                                            <core:ListItem id="liStatus" key="{status>STATUS}" text="{status>STATUS} - ({status>DESCRIP})"/>
+                                        </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement id="feDocDt" label="{ddtext>/DOCDT}">  
+                                    <f:fields>
+                                        <DatePicker
+                                            id="dpDocDt"
+                                            editable="{ui>/editModeHeader}"
+                                            valueFormat="MM/dd/yyyy" 
+                                            displayFormat="MM/dd/yyyy" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement id="feReqDt" label="{ddtext>/REQDT}">  
+                                    <f:fields>
+                                        <DatePicker
+                                            id="dpReqDt"
+                                            editable="{ui>/editModeHeader}"
+                                            valueFormat="MM/dd/yyyy" 
+                                            displayFormat="MM/dd/yyyy" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/POSTDT}">  
+                                    <f:fields>
+                                        <DatePicker
+                                            id="dpPostDt"
+                                            editable="{ui>/editModeHeader}"
+                                            valueFormat="MM/dd/yyyy" 
+                                            displayFormat="MM/dd/yyyy" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/ACTISSDT}">  
+                                    <f:fields>
+                                        <DatePicker
+                                            id="dpActIssDt"
+                                            editable="{ui>/editModeHeader}"
+                                            valueFormat="MM/dd/yyyy" 
+                                            displayFormat="MM/dd/yyyy" />
+                                    </f:fields>
+                                </f:FormElement>
+                            </f:formElements>
+                        </f:FormContainer>
+                        <f:FormContainer ariaLabelledBy="Grp2" class="sapUiNoContentPadding" >
+                            <f:formElements>
+                                <f:FormElement id="feIssPlant" label="{ddtext>/ISSPLANT}">  
+                                    <f:fields>
+                                        <ComboBox
+                                            id="cmbIssPlant"
+                                            showSecondaryValues= "true"
+                                            items="{
+                                                path: 'issPlant>/results',
+                                                sorter: { path: 'PLANTCD' }
+                                            }"
+                                            editable="{ui>/editModeHeader2}"
+                                            selectionChange="onDropdownSelectionChange">
+                                            <core:ListItem id="liIssPlant" key="{issPlant>PLANTCD}" text="{issPlant>PLANTCD} - ({issPlant>DESCRIP})"/>
+                                        </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement id="feIssSloc" label="{ddtext>/ISSSLOC}">  
+                                    <f:fields>
+                                        <ComboBox
+                                            id="cmbIssSloc"
+                                            showSecondaryValues= "true"
+                                            items="{
+                                                path: 'issSloc>/results',
+                                                sorter: { path: 'SLoc' }
+                                            }"
+                                            editable="{ui>/editModeHeader2}"
+                                            selectionChange="onDropdownSelectionChange">
+                                            <core:ListItem id="liIssSloc" key="{issSloc>SLOC}" text="{issSloc>SLOC} - ({issSloc>DESCRIP})"/>
+                                        </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement id="feRcvPlant" label="{ddtext>/RCVPLANT}">  
+                                    <f:fields>
+                                        <ComboBox
+                                            id="cmbRcvPlant"
+                                            showSecondaryValues= "true"
+                                            items="{
+                                                path: 'rcvPlant>/results',
+                                                sorter: { path: 'PLANTCD' }
+                                            }"
+                                            editable="{ui>/editModeHeader2}"
+                                            selectionChange="onDropdownSelectionChange">
+                                            <core:ListItem id="liRcvPlant" key="{rcvPlant>PLANTCD}" text="{rcvPlant>PLANTCD} - ({rcvPlant>DESCRIP})"/>
+                                        </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement id="feRcvSloc" label="{ddtext>/RCVSLOC}">  
+                                    <f:fields>
+                                        <ComboBox
+                                            id="cmbRcvSloc"
+                                            showSecondaryValues= "true"
+                                            items="{
+                                                path: 'rcvSloc>/results',
+                                                sorter: { path: 'SLoc' }
+                                            }"
+                                            editable="{ui>/editModeHeader2}"
+                                            selectionChange="onDropdownSelectionChange">
+                                            <core:ListItem id="liRcvSloc" key="{rcvSloc>SLOC}" text="{rcvSloc>SLOC} - ({rcvSloc>DESCRIP})"/>
+                                        </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/ETD}">  
+                                    <f:fields>
+                                        <DatePicker
+                                            id="dpETD"
+                                            editable="{ui>/editModeHeader}"
+                                            valueFormat="MM/dd/yyyy" 
+                                            displayFormat="MM/dd/yyyy" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/ETA}">  
+                                    <f:fields>
+                                        <DatePicker
+                                            id="dpETA"
+                                            editable="{ui>/editModeHeader}"
+                                            valueFormat="MM/dd/yyyy" 
+                                            displayFormat="MM/dd/yyyy" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement id="feShipMode" label="{ddtext>/MODESHIP}">  
+                                    <f:fields>
+                                        <ComboBox
+                                            id="cmbShipMode"
+                                            showSecondaryValues= "true"
+                                            items="{
+                                                path: 'shipMode>/results',
+                                                sorter: { path: 'SHIPMODE' }
+                                            }"
+                                            editable="{ui>/editModeHeader}"
+                                            selectionChange="onDropdownSelectionChange">
+                                            <core:ListItem id="liShipMode" key="{shipMode>SHIPMODE}" text="{shipMode>SHIPMODE} - ({shipMode>DESCRIP})"/>
+                                        </ComboBox>
+                                    </f:fields>
+                                </f:FormElement>
+
+                                <f:FormElement id="feShipMode2" label="{ddtext>/MODESHIP}">  
+                                    <f:fields>
+                                        <Input
+                                            id="iptShipMode"
+                                            type="Text"
+                                            showSuggestion="true"
+                                            showValueHelp="true"
+                                            editable="{ui>/editModeHeader}"
+                                            valueHelpRequest="onShipModeValueHelp"
+                                            suggestionItems="{shipMode>/}"
+                                            value="{shipMode>/SHIPMODE}"
+                                            change="onShipModeInputChange"
+                                            liveChange="onShipModeInputLiveChange"
+                                            tooltip="{shipMode>/SHIPMODE}"
+                                        >
+                                            <suggestionItems>
+                                                <core:ListItem text="{shipMode>SHIPMODE}" additionalText="{shipMode>DESCRIP}" />
+                                            </suggestionItems>
+                                        </Input>
+                                        <!-- <ComboBox
+                                            id="cmbShipMode2"
+                                            showSecondaryValues= "true"
+                                            items="{
+                                                path: 'shipMode>/results',
+                                                sorter: { path: 'SHIPMODE' }
+                                            }"
+                                            editable="{ui>/editModeHeader}"
+                                            selectionChange="onDropdownSelectionChange">
+                                            <core:ListItem id="liShipMode2" key="{shipMode>SHIPMODE}" text="{shipMode>SHIPMODE} - ({shipMode>DESCRIP})"/>
+                                        </ComboBox> -->
+                                    </f:fields>
+                                </f:FormElement>
+
+                            </f:formElements>
+                        </f:FormContainer>
+                        <f:FormContainer ariaLabelledBy="Grp3" class="sapUiNoContentPadding" >
+                            <f:formElements>
+                                <f:FormElement label="{ddtext>/VESSEL}">  
+                                    <f:fields>
+                                        <Input id="iptVessel" editable="{ui>/editModeHeader}" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/CONTAINERNO}">  
+                                    <f:fields>
+                                        <Input id="iptContainerNo" editable="{ui>/editModeHeader}" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/HBL}">  
+                                    <f:fields>
+                                        <Input id="iptHBL" editable="{ui>/editModeHeader}" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/MBL}">  
+                                    <f:fields>
+                                        <Input id="iptMBL" editable="{ui>/editModeHeader}" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/NOPACK}">  
+                                    <f:fields>
+                                        <Input id="iptNoPack" editable="false" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/CREATEDBY}">  
+                                    <f:fields>
+                                        <Input id="iptCreatedBy" editable="false" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/CREATEDDT}">  
+                                    <f:fields>
+                                        <Input id="iptCreatedDt" editable="false" />
+                                    </f:fields>
+                                </f:FormElement>
+                            </f:formElements>
+                        </f:FormContainer>
+                        <f:FormContainer ariaLabelledBy="Grp4" class="sapUiNoContentPadding" >
+                            <f:formElements>
+                                <f:FormElement label="{ddtext>/FORWARDER}">  
+                                    <f:fields>
+                                        <Input id="iptForwarder" editable="{ui>/editModeHeader}" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/CARRIER}">  
+                                    <f:fields>
+                                        <Input id="iptCarrier" editable="{ui>/editModeHeader}" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement id="feRefDocNo" label="{ddtext>/REFDOCNO}">  
+                                    <f:fields>
+                                        <Input id="iptRefDocNo" editable="{ui>/editModeHeader}" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/REFDOCDT}">  
+                                    <f:fields>
+                                        <DatePicker
+                                            id="dpRefDocDt"
+                                            editable="{ui>/editModeHeader}"
+                                            valueFormat="MM/dd/yyyy" 
+                                            displayFormat="MM/dd/yyyy" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/DELETED}">  
+                                    <f:fields>
+                                        <CheckBox 
+                                            id="chkDeleted"
+                                            editable="false"/>
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/UPDATEDBY}">  
+                                    <f:fields>
+                                        <Input id="iptUpdatedBy" editable="false" />
+                                    </f:fields>
+                                </f:FormElement>
+                                <f:FormElement label="{ddtext>/UPDATEDDT}">  
+                                    <f:fields>
+                                        <Input id="iptUpdatedDt" editable="false" />
+                                    </f:fields>
+                                </f:FormElement>
+                            </f:formElements>
+                        </f:FormContainer>
+                    </f:formContainers>
+                    <!-- <f:layoutData>
+                        <FlexItemData growFactor="1" baseSize="0%"/>
+                    </f:layoutData> -->
+                </f:Form>
+
+                <IconTabBar id="itbDetails" 
+                    headerMode="Inline"
+                    expanded="{device>/isNoPhone}" 
+                    expandable="false" 
+                    class="sapUiNoContentPadding" 
+                    stretchContentHeight="true" 
+                    applyContentPadding="false"
+                    select="onSelectTab">
+                    <items>
+                        <IconTabFilter id="itfDlvDtlHU" text="DELIVERY DETAILS (HU)" key="dlvDtlHU">
+                            <uiT:Table id="dlvDtlHUTab"
+                                rows="{dlvDtlHU>/results}"
+                                visibleRowCountMode="Auto"
+                                showColumnVisibilityMenu="true"
+                                enableColumnFreeze="true"
+                                enableCellFilter="true"
+                                selectionMode="MultiToggle"
+                                firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                cellClick="onCellClick"
+                                sort="onSorted"
+                                filter="onFilter"
+                                columnFreeze="onColumnUpdated"
+                                columnMove="onColumnUpdated"
+                                columnResize="onColumnUpdated"
+                                columnSelect="onColumnUpdated"
+                                columnVisibility="onColumnUpdated"
+                                rowSelectionChange="onRowSelectionChange">
+                                <uiT:extension>
+                                    <Toolbar>
+                                        <Text text="{ui>/rowCountDlvDtlHU} {ddtext>/ITEM(S)}" />
+                                        <ToolbarSpacer/>
+                                        <Button id="btnCreateDlvDtlHU" 
+                                            icon="sap-icon://add"
+                                            press="onCreateDlvDtlHU"
+                                            text=""
+                                            tooltip="{ddtext>/ADD}" 
+                                            visible="true"/>
+                                        <Button id="btnDeleteDlvDtlHU" 
+                                            icon="sap-icon://delete"
+                                            press="onDeleteDlvDtlHU" 
+                                            text=""
+                                            tooltip="{ddtext>/DELETE}" 
+                                            visible="true" />
+                                        <Button id="btnRefreshDlvDtlHU" 
+                                            icon="sap-icon://refresh"
+                                            press="onRefresh('dlvDtlHU')" 
+                                            text=""
+                                            tooltip="{ddtext>/REFRESH}" 
+                                            visible="true" />
+                                        <Button id="btnFullScreenDlvDtlHU" 
+                                            icon="sap-icon://full-screen"
+                                            press="onTableResize('dtl','Max')"
+                                            tooltip="{ddtext>/FULLSCREEN}"
+                                            visible="true" />
+                                        <Button id="btnExitFullScreenDlvDtlHU" 
+                                            icon="sap-icon://exit-full-screen"
+                                            press="onTableResize('dtl','Min')"
+                                            tooltip="{ddtext>/EXITFULLSCREEN}"
+                                            visible="false" />
+                                        <Button id="btnTabLayoutDlvDtlHU"
+                                            icon="sap-icon://grid" 
+                                            press="onSaveTableLayout"
+                                            tooltip="{ddtext>/SAVELAYOUT}" 
+                                            visible="true" />
+                                    </Toolbar>
+                                </uiT:extension>
+                                <uiT:layoutData>
                                     <FlexItemData growFactor="1" baseSize="0%"/>
-                                </f:layoutData> -->
-                            </f:Form>
-                        <!-- </uiL:contentAreas>
-                    </uiL:Splitter> 
-                    <uiL:Splitter> -->
-                        <!-- <uiL:layoutData><uiL:SplitterLayoutData size="55%"/></uiL:layoutData> -->
-                        <!-- <uiL:contentAreas> -->
-                            <IconTabBar id="itbDetails" 
-                                headerMode="Inline"
-                                expanded="{device>/isNoPhone}" 
-                                expandable="false" 
-                                class="sapUiNoContentPadding" 
-                                stretchContentHeight="true" 
-                                applyContentPadding="false"
-                                select="onSelectTab">
-                                <items>
-                                    <IconTabFilter id="itfDlvDtlHU" text="DELIVERY DETAILS (HU)" key="dlvDtlHU">
-                                        <uiT:Table id="dlvDtlHUTab"
-                                            rows="{dlvDtlHU>/results}"
-                                            visibleRowCountMode="Auto"
-                                            showColumnVisibilityMenu="true"
-                                            enableColumnFreeze="true"
-                                            enableCellFilter="true"
-                                            selectionMode="MultiToggle"
-                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
-                                            cellClick="onCellClick"
-                                            sort="onSorted"
-                                            filter="onFilter"
-                                            columnFreeze="onColumnUpdated"
-                                            columnMove="onColumnUpdated"
-                                            columnResize="onColumnUpdated"
-                                            columnSelect="onColumnUpdated"
-                                            columnVisibility="onColumnUpdated"
-                                            rowSelectionChange="onRowSelectionChange">
-                                            <uiT:extension>
-                                                <Toolbar>
-                                                    <ToolbarSpacer/>
-                                                    <Button id="btnCreateDlvDtlHU" 
-                                                        icon="sap-icon://add"
-                                                        press="onCreateDlvDtlHU"
-                                                        text=""
-                                                        visible="true"/>
-                                                    <Button id="btnDeleteDlvDtlHU" 
-                                                        icon="sap-icon://delete"
-                                                        press="onDeleteDlvDtlHU" 
-                                                        text=""
-                                                        visible="true" />
-                                                    <Button id="btnRefreshDlvDtlHU" 
-                                                        icon="sap-icon://refresh"
-                                                        press="onRefresh('dlvDtlHU')" 
-                                                        text=""
-                                                        visible="true" />
-                                                </Toolbar>
-                                            </uiT:extension>
-                                            <uiT:layoutData>
-                                                <FlexItemData growFactor="1" baseSize="0%"/>
-                                            </uiT:layoutData>
-                                        </uiT:Table>
-                                    </IconTabFilter>
-                                    <IconTabFilter id="itfDlvDtl" text="DELIVERY DETAILS" key="dlvDtl">
-                                        <uiT:Table id="dlvDtlTab"
-                                            rows="{dlvDtl>/results}"
-                                            visibleRowCountMode="Auto"
-                                            showColumnVisibilityMenu="true"
-                                            enableColumnFreeze="true"
-                                            enableCellFilter="true"
-                                            selectionMode="Single"
-                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
-                                            cellClick="onCellClick"
-                                            sort="onSorted"
-                                            filter="onFilter"
-                                            columnFreeze="onColumnUpdated"
-                                            columnMove="onColumnUpdated"
-                                            columnResize="onColumnUpdated"
-                                            columnSelect="onColumnUpdated"
-                                            columnVisibility="onColumnUpdated"
-                                            rowSelectionChange="onRowSelectionChange">
-                                            <uiT:extension>
-                                                <Toolbar>
-                                                    <ToolbarSpacer/>
-                                                    <Button id="btnRefreshDlvDtl" 
-                                                        icon="sap-icon://refresh"
-                                                        press="onRefresh('dlvDtl')" 
-                                                        text=""
-                                                        visible="true" />
-                                                </Toolbar>
-                                            </uiT:extension>
-                                            <uiT:layoutData>
-                                                <FlexItemData growFactor="1" baseSize="0%"/>
-                                            </uiT:layoutData>
-                                        </uiT:Table>
-                                    </IconTabFilter>
-                                    <IconTabFilter id="itfStatOvw" text="STATUS OVERVIEW" key="statOvw">
-                                        <uiT:Table id="statOvwTab"
-                                            rows="{statOvw>/results}"
-                                            visibleRowCountMode="Auto"
-                                            showColumnVisibilityMenu="true"
-                                            enableColumnFreeze="true"
-                                            enableCellFilter="true"
-                                            selectionMode="Single"
-                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
-                                            cellClick="onCellClick"
-                                            sort="onSorted"
-                                            filter="onFilter"
-                                            columnFreeze="onColumnUpdated"
-                                            columnMove="onColumnUpdated"
-                                            columnResize="onColumnUpdated"
-                                            columnSelect="onColumnUpdated"
-                                            columnVisibility="onColumnUpdated"
-                                            rowSelectionChange="onRowSelectionChange">
-                                            <uiT:extension>
-                                                <Toolbar>
-                                                    <ToolbarSpacer/>
-                                                    <Button id="btnRefreshStatOvw" 
-                                                        icon="sap-icon://refresh"
-                                                        press="onRefresh('statOvw')" 
-                                                        text=""
-                                                        visible="true" />
-                                                </Toolbar>
-                                            </uiT:extension>
-                                            <uiT:layoutData>
-                                                <FlexItemData growFactor="1" baseSize="0%"/>
-                                            </uiT:layoutData>
-                                        </uiT:Table>
-                                    </IconTabFilter>
-                                    <IconTabFilter id="itfMatDoc" text="MATERIAL DOCUMENTS" key="matDoc">
-                                        <uiT:Table id="matDocTab"
-                                            rows="{matDoc>/results}"
-                                            visibleRowCountMode="Auto"
-                                            showColumnVisibilityMenu="true"
-                                            enableColumnFreeze="true"
-                                            enableCellFilter="true"
-                                            selectionMode="Single"
-                                            firstVisibleRowChanged="onFirstVisibleRowChanged"
-                                            cellClick="onCellClick"
-                                            sort="onSorted"
-                                            filter="onFilter"
-                                            columnFreeze="onColumnUpdated"
-                                            columnMove="onColumnUpdated"
-                                            columnResize="onColumnUpdated"
-                                            columnSelect="onColumnUpdated"
-                                            columnVisibility="onColumnUpdated"
-                                            rowSelectionChange="onRowSelectionChange">
-                                            <uiT:extension>
-                                                <Toolbar>
-                                                    <ToolbarSpacer/>
-                                                    <Button id="btnRefreshMatDoc" 
-                                                        icon="sap-icon://refresh"
-                                                        press="onRefresh('matDoc')" 
-                                                        text=""
-                                                        visible="true" />
-                                                </Toolbar>
-                                            </uiT:extension>
-                                            <uiT:layoutData>
-                                                <FlexItemData growFactor="1" baseSize="0%"/>
-                                            </uiT:layoutData>
-                                        </uiT:Table>
-                                    </IconTabFilter>
-                                </items>
-                                <layoutData>
+                                </uiT:layoutData>
+                            </uiT:Table>
+                        </IconTabFilter>
+                        <IconTabFilter id="itfDlvDtl" text="DELIVERY DETAILS" key="dlvDtl">
+                            <uiT:Table id="dlvDtlTab"
+                                rows="{dlvDtl>/results}"
+                                visibleRowCountMode="Auto"
+                                showColumnVisibilityMenu="true"
+                                enableColumnFreeze="true"
+                                enableCellFilter="true"
+                                selectionMode="Single"
+                                firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                cellClick="onCellClick"
+                                sort="onSorted"
+                                filter="onFilter"
+                                columnFreeze="onColumnUpdated"
+                                columnMove="onColumnUpdated"
+                                columnResize="onColumnUpdated"
+                                columnSelect="onColumnUpdated"
+                                columnVisibility="onColumnUpdated"
+                                rowSelectionChange="onRowSelectionChange">
+                                <uiT:extension>
+                                    <Toolbar>
+                                        <Text text="{ui>/rowCountDlvDtl} {ddtext>/ITEM(S)}" />
+                                        <ToolbarSpacer/>
+                                        <Button id="btnRefreshDlvDtl" 
+                                            icon="sap-icon://refresh"
+                                            press="onRefresh('dlvDtl')" 
+                                            text=""
+                                            tooltip="{ddtext>/REFRESH}"
+                                            visible="true" />
+                                        <Button id="btnFullScreenDlvDtl" 
+                                            icon="sap-icon://full-screen"
+                                            press="onTableResize('dtl','Max')"
+                                            tooltip="{ddtext>/FULLSCREEN}"
+                                            visible="true" />
+                                        <Button id="btnExitFullScreenDlvDtl" 
+                                            icon="sap-icon://exit-full-screen"
+                                            press="onTableResize('dtl','Min')"
+                                            tooltip="{ddtext>/EXITFULLSCREEN}"
+                                            visible="false" />
+                                        <Button id="btnTabLayoutDlvDtl"
+                                            icon="sap-icon://grid" 
+                                            press="onSaveTableLayout"
+                                            tooltip="{ddtext>/SAVELAYOUT}" 
+                                            visible="true" />
+                                    </Toolbar>
+                                </uiT:extension>
+                                <uiT:layoutData>
                                     <FlexItemData growFactor="1" baseSize="0%"/>
-                                </layoutData>
-                            </IconTabBar>
-                        <!-- </uiL:contentAreas>
-                    </uiL:Splitter>
-                    <uiL:layoutData>
-                        <FlexItemData id="fidTabMain" growFactor="1" baseSize="0%"/>
-                    </uiL:layoutData> -->
-                <!-- </uiL:Splitter> -->
+                                </uiT:layoutData>
+                            </uiT:Table>
+                        </IconTabFilter>
+                        <IconTabFilter id="itfStatOvw" text="STATUS OVERVIEW" key="statOvw">
+                            <uiT:Table id="statOvwTab"
+                                rows="{statOvw>/results}"
+                                visibleRowCountMode="Auto"
+                                showColumnVisibilityMenu="true"
+                                enableColumnFreeze="true"
+                                enableCellFilter="true"
+                                selectionMode="Single"
+                                firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                cellClick="onCellClick"
+                                sort="onSorted"
+                                filter="onFilter"
+                                columnFreeze="onColumnUpdated"
+                                columnMove="onColumnUpdated"
+                                columnResize="onColumnUpdated"
+                                columnSelect="onColumnUpdated"
+                                columnVisibility="onColumnUpdated"
+                                rowSelectionChange="onRowSelectionChange">
+                                <uiT:extension>
+                                    <Toolbar>
+                                        <Text text="{ui>/rowCountStatOvw} {ddtext>/ITEM(S)}" />
+                                        <ToolbarSpacer/>
+                                        <Button id="btnRefreshStatOvw" 
+                                            icon="sap-icon://refresh"
+                                            press="onRefresh('statOvw')" 
+                                            text=""
+                                            tooltip="{ddtext>/REFRESH}"
+                                            visible="true" />
+                                        <Button id="btnFullScreenStatOvw" 
+                                            icon="sap-icon://full-screen"
+                                            press="onTableResize('dtl','Max')"
+                                            tooltip="{ddtext>/FULLSCREEN}"
+                                            visible="true" />
+                                        <Button id="btnExitFullScreenStatOvw" 
+                                            icon="sap-icon://exit-full-screen"
+                                            press="onTableResize('dtl','Min')"
+                                            tooltip="{ddtext>/EXITFULLSCREEN}"
+                                            visible="false" />
+                                        <Button id="btnTabLayoutStatOvw"
+                                            icon="sap-icon://grid" 
+                                            press="onSaveTableLayout"
+                                            tooltip="{ddtext>/SAVELAYOUT}" 
+                                            visible="true" />
+                                    </Toolbar>
+                                </uiT:extension>
+                                <uiT:layoutData>
+                                    <FlexItemData growFactor="1" baseSize="0%"/>
+                                </uiT:layoutData>
+                            </uiT:Table>
+                        </IconTabFilter>
+                        <IconTabFilter id="itfMatDoc" text="MATERIAL DOCUMENTS" key="matDoc">
+                            <uiT:Table id="matDocTab"
+                                rows="{matDoc>/results}"
+                                visibleRowCountMode="Auto"
+                                showColumnVisibilityMenu="true"
+                                enableColumnFreeze="true"
+                                enableCellFilter="true"
+                                selectionMode="Single"
+                                firstVisibleRowChanged="onFirstVisibleRowChanged"
+                                cellClick="onCellClick"
+                                sort="onSorted"
+                                filter="onFilter"
+                                columnFreeze="onColumnUpdated"
+                                columnMove="onColumnUpdated"
+                                columnResize="onColumnUpdated"
+                                columnSelect="onColumnUpdated"
+                                columnVisibility="onColumnUpdated"
+                                rowSelectionChange="onRowSelectionChange">
+                                <uiT:extension>
+                                    <Toolbar>
+                                        <Text text="{ui>/rowCountMatDoc} {ddtext>/ITEM(S)}" />
+                                        <ToolbarSpacer/>
+                                        <Button id="btnRefreshMatDoc" 
+                                            icon="sap-icon://refresh"
+                                            press="onRefresh('matDoc')" 
+                                            text=""
+                                            tooltip="{ddtext>/REFRESH}"
+                                            visible="true" />
+                                        <Button id="btnFullScreenMatDoc" 
+                                            icon="sap-icon://full-screen"
+                                            press="onTableResize('dtl','Max')"
+                                            tooltip="{ddtext>/FULLSCREEN}"
+                                            visible="true" />
+                                        <Button id="btnExitFullScreenMatDoc" 
+                                            icon="sap-icon://exit-full-screen"
+                                            press="onTableResize('dtl','Min')"
+                                            tooltip="{ddtext>/EXITFULLSCREEN}"
+                                            visible="false" />
+                                        <Button id="btnTabLayoutMatDoc"
+                                            icon="sap-icon://grid" 
+                                            press="onSaveTableLayout"
+                                            tooltip="{ddtext>/SAVELAYOUT}" 
+                                            visible="true" />
+                                    </Toolbar>
+                                </uiT:extension>
+                                <uiT:layoutData>
+                                    <FlexItemData growFactor="1" baseSize="0%"/>
+                                </uiT:layoutData>
+                            </uiT:Table>
+                        </IconTabFilter>
+                    </items>
+                    <layoutData>
+                        <FlexItemData growFactor="1" baseSize="0%"/>
+                    </layoutData>
+                </IconTabBar>
             </VBox>
         </content>
     </Page>
