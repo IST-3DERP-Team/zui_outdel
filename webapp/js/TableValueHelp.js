@@ -13,10 +13,14 @@ sap.ui.define([
             me._inputSource = oSource;
             me._inputId = oSource.getId();
             me._inputValue = oSource.getValue();
-            let input = oSource.getBindingInfo("value").parts[0].path.split("/");
-            me._inputField = input[input.length-1].toUpperCase(); //slice and uppercase
 
-            var sModel = oSource.getBindingInfo("value").parts[0].model;
+            if (me._inputId.includes("iptIssPlant")) me._inputField = "ISSPLANT";
+            else if (me._inputId.includes("iptIssSloc")) me._inputField = "ISSSLOC";
+            else if (me._inputId.includes("iptRcvPlant")) me._inputField = "RCVPLANT";
+            else if (me._inputId.includes("iptRcvSloc")) me._inputField = "RCVSLOC";
+            else if (me._inputId.includes("iptShipMode")) me._inputField = "SHIPMODE";
+
+            var sModel = "form";
             var sTitle = oSource.getProperty("name") === undefined || oSource.getProperty("name") === "" ? me._inputField : oSource.getProperty("name");
             var oTableSource = oSource.oParent.oParent;
             // var sTabId = oTableSource.sId.split("--")[oTableSource.sId.split("--").length - 1];
@@ -27,9 +31,9 @@ sap.ui.define([
             var sTextFormatMode = vColProp[0].TextFormatMode === undefined || vColProp[0].TextFormatMode === "" ? "Key" : vColProp[0].TextFormatMode;
             var sColumns = vColProp[0].ValueHelp.columns;
             var vhColumns = me._oModelColumns[sColumns];
-            var vh = me.getView().getModel(sPath).getData();            
+            var vh = me.getView().getModel(sPath).getData().results;            
             var aColumns = [], oDDTextParam = [];
-            var oDDText = me.getView().getModel("caption").getData();
+            var oDDText = me.getView().getModel("ddtext").getData();
 
             if (vhColumns !== undefined) {
                 vhColumns.forEach(item => {
@@ -37,7 +41,7 @@ sap.ui.define([
                     if (item.Value) sValue = item.ColumnName;
                 })
             }
-
+            console.log("handleFormValueHelp", me._oModelColumns, vh, sPath, me.getView().getModel(sPath).getData())
             vh.forEach(item => {
                 item.VHKey = item[sKey];
                 item.VHValue = sValue === undefined || sKey === sValue ? "" : item[sValue];
@@ -142,7 +146,7 @@ sap.ui.define([
                                 oDDText[item.CODE] = item.TEXT;
                             })
     
-                            me.getView().setModel(new JSONModel(oDDText), "caption");
+                            me.getView().setModel(new JSONModel(oDDText), "ddtext");
                             resolve(oDDText);
                         },
                         error: function(oError) { 
@@ -193,7 +197,7 @@ sap.ui.define([
 
             me._tableValueHelpDialog.open();
             var oTable = me._tableValueHelpDialog.getContent()[0].getAggregation("items")[0];
-            oTable.attachCellClick(me._tableValueHelp.handleTableValueHelpSelect.bind(me));
+            oTable.attachCellClick(me._tableValueHelp.handleFormValueHelpSelect.bind(me));
             // sap.ui.getCore().byId("tvhSearchField").attachSearch(me._tableValueHelp.handleTableValueHelpFilter); 
             // sap.ui.getCore().byId("btnTVHCancel").attachPress(me._tableValueHelp.handleTableValueHelpCancel.bind(me));
             me._tableValueHelpDialog.getContent()[0].getItems()[0].getExtension()[0].getContent()[3].attachSearch(me._tableValueHelp.handleTableValueHelpFilter);
@@ -842,5 +846,12 @@ sap.ui.define([
             oTable.getBinding("rows").filter(oFilter, "Application");
         },
 
+        handleFormValueHelpSelect: function (oEvent) {
+            var sRowPath = oEvent.getParameters().rowBindingContext.sPath;
+            this._inputSource.setSelectedKey(oEvent.getSource().getModel().getProperty(sRowPath + "/VHKey"));
+            
+            this._inputSource.setValueState("None");
+            this._tableValueHelpDialog.close(); 
+        }, 
 	};
 });

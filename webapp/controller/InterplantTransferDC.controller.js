@@ -174,6 +174,10 @@ sap.ui.define([
 
                     onAfterRendering: function(oEvent) {
                         _this.onAfterTableRendering(oEvent);
+                    },
+
+                    onclick: function(oEvent) {
+                        _this.onTableClick(oEvent);
                     }
                 };
 
@@ -181,6 +185,14 @@ sap.ui.define([
                 this.byId("dlvDtlTab").addEventDelegate(oTableEventDelegate);
                 this.byId("statOvwTab").addEventDelegate(oTableEventDelegate);
                 this.byId("matDocTab").addEventDelegate(oTableEventDelegate);
+
+                var oFormEventDelegate = {
+                    onclick: function(oEvent) {
+                        
+                    }
+                };
+
+                this.byId("frmHeader").addEventDelegate(oFormEventDelegate);
 
                 setTimeout(() => {
                     _this.onChangeHeader();
@@ -195,16 +207,16 @@ sap.ui.define([
 
             onChangeHeader() {
                 // Set Placeholder
-                if (!this.byId("cmbIssPlant").getSelectedKey()) {
-                    this.byId("cmbIssSloc").setPlaceholder(_oCaption.ISSPLANT + " is required.");
+                if (!this.byId("iptIssPlant").getSelectedKey()) {
+                    this.byId("iptIssSloc").setPlaceholder(_oCaption.ISSPLANT + " is required.");
                 } else {
-                    this.byId("cmbIssSloc").setPlaceholder("");
+                    this.byId("iptIssSloc").setPlaceholder("");
                 }
 
-                if (!this.byId("cmbRcvPlant").getSelectedKey()) {
-                    this.byId("cmbRcvSloc").setPlaceholder(_oCaption.RCVPLANT + " is required.");
+                if (!this.byId("iptRcvPlant").getSelectedKey()) {
+                    this.byId("iptRcvSloc").setPlaceholder(_oCaption.RCVPLANT + " is required.");
                 } else {
-                    this.byId("cmbRcvSloc").setPlaceholder("");
+                    this.byId("iptRcvSloc").setPlaceholder("");
                 }
 
                 if (_this.getView().getModel("ui").getData().activeDlvNo == "empty") {
@@ -786,13 +798,14 @@ sap.ui.define([
                     _this.byId("dpPostDt").setValue(_oHeader.postDt);
                     _this.byId("dpActIssDt").setValue(_oHeader.actIssDt);
 
-                    _this.byId("cmbIssPlant").setSelectedKey(_oHeader.issPlant);
-                    _this.byId("cmbIssSloc").setSelectedKey(_oHeader.issSloc);
-                    _this.byId("cmbRcvPlant").setSelectedKey(_oHeader.rcvPlant);
-                    _this.byId("cmbRcvSloc").setSelectedKey(_oHeader.rcvSloc);
+                    _this.byId("iptIssPlant").setSelectedKey(_oHeader.issPlant);
+                    _this.byId("iptIssSloc").setSelectedKey(_oHeader.issSloc);
+                    _this.byId("iptRcvPlant").setSelectedKey(_oHeader.rcvPlant);
+                    _this.byId("iptRcvSloc").setSelectedKey(_oHeader.rcvSloc);
                     _this.byId("dpETD").setValue(_oHeader.etd);
                     _this.byId("dpETA").setValue(_oHeader.eta);
-                    _this.byId("cmbShipMode").setSelectedKey(_oHeader.shipMode);
+                    _this.byId("iptShipMode").setSelectedKey(_oHeader.shipMode);
+                    _this.byId("iptShipMode").setSelectedKey(_oHeader.shipMode);
 
                     _this.byId("iptVessel").setValue(_oHeader.vessel);
                     _this.byId("iptContainerNo").setValue(_oHeader.containerNo);
@@ -821,13 +834,13 @@ sap.ui.define([
                     _this.byId("dpPostDt").setValue(sCurrentDate);
                     _this.byId("dpActIssDt").setValue(sCurrentDate);
 
-                    _this.byId("cmbIssPlant").setSelectedKey("");
-                    _this.byId("cmbIssSloc").setSelectedKey("");
-                    _this.byId("cmbRcvPlant").setSelectedKey("");
-                    _this.byId("cmbRcvSloc").setSelectedKey("");
+                    _this.byId("iptIssPlant").setSelectedKey("");
+                    _this.byId("iptIssSloc").setSelectedKey("");
+                    _this.byId("iptRcvPlant").setSelectedKey("");
+                    _this.byId("iptRcvSloc").setSelectedKey("");
                     _this.byId("dpETD").setValue("");
                     _this.byId("dpETA").setValue("");
-                    _this.byId("cmbShipMode").setSelectedKey("");
+                    _this.byId("iptShipMode").setSelectedKey("");
 
                     _this.byId("iptVessel").setValue("");
                     _this.byId("iptContainerNo").setValue("");
@@ -854,11 +867,11 @@ sap.ui.define([
 
                 if (!this.byId("dpDocDt").getValue()) sErrMsg = _oCaption.DOCDT;
                 else if (!this.byId("dpReqDt").getValue()) sErrMsg = _oCaption.REQDT;
-                else if (!this.byId("cmbIssPlant").getSelectedKey()) sErrMsg = _oCaption.ISSPLANT;
-                else if (!this.byId("cmbIssSloc").getSelectedKey()) sErrMsg = _oCaption.ISSSLOC;
-                else if (!this.byId("cmbRcvPlant").getSelectedKey()) sErrMsg = _oCaption.RCVPLANT;
-                else if (!this.byId("cmbRcvSloc").getSelectedKey()) sErrMsg = _oCaption.RCVSLOC;
-                else if (!this.byId("cmbShipMode").getSelectedKey()) sErrMsg = _oCaption.MODESHIP;
+                else if (!this.byId("iptIssPlant").getSelectedKey()) sErrMsg = _oCaption.ISSPLANT;
+                else if (!this.byId("iptIssSloc").getSelectedKey()) sErrMsg = _oCaption.ISSSLOC;
+                else if (!this.byId("iptRcvPlant").getSelectedKey()) sErrMsg = _oCaption.RCVPLANT;
+                else if (!this.byId("iptRcvSloc").getSelectedKey()) sErrMsg = _oCaption.RCVSLOC;
+                else if (!this.byId("iptShipMode").getSelectedKey()) sErrMsg = _oCaption.MODESHIP;
                 else if (!this.byId("iptRefDocNo").getValue()) sErrMsg = _oCaption.REFDOCNO;
 
                 if (sErrMsg.length > 0) {
@@ -874,11 +887,11 @@ sap.ui.define([
                     BWART: _this.byId("iptMvtType").getValue(),
                     STATUSCD: _oHeader.status,
                     
-                    ISSPLNT: _this.byId("cmbIssPlant").getSelectedKey(),
-                    ISSSLOC: _this.byId("cmbIssSloc").getSelectedKey(),
-                    RCVPLNT: _this.byId("cmbRcvPlant").getSelectedKey(),
-                    RCVSLOC: _this.byId("cmbRcvSloc").getSelectedKey(),
-                    EVERS: _this.byId("cmbShipMode").getSelectedKey(),
+                    ISSPLNT: _this.byId("iptIssPlant").getSelectedKey(),
+                    ISSSLOC: _this.byId("iptIssSloc").getSelectedKey(),
+                    RCVPLNT: _this.byId("iptRcvPlant").getSelectedKey(),
+                    RCVSLOC: _this.byId("iptRcvSloc").getSelectedKey(),
+                    EVERS: _this.byId("iptShipMode").getSelectedKey(),
 
                     VESSEL: _this.byId("iptVessel").getValue(),
                     CONTNO: _this.byId("iptContainerNo").getValue(),
@@ -1126,24 +1139,24 @@ sap.ui.define([
                         _this.getView().setModel(oJSONModel, pModel);
 
                         if (pModel == "issSloc" && data.results.length > 0) {
-                            if (data.results.length > 0) _this.byId("cmbIssSloc").setPlaceholder("");
-                            else _this.byId("cmbIssSloc").setPlaceholder("No data for selected " + _oCaption.ISSPLANT);
+                            if (data.results.length > 0) _this.byId("iptIssSloc").setPlaceholder("");
+                            else _this.byId("iptIssSloc").setPlaceholder("No data for selected " + _oCaption.ISSPLANT);
                         } else if (pModel == "rcvSloc" && data.results.length > 0) {
                             if (data.results.length > 0) {
-                                if (_this.byId("cmbIssSloc").getSelectedKey()) {
-                                    var sIssSloc = _this.byId("cmbIssSloc").getSelectedKey();
+                                if (_this.byId("iptIssSloc").getSelectedKey()) {
+                                    var sIssSloc = _this.byId("iptIssSloc").getSelectedKey();
                                     var oDataIssSloc = _this.getView().getModel("issSloc").getProperty("/results")
                                         .filter(x => x.SLOC == sIssSloc)[0];
                                     var oDataRcvSloc = _this.getView().getModel("rcvSloc").getProperty("/results")
                                         .filter(x => x.MATTYPEGRP == oDataIssSloc.MATTYPEGRP)[0];
 
-                                    _this.byId("cmbRcvSloc").setSelectedKey(oDataRcvSloc.SLOC);
+                                    _this.byId("iptRcvSloc").setSelectedKey(oDataRcvSloc.SLOC);
                                     _matTypeGrp = oDataIssSloc.MATTYPEGRP;
                                 } else {
-                                    _this.byId("cmbRcvSloc").setPlaceholder("");
+                                    _this.byId("iptRcvSloc").setPlaceholder("");
                                 }
                             }
-                            else _this.byId("cmbRcvSloc").setPlaceholder("No data for selected " + _oCaption.RCVPLANT);
+                            else _this.byId("iptRcvSloc").setPlaceholder("No data for selected " + _oCaption.RCVPLANT);
                         }
                     },
                     error: function (err) {
@@ -1151,8 +1164,22 @@ sap.ui.define([
                 })
             },
 
-            onShipModeValueHelp(oEvent) {
-                TableValueHelp.handleFormValueHelp(oEvent, this);
+            onFormValueHelpInputChange(oEvent) {
+                var oSource = oEvent.getSource();
+                var sId = oSource.getId();
+                var sKey = oSource.mProperties.selectedKey;
+
+                if (sId.includes("iptIssPlant")) {
+                    this.getResources("SLocSet", "issSloc", "PLANTCD eq '" + sKey + "'");
+                }
+                else if (sId.includes("iptIssSloc")) {
+                    var oIssSloc = (this.getView().getModel("issSloc").getData().results.filter(x => x.SLOC == sKey))[0];
+                    _oHeader.whseCd = oIssSloc.WHSECD;
+                    _oHeader.storAreaCd = oIssSloc.STORAREACD;
+                }
+                else if (sId.includes("iptRcvPlant")) {
+                    this.getResources("SLocSet", "rcvSloc", "PLANTCD eq '" + sKey + "'");
+                }
             },
 
             onDropdownSelectionChange(oEvent) {

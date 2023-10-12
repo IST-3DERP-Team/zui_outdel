@@ -104,6 +104,10 @@ sap.ui.define([
 
                     onAfterRendering: function(oEvent) {
                         _this.onAfterTableRendering(oEvent);
+                    },
+
+                    onclick: function(oEvent) {
+                        _this.onTableClick(oEvent);
                     }
                 };
 
@@ -126,6 +130,7 @@ sap.ui.define([
                     });
                 }
                 
+                this._sActiveTable = "outDelHdrTab";
                 this.closeLoadingDialog();
             },
 
@@ -373,6 +378,25 @@ sap.ui.define([
             onRefreshOutDelDtl() {
                 _this.showLoadingDialog("Loading...");
                 _this.getOutDelDtl();
+            },
+
+            onAddHK() {
+                if (_this.getView().getModel("base").getData().dataMode == "READ" && _this.getView().getModel("base").getData().appChange) {
+                    if (this._sActiveTable === "outDelHdrTab") this.onAddOutDelHdr();
+                }
+            },
+
+            onEditHK() {
+                if (_this.getView().getModel("base").getData().dataMode == "READ") {
+                    if (this._sActiveTable === "outDelHdrTab") this.onEditOutDelHdr();
+                }
+            },
+
+            onRefreshHK() {
+                if (_this.getView().getModel("base").getData().dataMode == "READ") {
+                    if (this._sActiveTable === "outDelHdrTab") this.onRefreshOutDelHdr();
+                    else if (this._sActiveTable === "outDelDtlTab") this.onRefreshOutDelDtl();
+                }
             },
 
             onNavBack() {

@@ -61,7 +61,7 @@
                                             }"
                                             editable="false"
                                             selectionChange="onDropdownSelectionChange">
-                                            <core:ListItem id="liStatus" key="{status>STATUS}" text="{status>STATUS} - ({status>DESCRIP})"/>
+                                            <core:ListItem id="liStatus" key="{status>STATUS}" text="({status>STATUS}) {status>DESCRIP}"/>
                                         </ComboBox>
                                     </f:fields>
                                 </f:FormElement>
@@ -107,7 +107,23 @@
                             <f:formElements>
                                 <f:FormElement id="feIssPlant" label="{ddtext>/ISSPLANT}">  
                                     <f:fields>
-                                        <ComboBox
+                                        <Input
+                                            id="iptIssPlant"
+                                            type="Text"
+                                            textFormatMode="KeyValue"
+                                            showSuggestion="true"
+                                            showValueHelp="true"
+                                            editable="{ui>/editModeHeader2}"
+                                            valueHelpRequest="handleFormValueHelp"
+                                            suggestionItems="{path: 'issPlant>/results', length: 10000, templateShareable: false}"
+                                            change="onFormValueHelpInputChange"
+                                        >
+                                            <suggestionItems>
+                                                <core:ListItem key="{issPlant>PLANTCD}" text="{issPlant>DESCRIP}" additionalText="{issPlant>PLANTCD}" />
+                                            </suggestionItems>
+                                        </Input>
+
+                                        <!-- <ComboBox
                                             id="cmbIssPlant"
                                             showSecondaryValues= "true"
                                             items="{
@@ -117,12 +133,28 @@
                                             editable="{ui>/editModeHeader2}"
                                             selectionChange="onDropdownSelectionChange">
                                             <core:ListItem id="liIssPlant" key="{issPlant>PLANTCD}" text="{issPlant>PLANTCD} - ({issPlant>DESCRIP})"/>
-                                        </ComboBox>
+                                        </ComboBox> -->
                                     </f:fields>
                                 </f:FormElement>
                                 <f:FormElement id="feIssSloc" label="{ddtext>/ISSSLOC}">  
                                     <f:fields>
-                                        <ComboBox
+                                        <Input
+                                            id="iptIssSloc"
+                                            type="Text"
+                                            textFormatMode="KeyValue"
+                                            showSuggestion="true"
+                                            showValueHelp="true"
+                                            editable="{ui>/editModeHeader2}"
+                                            valueHelpRequest="handleFormValueHelp"
+                                            suggestionItems="{path: 'issSloc>/results', length: 10000, templateShareable: false}"
+                                            change="onFormValueHelpInputChange"
+                                        >
+                                            <suggestionItems>
+                                                <core:ListItem key="{issSloc>SLOC}" text="{issSloc>DESCRIP}" additionalText="{issSloc>SLOC}" />
+                                            </suggestionItems>
+                                        </Input>
+
+                                        <!-- <ComboBox
                                             id="cmbIssSloc"
                                             showSecondaryValues= "true"
                                             items="{
@@ -132,12 +164,28 @@
                                             editable="{ui>/editModeHeader2}"
                                             selectionChange="onDropdownSelectionChange">
                                             <core:ListItem id="liIssSloc" key="{issSloc>SLOC}" text="{issSloc>SLOC} - ({issSloc>DESCRIP})"/>
-                                        </ComboBox>
+                                        </ComboBox> -->
                                     </f:fields>
                                 </f:FormElement>
                                 <f:FormElement id="feRcvPlant" label="{ddtext>/RCVPLANT}">  
                                     <f:fields>
-                                        <ComboBox
+                                        <Input
+                                            id="iptRcvPlant"
+                                            type="Text"
+                                            textFormatMode="KeyValue"
+                                            showSuggestion="true"
+                                            showValueHelp="true"
+                                            editable="{ui>/editModeHeader2}"
+                                            valueHelpRequest="handleFormValueHelp"
+                                            suggestionItems="{path: 'rcvPlant>/results', length: 10000, templateShareable: false}"
+                                            change="onFormValueHelpInputChange"
+                                        >
+                                            <suggestionItems>
+                                                <core:ListItem key="{rcvPlant>PLANTCD}" text="{rcvPlant>DESCRIP}" additionalText="{rcvPlant>PLANTCD}" />
+                                            </suggestionItems>
+                                        </Input>
+
+                                        <!-- <ComboBox
                                             id="cmbRcvPlant"
                                             showSecondaryValues= "true"
                                             items="{
@@ -147,12 +195,28 @@
                                             editable="{ui>/editModeHeader2}"
                                             selectionChange="onDropdownSelectionChange">
                                             <core:ListItem id="liRcvPlant" key="{rcvPlant>PLANTCD}" text="{rcvPlant>PLANTCD} - ({rcvPlant>DESCRIP})"/>
-                                        </ComboBox>
+                                        </ComboBox> -->
                                     </f:fields>
                                 </f:FormElement>
                                 <f:FormElement id="feRcvSloc" label="{ddtext>/RCVSLOC}">  
                                     <f:fields>
-                                        <ComboBox
+                                        <Input
+                                            id="iptRcvSloc"
+                                            type="Text"
+                                            textFormatMode="KeyValue"
+                                            showSuggestion="true"
+                                            showValueHelp="true"
+                                            editable="{ui>/editModeHeader2}"
+                                            valueHelpRequest="handleFormValueHelp"
+                                            suggestionItems="{path: 'rcvSloc>/results', length: 10000, templateShareable: false}"
+                                            change="onFormValueHelpInputChange"
+                                        >
+                                            <suggestionItems>
+                                                <core:ListItem key="{rcvSloc>SLOC}" text="{rcvSloc>DESCRIP}" additionalText="{rcvSloc>SLOC}" />
+                                            </suggestionItems>
+                                        </Input>
+
+                                        <!-- <ComboBox
                                             id="cmbRcvSloc"
                                             showSecondaryValues= "true"
                                             items="{
@@ -162,7 +226,7 @@
                                             editable="{ui>/editModeHeader2}"
                                             selectionChange="onDropdownSelectionChange">
                                             <core:ListItem id="liRcvSloc" key="{rcvSloc>SLOC}" text="{rcvSloc>SLOC} - ({rcvSloc>DESCRIP})"/>
-                                        </ComboBox>
+                                        </ComboBox> -->
                                     </f:fields>
                                 </f:FormElement>
                                 <f:FormElement label="{ddtext>/ETD}">  
@@ -185,7 +249,23 @@
                                 </f:FormElement>
                                 <f:FormElement id="feShipMode" label="{ddtext>/MODESHIP}">  
                                     <f:fields>
-                                        <ComboBox
+                                        <Input
+                                            id="iptShipMode"
+                                            type="Text"
+                                            textFormatMode="KeyValue"
+                                            showSuggestion="true"
+                                            showValueHelp="true"
+                                            editable="{ui>/editModeHeader}"
+                                            valueHelpRequest="handleFormValueHelp"
+                                            suggestionItems="{path: 'shipMode>/results', length: 10000, templateShareable: false}"
+                                            change="onFormValueHelpInputChange"
+                                        >
+                                            <suggestionItems>
+                                                <core:ListItem key="{shipMode>SHIPMODE}" text="{shipMode>DESCRIP}" additionalText="{shipMode>SHIPMODE}" />
+                                            </suggestionItems>
+                                        </Input>
+
+                                        <!-- <ComboBox
                                             id="cmbShipMode"
                                             showSecondaryValues= "true"
                                             items="{
@@ -195,43 +275,9 @@
                                             editable="{ui>/editModeHeader}"
                                             selectionChange="onDropdownSelectionChange">
                                             <core:ListItem id="liShipMode" key="{shipMode>SHIPMODE}" text="{shipMode>SHIPMODE} - ({shipMode>DESCRIP})"/>
-                                        </ComboBox>
-                                    </f:fields>
-                                </f:FormElement>
-
-                                <f:FormElement id="feShipMode2" label="{ddtext>/MODESHIP}">  
-                                    <f:fields>
-                                        <Input
-                                            id="iptShipMode"
-                                            type="Text"
-                                            showSuggestion="true"
-                                            showValueHelp="true"
-                                            editable="{ui>/editModeHeader}"
-                                            valueHelpRequest="onShipModeValueHelp"
-                                            suggestionItems="{shipMode>/}"
-                                            value="{shipMode>/SHIPMODE}"
-                                            change="onShipModeInputChange"
-                                            liveChange="onShipModeInputLiveChange"
-                                            tooltip="{shipMode>/SHIPMODE}"
-                                        >
-                                            <suggestionItems>
-                                                <core:ListItem text="{shipMode>SHIPMODE}" additionalText="{shipMode>DESCRIP}" />
-                                            </suggestionItems>
-                                        </Input>
-                                        <!-- <ComboBox
-                                            id="cmbShipMode2"
-                                            showSecondaryValues= "true"
-                                            items="{
-                                                path: 'shipMode>/results',
-                                                sorter: { path: 'SHIPMODE' }
-                                            }"
-                                            editable="{ui>/editModeHeader}"
-                                            selectionChange="onDropdownSelectionChange">
-                                            <core:ListItem id="liShipMode2" key="{shipMode>SHIPMODE}" text="{shipMode>SHIPMODE} - ({shipMode>DESCRIP})"/>
                                         </ComboBox> -->
                                     </f:fields>
                                 </f:FormElement>
-
                             </f:formElements>
                         </f:FormContainer>
                         <f:FormContainer ariaLabelledBy="Grp3" class="sapUiNoContentPadding" >

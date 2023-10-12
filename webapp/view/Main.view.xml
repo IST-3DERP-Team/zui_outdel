@@ -10,12 +10,12 @@
     height="100%">
     <Page id="page" enableScrolling="false" class="sapUiNoContentPadding" showHeader="false" showNavButton="true" navButtonPress="onNavBack">
         <dependents>
-            <core:CommandExecution id="CE_NEW" command="New" enabled="true" execute=".onAddOutDelHdr" />
-            <core:CommandExecution id="CE_EDIT" command="Edit" enabled="true" execute=".onEditOutDelHdr" />
+            <core:CommandExecution id="CE_NEW" command="New" enabled="true" execute="onAddHK" />
+            <core:CommandExecution id="CE_EDIT" command="Edit" enabled="true" execute="onEditHK" />
             <!-- <core:CommandExecution id="CE_DELETE" command="Delete" enabled="true" execute=".onDelete" />
             <core:CommandExecution id="CE_SAVE" command="Save" enabled="true" execute=".onSave" />
             <core:CommandExecution id="CE_CANCEL" command="Cancel" enabled="true" execute=".onCancel" /> -->
-            <core:CommandExecution id="CE_REFRESH" command="Refresh" enabled="true" execute=".onRefreshOutDelHdr" />
+            <core:CommandExecution id="CE_REFRESH" command="Refresh" enabled="true" execute="onRefreshHK" />
         </dependents>
         <content>
             <VBox id="vbOutDel" fitContainer="true">

@@ -1,1 +1,67 @@
-{}
+{
+    "form": [
+        {"ColumnName": "ISSPLANT", "TextFormatMode": "KeyValue",
+            "ValueHelp": {"show": true, "items": {"path": "issPlant", "value": "PLANTCD", "text": "DESCRIP"},
+                "SuggestionItems": {"path": "issPlant>/", "text": "{issPlant>PLANTCD}", "additionalText": "{issPlant>DESCRIP}", "maxSuggestionWidth": "200px"},
+                "columns": "tvh_issplant"
+            }
+        },
+        {"ColumnName": "ISSSLOC", "TextFormatMode": "KeyValue",
+            "ValueHelp": {"show": true, "items": {"path": "issSloc", "value": "SLOC", "text": "DESCRIP"},
+                "SuggestionItems": {"path": "issSloc>/", "text": "{issSloc>SLOC}", "additionalText": "{issSloc>DESCRIP}", "maxSuggestionWidth": "200px"},
+                "columns": "tvh_isssloc"
+            }
+        },
+        {"ColumnName": "RCVPLANT", "TextFormatMode": "KeyValue",
+            "ValueHelp": {"show": true, "items": {"path": "rcvPlant", "value": "PLANTCD", "text": "DESCRIP"},
+                "SuggestionItems": {"path": "rcvPlant>/", "text": "{rcvPlant>PLANTCD}", "additionalText": "{rcvPlant>DESCRIP}", "maxSuggestionWidth": "200px"},
+                "columns": "tvh_rcvplant"
+            }
+        },
+        {"ColumnName": "RCVSLOC", "TextFormatMode": "KeyValue",
+            "ValueHelp": {"show": true, "items": {"path": "rcvSloc", "value": "SLOC", "text": "DESCRIP"},
+                "SuggestionItems": {"path": "rcvSloc>/", "text": "{rcvSloc>SLOC}", "additionalText": "{rcvSloc>DESCRIP}", "maxSuggestionWidth": "200px"},
+                "columns": "tvh_rcvsloc"
+            }
+        },
+        {"ColumnName": "SHIPMODE", "TextFormatMode": "KeyValue",
+            "ValueHelp": {"show": true, "items": {"path": "shipMode", "value": "SHIPMODE", "text": "DESCRIP"},
+                "SuggestionItems": {"path": "shipMode>/", "text": "{shipmode>SHIPMODE}", "additionalText": "{shipmode>DESCRIP}", "maxSuggestionWidth": "200px"},
+                "columns": "tvh_shipmode"
+            }
+        }
+    ],
+
+    "tvh_issplant": [
+        {"ColumnName": "PLANTCD", "DataType": "STRING", "ColumnWidth": "100px", "Visible": true, "Key": true, "Value": false},
+        {"ColumnName": "DESCRIP", "DataType": "STRING", "ColumnWidth": "300px", "Visible": true, "Key": false, "Value": true},
+        {"ColumnName": "SBU", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true},
+        {"ColumnName": "DCIND", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true}
+    ],
+    "tvh_isssloc": [
+        {"ColumnName": "SLOC", "DataType": "STRING", "ColumnWidth": "100px", "Visible": true, "Key": true, "Value": false},
+        {"ColumnName": "DESCRIP", "DataType": "STRING", "ColumnWidth": "300px", "Visible": true, "Key": false, "Value": true},
+        {"ColumnName": "WHSECD", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true},
+        {"ColumnName": "STORAREACD", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true},
+        {"ColumnName": "PLANTCD", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true},
+        {"ColumnName": "MATTYPEGRP", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true}
+    ],
+    "tvh_rcvplant": [
+        {"ColumnName": "PLANTCD", "DataType": "STRING", "ColumnWidth": "100px", "Visible": true, "Key": true, "Value": false},
+        {"ColumnName": "DESCRIP", "DataType": "STRING", "ColumnWidth": "300px", "Visible": true, "Key": false, "Value": true},
+        {"ColumnName": "SBU", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true},
+        {"ColumnName": "DCIND", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true}
+    ],
+    "tvh_rcvsloc": [
+        {"ColumnName": "SLOC", "DataType": "STRING", "ColumnWidth": "100px", "Visible": true, "Key": true, "Value": false},
+        {"ColumnName": "DESCRIP", "DataType": "STRING", "ColumnWidth": "300px", "Visible": true, "Key": false, "Value": true},
+        {"ColumnName": "WHSECD", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true},
+        {"ColumnName": "STORAREACD", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true},
+        {"ColumnName": "PLANTCD", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true},
+        {"ColumnName": "MATTYPEGRP", "DataType": "STRING", "ColumnWidth": "300px", "Visible": false, "Key": false, "Value": true}
+    ],
+    "tvh_shipmode": [
+        {"ColumnName": "SHIPMODE", "DataType": "STRING", "ColumnWidth": "100px", "Visible": true, "Key": true, "Value": false},
+        {"ColumnName": "DESCRIP", "DataType": "STRING", "ColumnWidth": "300px", "Visible": true, "Key": false, "Value": true}
+    ]
+}
