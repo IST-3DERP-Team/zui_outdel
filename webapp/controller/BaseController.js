@@ -778,6 +778,8 @@ sap.ui.define([
         onSelectTab: function(oEvent) {
             _this._tableRendered = oEvent.getSource().getSelectedKey() + "Tab";
             _this.setActiveRowHighlight(oEvent.getSource().getSelectedKey());
+            
+            this._sActiveTable = _this._tableRendered;
         },
 
         onAfterTableRendering: function(oEvent) {

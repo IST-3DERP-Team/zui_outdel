@@ -188,7 +188,7 @@ sap.ui.define([
 
                 var oFormEventDelegate = {
                     onclick: function(oEvent) {
-                        
+                        _this._sActiveTable = "frmHeader";
                     }
                 };
 
@@ -198,6 +198,7 @@ sap.ui.define([
                     _this.onChangeHeader();
                 }, 1500);
 
+                this._sActiveTable = "frmHeader";
                 _this.closeLoadingDialog();
             },
 
@@ -1060,6 +1061,52 @@ sap.ui.define([
 
             onCloseIOTransfer() {
                 _this._IOTransfer.destroy(true);
+            },
+
+            onAddHK() {
+                if (_this.getView().getModel("base").getData().dataMode == "READ" && _this.getView().getModel("base").getData().appChange) {
+                    if (this._sActiveTable === "dlvDtlHUTab") this.onCreateDlvDtlHU();
+                }
+            },
+
+            onEditHK() {
+                if (_this.getView().getModel("base").getData().dataMode == "READ"  && _this.getView().getModel("base").getData().appChange) {
+                    if (this._sActiveTable === "frmHeader") this.onEditHeader();
+                }
+            },
+
+            onDeleteHK() {
+                if (_this.getView().getModel("base").getData().dataMode == "READ"  && _this.getView().getModel("base").getData().appChange) {
+                    if (this._sActiveTable === "frmHeader") this.onDeleteHeader();
+                    else if (this._sActiveTable === "dlvDtlHUTab") this.onDeleteDlvDtlHU();
+                }
+            },
+
+            onSaveHK() {
+                if ((_this.getView().getModel("base").getData().dataMode == "NEW" || 
+                    _this.getView().getModel("base").getData().dataMode == "EDIT")  && 
+                    _this.getView().getModel("base").getData().appChange) {
+                    if (this._sActiveTable === "frmHeader") this.onSaveHeader();
+                }
+            },
+
+            onCancelHK() {
+                if ((_this.getView().getModel("base").getData().dataMode == "NEW" || 
+                    _this.getView().getModel("base").getData().dataMode == "EDIT")  && 
+                    _this.getView().getModel("base").getData().appChange) {
+                    if (this._sActiveTable === "frmHeader") this.onCancelHeader();
+                }
+            },
+
+            onRefreshHK() {
+                console.log("onRefreshHK")
+                if (_this.getView().getModel("base").getData().dataMode == "READ") {
+                    if (this._sActiveTable === "frmHeader") this.onRefreshHeader();
+                    else if (this._sActiveTable === "dlvDtlHUTab") this.onRefresh("dlvDtlHU");
+                    else if (this._sActiveTable === "dlvDtlTab") this.onRefresh("dlvDtl");
+                    else if (this._sActiveTable === "statOvwTab") this.onRefresh("statOvw");
+                    else if (this._sActiveTable === "matDocTab") this.onRefresh("matDoc");
+                }
             },
 
             onNavBack() {

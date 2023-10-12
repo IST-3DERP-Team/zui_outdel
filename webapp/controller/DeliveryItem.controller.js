@@ -97,12 +97,18 @@ sap.ui.define([
 
                     onAfterRendering: function(oEvent) {
                         _this.onAfterTableRendering(oEvent);
+                    },
+
+                    onclick: function(oEvent) {
+                        _this.onTableClick(oEvent);
                     }
                 };
 
                 this.byId("dlvItemTab").addEventDelegate(oTableEventDelegate);
 
                 this.clearSortFilter("dlvItemTab");
+
+                this._sActiveTable = "dlvItemTab";
                 this.closeLoadingDialog();
             },
 
@@ -418,6 +424,11 @@ sap.ui.define([
                         }
                     }
                 });
+            },
+
+            onAddHK() {
+                console.log(this._sActiveTable)
+                if (this._sActiveTable === "dlvItemTab") this.onAdd();
             },
 
             onNavBack() {
