@@ -394,12 +394,12 @@ sap.ui.define([
 
                                 col.setTemplate(oInput);
                             }
-                            else if (ci.type === "BOOLEAN") {
+                            else if (ci.DataType === "BOOLEAN") {
                                 col.setTemplate(new sap.m.CheckBox({selected: "{" + pModel + ">" + sColName + "}",  
                                     editable: true
                                 }));
                             }
-                            else if (ci.type === "NUMBER") {
+                            else if (ci.DataType === "NUMBER") {
                                 col.setTemplate(new sap.m.Input({
                                     type: sap.m.InputType.Number,
                                     textAlign: sap.ui.core.TextAlign.Right,
@@ -409,7 +409,7 @@ sap.ui.define([
                                     enabled: true
                                 }));
                             }
-                            else if (ci.type === "DATE") {
+                            else if (ci.DataType === "DATE") {
                                 col.setTemplate(new sap.m.DatePicker({
                                     value: "{" + pModel + ">" + sColName + "}",
                                     displayFormat: "MM/dd/yyyy",
@@ -430,9 +430,9 @@ sap.ui.define([
                             col.getLabel().addStyleClass("sapMLabelRequired");
                         }
 
-                        if (ci.type === "STRING") oNewRow[ci.name] = "";
-                        //else if (ci.type === "NUMBER") oNewRow[ci.name] = "0";
-                        else if (ci.type === "BOOLEAN") oNewRow[ci.name] = false;
+                        if (ci.DataType === "STRING") oNewRow[ci.name] = "";
+                        //else if (ci.DataType === "NUMBER") oNewRow[ci.name] = "0";
+                        else if (ci.DataType === "BOOLEAN") oNewRow[ci.name] = false;
                     })                
             })
 
@@ -526,12 +526,12 @@ sap.ui.define([
 
                                 col.setTemplate(oInput);
                             }
-                            else if (ci.type === "BOOLEAN") {
+                            else if (ci.DataType === "BOOLEAN") {
                                 col.setTemplate(new sap.m.CheckBox({selected: "{" + pModel + ">" + sColName + "}",  
                                     editable: true
                                 }));
                             }
-                            else if (ci.type === "NUMBER") {
+                            else if (ci.DataType === "NUMBER") {
                                 col.setTemplate(new sap.m.Input({
                                     type: sap.m.InputType.Number,
                                     textAlign: sap.ui.core.TextAlign.Right,
@@ -541,7 +541,7 @@ sap.ui.define([
                                     enabled: true
                                 }));
                             }
-                            else if (ci.type === "DATE") {
+                            else if (ci.DataType === "DATE") {
                                 col.setTemplate(new sap.m.DatePicker({
                                     value: "{" + pModel + ">" + sColName + "}",
                                     displayFormat: "MM/dd/yyyy",
