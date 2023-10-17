@@ -557,7 +557,8 @@ sap.ui.define([
                     return;
                 }
 
-                _this.setControlEditMode("header", true)
+                _this.setControlEditMode("header", true);
+                _this.getView().getModel("base").setProperty("/dataMode", "EDIT");
             },
 
             onDeleteHeader() {
@@ -929,6 +930,7 @@ sap.ui.define([
 
                 if (_sHeaderMode == "NEW") {
                     _this.getNumber(param);
+                    _this.getView().getModel("base").setProperty("/dataMode", "READ");
                     // oModel.create("/DlvHeaderTblSet", param, {
                     //     method: "POST",
                     //     success: function(data, oResponse) {
@@ -951,6 +953,7 @@ sap.ui.define([
                             console.log(sEntitySet, data, oResponse);
                             MessageBox.information(_oCaption.INFO_SAVE_SUCCESS);
                             _this.getHeader();
+                            _this.getView().getModel("base").setProperty("/dataMode", "READ");
                         },
                         error: function(err) {
                             console.log("error", err)
@@ -969,9 +972,11 @@ sap.ui.define([
                         if (sAction == "Yes") {
                             if (_sHeaderMode == "NEW") {
                                 _this.setControlEditMode("header", false);
+                                _this.getView().getModel("base").setProperty("/dataMode", "READ");
                                 _this._router.navTo("RouteMain", {}, true);
                             } else if (_sHeaderMode == "EDIT") {
                                 _this.setControlEditMode("header", false);
+                                _this.getView().getModel("base").setProperty("/dataMode", "READ");
                             }
                         }
                     }
