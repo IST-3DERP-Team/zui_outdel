@@ -387,7 +387,7 @@
                     applyContentPadding="false"
                     select="onSelectTab">
                     <items>
-                        <IconTabFilter id="itfDlvDtlHU" text="DELIVERY DETAILS (HU)" key="dlvDtlHU">
+                        <IconTabFilter id="itfDlvDtlHU" text="Delivery Details (HU)" key="dlvDtlHU">
                             <uiT:Table id="dlvDtlHUTab"
                                 rows="{dlvDtlHU>/results}"
                                 visibleRowCountMode="Auto"
@@ -449,7 +449,7 @@
                                 </uiT:layoutData>
                             </uiT:Table>
                         </IconTabFilter>
-                        <IconTabFilter id="itfDlvDtl" text="DELIVERY DETAILS" key="dlvDtl">
+                        <IconTabFilter id="itfDlvDtl" text="Delivery Details" key="dlvDtl">
                             <uiT:Table id="dlvDtlTab"
                                 rows="{dlvDtl>/results}"
                                 visibleRowCountMode="Auto"
@@ -499,7 +499,7 @@
                                 </uiT:layoutData>
                             </uiT:Table>
                         </IconTabFilter>
-                        <IconTabFilter id="itfStatOvw" text="STATUS OVERVIEW" key="statOvw">
+                        <IconTabFilter id="itfStatOvw" text="Status Overview" key="statOvw">
                             <uiT:Table id="statOvwTab"
                                 rows="{statOvw>/results}"
                                 visibleRowCountMode="Auto"
@@ -549,7 +549,7 @@
                                 </uiT:layoutData>
                             </uiT:Table>
                         </IconTabFilter>
-                        <IconTabFilter id="itfMatDoc" text="MATERIAL DOCUMENTS" key="matDoc">
+                        <IconTabFilter id="itfMatDoc" text="Material Documents" key="matDoc">
                             <uiT:Table id="matDocTab"
                                 rows="{matDoc>/results}"
                                 visibleRowCountMode="Auto"

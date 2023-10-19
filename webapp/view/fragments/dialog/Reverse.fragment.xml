@@ -1,0 +1,23 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:uiT="sap.ui.table">
+    <Dialog title="{ddtext>/SEL_DLVTYPE}" draggable="true" escapeHandler="onCancelReverse" afterClose="onCancelReverse" contentWidth="25%"      >
+        
+    <VBox fitContainer="true" height="130px" class="sapUiTinyMargin">
+        <Label text="{ddtext>/POSTDT}:" design="Bold"/>
+        <DatePicker
+            id="dpReversePostDt"
+            editable="true"
+            valueFormat="yyyy-MM-dd"
+            displayFormat="MM/dd/yyyy"
+            value="{/postDt}">
+            <layoutData>
+                <FlexItemData growFactor="1" baseSize="0%"/>
+            </layoutData>
+        </DatePicker>
+		<Toolbar height="2rem">
+            <ToolbarSpacer />
+            <Button type="Ghost" icon="sap-icon://sys-enter" text="Proceed" tooltip="Proceed" press="onProceedReverse" />
+            <Button type="Ghost" icon="sap-icon://decline" text="Cancel" tooltip="Cancel" press="onCancelReverse" />
+        </Toolbar>
+        </VBox>
+    </Dialog>
+</core:FragmentDefinition>

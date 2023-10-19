@@ -675,6 +675,11 @@ sap.ui.define([
             },
 
             validatePost: async function() {
+                if (_oHeader.deleted) {
+                    MessageBox.warning(_oCaption.WARN_ALREADY_DELETED);
+                    return false;
+                }
+
                 if (_oHeader.status == "54") {
                     MessageBox.warning(_oCaption.WARN_NOT_STATUS_GR_POSTED);
                     _this.closeLoadingDialog();
@@ -739,12 +744,78 @@ sap.ui.define([
                     return;
                 }
 
-                MessageBox.confirm(_oCaption.CONFIRM_PROCEED_REVERSAL, {
-                    actions: ["Yes", "No"],
-                    onClose: function (sAction) {
-                        if (sAction === "Yes") {
-                            _this.showLoadingDialog("Loading...");
+                var oJSONModel = new JSONModel();
+                oJSONModel.setData({
+                    postDt: _oHeader.postDt
+                })
 
+                _this._Reverse = sap.ui.xmlfragment(_this.getView().getId(), "zuioutdel.view.fragments.dialog.Reverse", _this);
+                _this._Reverse.setModel(oJSONModel);
+                _this.getView().addDependent(_this._Reverse);
+
+                _this._Reverse.addStyleClass("sapUiSizeCompact");
+                _this._Reverse.open();
+
+                // MessageBox.confirm(_oCaption.CONFIRM_PROCEED_REVERSAL, {
+                //     actions: ["Yes", "No"],
+                //     onClose: function (sAction) {
+                //         if (sAction === "Yes") {
+                //             _this.showLoadingDialog("Loading...");
+
+                //             var oModelRFC = _this.getOwnerComponent().getModel("ZGW_3DERP_RFC_SRV");
+                //             var oParam = {
+                //                 "iv_dlvno": _oHeader.dlvNo,
+                //                 "iv_userid": _startUpInfo.id,
+                //                 "iv_pstngdt": _this.formatDate(_this.byId("dpPostDt").getValue()) + "T00:00:00",
+                //                 "N_IDOD_ET_CANC": [],
+                //                 "N_IDOD_RETURN": []
+                //             };
+
+                //             console.log("IDOD_ReverseSet param", oParam);
+                //             oModelRFC.create("/IDOD_ReverseSet", oParam, {
+                //                 method: "POST",
+                //                 success: function(oResult, oResponse) {
+                //                     console.log("IDOD_ReverseSet", oResult, oResponse);
+
+                //                     _this.closeLoadingDialog();
+                //                     if (oResult.N_IDOD_ET_CANC.results.length > 0) { //oResult.N_IDOD_ET_CANC.results[0].Type == "S"
+
+                //                         MessageBox.information(oResult.N_IDOD_ET_CANC.results[0].Message);
+                //                         _this.getHeader();
+                //                     } else if (oResult.N_IDOD_RETURN.results.length > 0) {
+                //                         MessageBox.information(oResult.N_IDOD_RETURN.results[0].Message);
+                //                     } else {
+                //                         MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
+                //                     }
+                //                 },
+                //                 error: function(err) {
+                //                     MessageBox.error(_oCaption.INFO_EXECUTE_FAIL);
+                //                     _this.closeLoadingDialog();
+                //                 }
+                //             });
+                //         }
+                //     }
+                // });
+            },
+
+            onProceedReverse(oEvent) {
+                _this.showLoadingDialog();
+
+                var oModel = this.getOwnerComponent().getModel();
+                var sUser = _startUpInfo.id;
+                var sPostDt = new Date(_this.byId("dpReversePostDt").getValue());
+                var sBuperDt =  sPostDt.getFullYear() +  ('0' + (sPostDt.getMonth() + 1)).slice(-2)
+                var sFilter = "USNAM eq '" + sUser + "' and BUPER_FROM eq '" + sBuperDt + "'";
+
+                console.log("ReverseSet param", sFilter);
+                oModel.read("/ReverseSet", {
+                    urlParameters: {
+                        "$filter": sFilter
+                    },
+                    success: function (data, response) {
+                        console.log("ReverseSet read", data);
+
+                        if (data.results.length > 0) {
                             var oModelRFC = _this.getOwnerComponent().getModel("ZGW_3DERP_RFC_SRV");
                             var oParam = {
                                 "iv_dlvno": _oHeader.dlvNo,
@@ -777,8 +848,20 @@ sap.ui.define([
                                 }
                             });
                         }
+                        else {
+                            MessageBox.information(_oCaption.POSTDT + " " + _oCaption.INFO_IS_NOT_VALID);
+                        }
+
+                        _this.closeLoadingDialog();
+                    },
+                    error: function (err) {
+                        _this.closeLoadingDialog();
                     }
-                });
+                })
+            },
+
+            onCancelReverse() {
+                _this._Reverse.destroy(true);
             },
 
             onRefreshHeader() {
@@ -855,7 +938,7 @@ sap.ui.define([
                     _this.byId("iptForwarder").setValue("");
                     _this.byId("iptCarrier").setValue("");
                     _this.byId("iptRefDocNo").setValue("");
-                    _this.byId("dpRefDocDt").setValue("");
+                    _this.byId("dpRefDocDt").setValue(sCurrentDate);
                     _this.byId("chkDeleted").setSelected(false);
                     _this.byId("iptUpdatedBy").setValue("");
                     _this.byId("iptUpdatedDt").setValue("");
@@ -984,6 +1067,11 @@ sap.ui.define([
             },
 
             onCreateDlvDtlHU() {
+                if (_oHeader.deleted) {
+                    MessageBox.warning(_oCaption.WARN_ALREADY_DELETED);
+                    return;
+                }
+
                 if (_oHeader.status != "50") {
                     MessageBox.warning(_oCaption.WARN_ADD_NOT_ALLOW);
                     return;
@@ -999,6 +1087,11 @@ sap.ui.define([
             },
 
             onDeleteDlvDtlHU() {
+                if (_oHeader.deleted) {
+                    MessageBox.warning(_oCaption.WARN_ALREADY_DELETED);
+                    return;
+                }
+                
                 if (_oHeader.status != "50") {
                     MessageBox.warning(_oCaption.WARN_DELETE_NOT_ALLOW);
                     return;
@@ -1554,6 +1647,7 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "DESTPLANT"});
                 oDDTextParam.push({CODE: "CLOSE"});
                 oDDTextParam.push({CODE: "ITEM(S)"});
+                oDDTextParam.push({CODE: "SEL_DLVTYPE"});
 
                 // Buttons
                 oDDTextParam.push({CODE: "ADD"});
@@ -1573,7 +1667,7 @@ sap.ui.define([
                 // oDDTextParam.push({CODE: "INFO_NO_SELECTED"});
                 oDDTextParam.push({CODE: "CONFIRM_DISREGARD_CHANGE"});
                 // oDDTextParam.push({CODE: "INFO_INVALID_SAVE"});
-                // oDDTextParam.push({CODE: "WARN_NO_DATA_MODIFIED"});
+                oDDTextParam.push({CODE: "INFO_IS_NOT_VALID"});
                 oDDTextParam.push({CODE: "INFO_SAVE_SUCCESS"});
                 oDDTextParam.push({CODE: "WARN_DELETE_NOT_ALLOW"});
                 oDDTextParam.push({CODE: "INFO_PROCEED_POST"});

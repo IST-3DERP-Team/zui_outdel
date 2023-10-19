@@ -95,6 +95,9 @@ sap.ui.define([
                     this.byId("btnFullScreenOutDelDtl").setEnabled(false);
                     this.byId("btnTabLayoutOutDelDtl").setEnabled(false);
                 }
+                else {
+                    _this.onSearch();
+                }
 
                 this._tableRendered = "";
                 var oTableEventDelegate = {
