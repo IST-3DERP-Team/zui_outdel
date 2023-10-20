@@ -452,7 +452,7 @@ sap.ui.define([
                             item.COMPLETE = item.COMPLETE === "X" ? true : false;
                             console.log("status", _this.getView().getModel("status").getData().results, item.DLVSTATCD)
                             var oStatus = _this.getView().getModel("status").getData().results.filter(x => x.STATUS == item.DLVSTATCD)[0];
-                            item.DLVSTATCD = item.DLVSTATCD + " - (" + oStatus.DESCRIP + ")";
+                            item.DLVSTATCD = oStatus.DESCRIP + " (" + item.DLVSTATCD + ")";
 
                             if (item.STARTDT !== null)
                                 item.STARTDT = _this.formatDate(item.STARTDT) + " " + _this.formatTime(item.STARTTM);
@@ -733,7 +733,7 @@ sap.ui.define([
                 else return true;
             },
 
-            onReverseHeader() {
+            onReverseHeader: async function() {
                 if (_oHeader.deleted) {
                     MessageBox.warning(_oCaption.WARN_ALREADY_DELETED);
                     return;
@@ -744,17 +744,47 @@ sap.ui.define([
                     return;
                 }
 
-                var oJSONModel = new JSONModel();
-                oJSONModel.setData({
-                    postDt: _oHeader.postDt
+                var oModel = _this.getOwnerComponent().getModel();
+                var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+                var sFilter = "VARKEY eq '" + sDlvNo + "'";
+                var aDataLock = {results: []};
+
+                var oPromiseResult = new Promise((resolve, reject) => {
+                    oModel.read('/LockInboundSet', {
+                        urlParameters: {
+                            "$filter": sFilter
+                        },
+                        success: function (data, response) {
+                            console.log("LockInboundSet", data);
+                            if (data.results.length > 0) aDataLock = data;
+                            resolve();
+                        },
+                        error: function (err) { 
+                            console.log("error", err)
+                            resolve();
+                        }
+                    })
                 })
 
-                _this._Reverse = sap.ui.xmlfragment(_this.getView().getId(), "zuioutdel.view.fragments.dialog.Reverse", _this);
-                _this._Reverse.setModel(oJSONModel);
-                _this.getView().addDependent(_this._Reverse);
+                await oPromiseResult;
 
-                _this._Reverse.addStyleClass("sapUiSizeCompact");
-                _this._Reverse.open();
+                if (aDataLock.results.length > 0) {
+                    MessageBox.warning(_oCaption.INFO_REVERSAL_CANT_PROCEED + ". ID " + aDataLock.results[0].VARKEY.replace("888", "") +
+                    " " + _oCaption.INFO_IS_LOCK_BY_USER + " " + aDataLock.results[0].UPDATEBY);
+                }
+                else {
+                    var oJSONModel = new JSONModel();
+                    oJSONModel.setData({
+                        postDt: _oHeader.postDt
+                    })
+
+                    _this._Reverse = sap.ui.xmlfragment(_this.getView().getId(), "zuioutdel.view.fragments.dialog.Reverse", _this);
+                    _this._Reverse.setModel(oJSONModel);
+                    _this.getView().addDependent(_this._Reverse);
+
+                    _this._Reverse.addStyleClass("sapUiSizeCompact");
+                    _this._Reverse.open();
+                }
 
                 // MessageBox.confirm(_oCaption.CONFIRM_PROCEED_REVERSAL, {
                 //     actions: ["Yes", "No"],
@@ -1686,6 +1716,8 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "INFO_ID_CREATED"});
                 oDDTextParam.push({CODE: "INFO_OD_POST_IOTRANSFER"});
                 oDDTextParam.push({CODE: "INFO_LAYOUT_SAVE"});
+                oDDTextParam.push({CODE: "INFO_IS_LOCK_BY_USER"});
+                oDDTextParam.push({CODE: "INFO_REVERSAL_CANT_PROCEED"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",

@@ -7,6 +7,7 @@
                 <Key>
                     <PropertyRef Name="DLVNO"/>
                 </Key>
+                <Property Name="DELETED" Type="Edm.Boolean" Nullable="false" sap:unicode="false" sap:label="Deleted" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="CREATEDDT" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Created on" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="REFDLVNO" Type="Edm.String" Nullable="false" MaxLength="300" sap:unicode="false" sap:label="REFDLVNO" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="DLVNO" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Dlv No" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -383,6 +384,18 @@
                 <Property Name="BUPER_FROM" Type="Edm.String" Nullable="false" MaxLength="7" sap:unicode="false" sap:label="Period Fr" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="BUPER_TO" Type="Edm.String" Nullable="false" MaxLength="7" sap:unicode="false" sap:label="Period To" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
             </EntityType>
+            <EntityType Name="LockInbound" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TABLENAME"/>
+                    <PropertyRef Name="VARKEY"/>
+                </Key>
+                <Property Name="TABLENAME" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Table name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="VARKEY" Type="Edm.String" Nullable="false" MaxLength="150" sap:unicode="false" sap:label="Lock Argument" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TERMINALID" Type="Edm.String" Nullable="false" MaxLength="36" sap:unicode="false" sap:label="Terminal" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="JOBNAME" Type="Edm.String" Nullable="false" MaxLength="32" sap:unicode="false" sap:label="Job Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="UPDATEBY" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="User" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="UPDATEDT" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Last Change" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
             <EntityContainer Name="ZGW_3DERP_OUTDEL_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
                 <EntitySet Name="OutDelHeaderSet" EntityType="ZGW_3DERP_OUTDEL_SRV.OutDelHeader" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="OutDelDetailSet" EntityType="ZGW_3DERP_OUTDEL_SRV.OutDelDetail" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
@@ -404,6 +417,7 @@
                 <EntitySet Name="DlvHeaderNewIDSet" EntityType="ZGW_3DERP_OUTDEL_SRV.DlvHeaderNewID" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="IOTransferSet" EntityType="ZGW_3DERP_OUTDEL_SRV.IOTransfer" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
                 <EntitySet Name="ReverseSet" EntityType="ZGW_3DERP_OUTDEL_SRV.Reverse" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="LockInboundSet" EntityType="ZGW_3DERP_OUTDEL_SRV.LockInbound" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
             </EntityContainer>
             <atom:link rel="self" href="http://190.92.230.65:8000/sap/opu/odata/sap/ZGW_3DERP_OUTDEL_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
             <atom:link rel="latest-version" href="http://190.92.230.65:8000/sap/opu/odata/sap/ZGW_3DERP_OUTDEL_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>

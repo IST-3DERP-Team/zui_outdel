@@ -69,7 +69,7 @@
                                             }"
                                             editable="false"
                                             selectionChange="onDropdownSelectionChange">
-                                            <core:ListItem id="liStatus" key="{status>STATUS}" text="({status>STATUS}) {status>DESCRIP}"/>
+                                            <core:ListItem id="liStatus" key="{status>STATUS}" text="{status>DESCRIP} ({status>STATUS})"/>
                                         </ComboBox>
                                     </f:fields>
                                 </f:FormElement>
@@ -118,7 +118,7 @@
                                         <Input
                                             id="iptIssPlant"
                                             type="Text"
-                                            textFormatMode="KeyValue"
+                                            textFormatMode="ValueKey"
                                             showSuggestion="true"
                                             showValueHelp="true"
                                             editable="{ui>/editModeHeader2}"
@@ -149,7 +149,7 @@
                                         <Input
                                             id="iptIssSloc"
                                             type="Text"
-                                            textFormatMode="KeyValue"
+                                            textFormatMode="ValueKey"
                                             showSuggestion="true"
                                             showValueHelp="true"
                                             editable="{ui>/editModeHeader2}"
@@ -180,7 +180,7 @@
                                         <Input
                                             id="iptRcvPlant"
                                             type="Text"
-                                            textFormatMode="KeyValue"
+                                            textFormatMode="ValueKey"
                                             showSuggestion="true"
                                             showValueHelp="true"
                                             editable="{ui>/editModeHeader2}"
@@ -211,7 +211,7 @@
                                         <Input
                                             id="iptRcvSloc"
                                             type="Text"
-                                            textFormatMode="KeyValue"
+                                            textFormatMode="ValueKey"
                                             showSuggestion="true"
                                             showValueHelp="true"
                                             editable="{ui>/editModeHeader2}"
@@ -260,7 +260,7 @@
                                         <Input
                                             id="iptShipMode"
                                             type="Text"
-                                            textFormatMode="KeyValue"
+                                            textFormatMode="ValueKey"
                                             showSuggestion="true"
                                             showValueHelp="true"
                                             editable="{ui>/editModeHeader}"
