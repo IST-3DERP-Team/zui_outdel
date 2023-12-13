@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:uiT="sap.ui.table">
-    <Dialog title="{ddtext>/SEL_DLVTYPE}" draggable="true" escapeHandler="onCancelReverse" afterClose="onCancelReverse" contentWidth="25%"      >
+    <Dialog title="{ddtext>/INFO_SEL_POST_DATE}" draggable="true" escapeHandler="onCancelReverse" afterClose="onCancelReverse" contentWidth="25%"      >
         
     <VBox fitContainer="true" height="130px" class="sapUiTinyMargin">
         <Label text="{ddtext>/POSTDT}:" design="Bold"/>

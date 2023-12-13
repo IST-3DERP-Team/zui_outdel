@@ -1718,6 +1718,7 @@ sap.ui.define([
                 oDDTextParam.push({CODE: "INFO_LAYOUT_SAVE"});
                 oDDTextParam.push({CODE: "INFO_IS_LOCK_BY_USER"});
                 oDDTextParam.push({CODE: "INFO_REVERSAL_CANT_PROCEED"});
+                oDDTextParam.push({CODE: "INFO_SEL_POST_DATE"});
                 
                 oModel.create("/CaptionMsgSet", { CaptionMsgItems: oDDTextParam  }, {
                     method: "POST",
