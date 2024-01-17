@@ -142,13 +142,45 @@ sap.ui.define([
                 var sDlvAsgnd = "";
                 var sMatTypeGrp = _this.getView().getModel("ui").getData().activeMatTypeGrp;
 
-                var sFilter = "DLVNO eq '" + sDlvNo + "' and PLANT eq '" + sIssPlant + "' and SHIPTOPLANT eq '" + sRcvPlant + 
-                    "' and DIRECTIONCD eq '" + sDirectionCd + "' and DLVASGND eq '" + sDlvAsgnd + "' and MATGRP eq '" + sMatTypeGrp + "'";
-                //console.log("getDlvItem", sFilter)
+                // var sFilter = "DLVNO eq '" + sDlvNo + "' and PLANT eq '" + sIssPlant + "' and SHIPTOPLANT eq '" + sRcvPlant + 
+                //     "' and DIRECTIONCD eq '" + sDirectionCd + "' and DLVASGND eq '" + sDlvAsgnd + "' and MATGRP eq '" + sMatTypeGrp + "'";
+
+                var oSmartFilter = this.getView().byId("sfbDlvItem").getFilters();
+                var aFilters = [],
+                    aFilter = [],
+                    aSmartFilter = [];
+
+                if (oSmartFilter.length > 0 && oSmartFilter[0].aFilters)  {
+                    oSmartFilter[0].aFilters.forEach(item => {
+                        // console.log(item)
+                        if (item.aFilters === undefined) {
+                            aFilter.push(new Filter(item.sPath, item.sOperator, item.oValue1));
+                        }
+                        else {
+                            aFilters.push(item);
+                        }
+                    })
+
+                    if (aFilter.length > 0) { aFilters.push(new Filter(aFilter, false)); }
+                }
+                else if (pFilters.length > 0) {
+                    var sName = pFilters[0].sPath;
+                    aFilters.push(new Filter(sName, FilterOperator.EQ, pFilters[0].oValue1));
+                }
+
+                // aFilters.push(new Filter("DLVNO", FilterOperator.EQ, sDlvNo));
+                aFilters.push(new Filter("PLANT", FilterOperator.EQ, sIssPlant));
+                aFilters.push(new Filter("SHIPTOPLANT", FilterOperator.EQ, sRcvPlant));
+                aFilters.push(new Filter("DIRECTIONCD", FilterOperator.EQ, sDirectionCd));
+                aFilters.push(new Filter("DLVASGND", FilterOperator.EQ, sDlvAsgnd));
+                aFilters.push(new Filter("MATGRP", FilterOperator.EQ, sMatTypeGrp));
+
+                aSmartFilter.push(new Filter(aFilters, true));
                 oModel.read('/DlvDetailHUSet', {
-                    urlParameters: {
-                        "$filter": sFilter
-                    },
+                    // urlParameters: {
+                    //     "$filter": sFilter
+                    // },
+                    filters: aSmartFilter,
                     success: function (data, response) {
                         console.log("DlvDetailHUSet", data)
 
@@ -170,7 +202,7 @@ sap.ui.define([
                         // Set row count
                         _this.getView().getModel("ui").setProperty("/rowCount", data.results.length);
 
-                        _this.onFilterBySmart("dlvItem", pFilters, pFilterGlobal, aFilterTab);
+                        //_this.onFilterBySmart("dlvItem", pFilters, pFilterGlobal, aFilterTab);
 
                         _this.setRowReadMode("dlvItem");
 
@@ -203,13 +235,21 @@ sap.ui.define([
                 var oModel = this.getOwnerComponent().getModel();
                 var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
 
-                var sFilter = "DLVNO eq '" + sDlvNo + "'";
+                var aFilters = [],
+                    aFilter = [],
+                    aSmartFilter = [];
+
+                aFilters.push(new Filter("DLVNO", FilterOperator.EQ, sDlvNo));
+                aSmartFilter.push(new Filter(aFilters, true));
+
+                //var sFilter = "DLVNO eq '" + sDlvNo + "'";
                 oModel.read('/DlvDetailHUSet', {
-                    urlParameters: {
-                        "$filter": sFilter
-                    },
+                    // urlParameters: {
+                    //     "$filter": sFilter
+                    // },
+                    filters: aSmartFilter,
                     success: function (data, response) {
-                        console.log("DlvDetailHUSet", data)
+                        console.log("dlvDtlHU", data)
 
                         var oJSONModel = new sap.ui.model.json.JSONModel();
                         oJSONModel.setData(data);

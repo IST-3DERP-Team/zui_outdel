@@ -352,11 +352,19 @@ sap.ui.define([
                 var oModel = this.getOwnerComponent().getModel();
                 var sDlvNo = _oHeader.dlvNo;
 
-                var sFilter = "DLVNO eq '" + sDlvNo + "'";
+                var aFilters = [],
+                    aFilter = [],
+                    aSmartFilter = [];
+
+                aFilters.push(new Filter("DLVNO", FilterOperator.EQ, sDlvNo));
+                aSmartFilter.push(new Filter(aFilters, true));
+
+                // var sFilter = "DLVNO eq '" + sDlvNo + "'";
                 oModel.read('/DlvDetailHUSet', {
-                    urlParameters: {
-                        "$filter": sFilter
-                    },
+                    // urlParameters: {
+                    //     "$filter": sFilter
+                    // },
+                    filters: aSmartFilter,
                     success: function (data, response) {
                         console.log("DlvDetailHUSet", data)
 
