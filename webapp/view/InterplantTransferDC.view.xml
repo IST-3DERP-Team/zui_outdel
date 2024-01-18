@@ -124,6 +124,7 @@
                                             editable="{ui>/editModeHeader2}"
                                             valueHelpRequest="handleFormValueHelp"
                                             suggestionItems="{path: 'issPlant>/results', length: 10000, templateShareable: false}"
+                                            maxSuggestionWidth="400px"
                                             change="onFormValueHelpInputChange"
                                         >
                                             <suggestionItems>
@@ -155,6 +156,7 @@
                                             editable="{ui>/editModeHeader2}"
                                             valueHelpRequest="handleFormValueHelp"
                                             suggestionItems="{path: 'issSloc>/results', length: 10000, templateShareable: false}"
+                                            maxSuggestionWidth="400px"
                                             change="onFormValueHelpInputChange"
                                         >
                                             <suggestionItems>
@@ -186,6 +188,7 @@
                                             editable="{ui>/editModeHeader2}"
                                             valueHelpRequest="handleFormValueHelp"
                                             suggestionItems="{path: 'rcvPlant>/results', length: 10000, templateShareable: false}"
+                                            maxSuggestionWidth="400px"
                                             change="onFormValueHelpInputChange"
                                         >
                                             <suggestionItems>
@@ -217,6 +220,7 @@
                                             editable="{ui>/editModeHeader2}"
                                             valueHelpRequest="handleFormValueHelp"
                                             suggestionItems="{path: 'rcvSloc>/results', length: 10000, templateShareable: false}"
+                                            maxSuggestionWidth="400px"
                                             change="onFormValueHelpInputChange"
                                         >
                                             <suggestionItems>
