@@ -273,102 +273,149 @@ sap.ui.define([
                 var oModel = this.getOwnerComponent().getModel();
                 var aData = _this.getView().getModel("dlvItem").getData().results;
                 var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
-                var iIdx = 0;
-
-                var aDlvDtlHU = _this.getView().getModel("dlvDtlHU").getData().results;
-                var iMaxDlvItem = 0;
-                var iMaxSeqNo = 0;
-                if (aDlvDtlHU.length > 0) {
-                    iMaxDlvItem = Math.max(...aDlvDtlHU.map(x => x.DLVITEM));
-                    iMaxSeqNo = Math.max(...aDlvDtlHU.map(x => x.SEQNO));
-                }
+                var iTimer = 0;
 
                 var aOrigSelIdx = [];
                 aSelIdx.forEach(i => {
                     aOrigSelIdx.push(oTable.getBinding("rows").aIndices[i]);
                 })
 
-                aOrigSelIdx.forEach(i => {
+                aOrigSelIdx.forEach((i, idx) => {
                     var oData = aData[i];
                     var sEntitySet = "/DlvDetailHUTblSet(DLVNO='" + oData.DLVNO + "',DLVITEM='" + oData.DLVITEM + "',SEQNO='" + oData.SEQNO + "')";
                     var param = {
                         DLVASGND: sDlvNo
                     }
+                    iTimer += 200;
 
                     setTimeout(() => {
                         oModel.update(sEntitySet, param, {
                             method: "PUT",
                             success: function(data, oResponse) {
                                 console.log(sEntitySet, data, oResponse)
-    
-                                var oDataCreate = oData; //aData[iIdx];
-                                
-                                // DlvTem
-                                var iDlvItem = parseInt(oDataCreate.DLVITEM);
-                                iMaxDlvItem = iDlvItem;
-                                /*if (iMaxDlvItem == 0) iMaxDlvItem = iDlvItem;
-                                else if (iMaxDlvItem > iDlvItem) iMaxDlvItem += 1;
-                                else iMaxDlvItem = iDlvItem + 1;*/
-    
-                                // SeqNo
-                                var iSeqNo = parseInt(oDataCreate.SEQNO);
-                                if (iMaxSeqNo == 0) iMaxSeqNo = iSeqNo;
-                                else if (iMaxSeqNo > iSeqNo) iMaxSeqNo += 1;
-                                else iMaxSeqNo = iSeqNo + 1;
-    
-                                var paramCreate = {
-                                    DLVNO: sDlvNo,
-                                    DLVITEM: iMaxDlvItem.toString(), //.toString().padStart(5, '0'),
-                                    SEQNO: iMaxSeqNo.toString(), //.toString().padStart(4, '0'),
-                                    PLANTCD: oDataCreate.PLANT,
-                                    SLOC: oDataCreate.SLOC,
-                                    MATNO: oDataCreate.MATNO,
-                                    BATCH: oDataCreate.NEWBATCH,
-                                    PKGNO: oDataCreate.PACKNO,
-                                    HUID: oDataCreate.HUID,
-                                    HUITEM: oDataCreate.HUITEM,
-                                    DLVQTYORD: oDataCreate.ACTQTYBASE,
-                                    DLVQTYBSE: oDataCreate.ACTQTYBASE,
-                                    ORDUOM: oDataCreate.BASEUOM,
-                                    BASEUOM: oDataCreate.BASEUOM,
-                                    ACTQTYORD: oDataCreate.ACTQTYBASE,
-                                    ACTQTYBSE: oDataCreate.ACTQTYBASE
-                                };
-    
-                                console.log("paramCreate", paramCreate);
-                                oModel.create("/DlvDetailHUTblSet", paramCreate, {
-                                    method: "POST",
-                                    success: function(data, oResponse) {
-                                        console.log("DlvDetailHUTblSet create", data)
-                                    },
-                                    error: function(err) {
-                                        console.log("error", err)
-                                    }
-                                });
-    
-    
-                                iIdx++;
-                                if (iIdx === aOrigSelIdx.length) {
+
+                                if (idx == aOrigSelIdx.length - 1) {
                                     _this.onSaveDlvDtl();
                                 }
-    
                             },
                             error: function(err) {
                                 console.log("error", err)
                             }
                         });
-                    }, 100);
+                    }, iTimer);
                     
                 })
+            },   
 
-                //console.log("onAdd", aOrigSelIdx)
+            // old code 20240122
+            // onAdd() {
+            //     var oTable = this.byId("dlvItemTab");
+            //     var aSelIdx = oTable.getSelectedIndices();
+
+            //     if (aSelIdx.length === 0) {
+            //         MessageBox.information(_oCaption.INFO_NO_RECORD_SELECT);
+            //         return;
+            //     }
+
+            //     var oModel = this.getOwnerComponent().getModel();
+            //     var aData = _this.getView().getModel("dlvItem").getData().results;
+            //     var sDlvNo = _this.getView().getModel("ui").getData().activeDlvNo;
+            //     var iIdx = 0;
+
+            //     var aDlvDtlHU = _this.getView().getModel("dlvDtlHU").getData().results;
+            //     var iMaxDlvItem = 0;
+            //     var iMaxSeqNo = 0;
+            //     if (aDlvDtlHU.length > 0) {
+            //         iMaxDlvItem = Math.max(...aDlvDtlHU.map(x => x.DLVITEM));
+            //         iMaxSeqNo = Math.max(...aDlvDtlHU.map(x => x.SEQNO));
+            //     }
+
+            //     var aOrigSelIdx = [];
+            //     aSelIdx.forEach(i => {
+            //         aOrigSelIdx.push(oTable.getBinding("rows").aIndices[i]);
+            //     })
+
+            //     aOrigSelIdx.forEach(i => {
+            //         var oData = aData[i];
+            //         var sEntitySet = "/DlvDetailHUTblSet(DLVNO='" + oData.DLVNO + "',DLVITEM='" + oData.DLVITEM + "',SEQNO='" + oData.SEQNO + "')";
+            //         var param = {
+            //             DLVASGND: sDlvNo
+            //         }
+
+            //         setTimeout(() => {
+            //             oModel.update(sEntitySet, param, {
+            //                 method: "PUT",
+            //                 success: function(data, oResponse) {
+            //                     console.log(sEntitySet, data, oResponse)
+    
+            //                     var oDataCreate = oData; //aData[iIdx];
+                                
+            //                     // DlvTem
+            //                     var iDlvItem = parseInt(oDataCreate.DLVITEM);
+            //                     iMaxDlvItem = iDlvItem;
+            //                     /*if (iMaxDlvItem == 0) iMaxDlvItem = iDlvItem;
+            //                     else if (iMaxDlvItem > iDlvItem) iMaxDlvItem += 1;
+            //                     else iMaxDlvItem = iDlvItem + 1;*/
+    
+            //                     // SeqNo
+            //                     var iSeqNo = parseInt(oDataCreate.SEQNO);
+            //                     if (iMaxSeqNo == 0) iMaxSeqNo = iSeqNo;
+            //                     else if (iMaxSeqNo > iSeqNo) iMaxSeqNo += 1;
+            //                     else iMaxSeqNo = iSeqNo + 1;
+    
+            //                     var paramCreate = {
+            //                         DLVNO: sDlvNo,
+            //                         DLVITEM: iMaxDlvItem.toString(), //.toString().padStart(5, '0'),
+            //                         SEQNO: iMaxSeqNo.toString(), //.toString().padStart(4, '0'),
+            //                         PLANTCD: oDataCreate.PLANT,
+            //                         SLOC: oDataCreate.SLOC,
+            //                         MATNO: oDataCreate.MATNO,
+            //                         BATCH: oDataCreate.NEWBATCH,
+            //                         PKGNO: oDataCreate.PACKNO,
+            //                         HUID: oDataCreate.HUID,
+            //                         HUITEM: oDataCreate.HUITEM,
+            //                         DLVQTYORD: oDataCreate.ACTQTYBASE,
+            //                         DLVQTYBSE: oDataCreate.ACTQTYBASE,
+            //                         ORDUOM: oDataCreate.BASEUOM,
+            //                         BASEUOM: oDataCreate.BASEUOM,
+            //                         ACTQTYORD: oDataCreate.ACTQTYBASE,
+            //                         ACTQTYBSE: oDataCreate.ACTQTYBASE
+            //                     };
+    
+            //                     console.log("paramCreate", paramCreate);
+            //                     oModel.create("/DlvDetailHUTblSet", paramCreate, {
+            //                         method: "POST",
+            //                         success: function(data, oResponse) {
+            //                             console.log("DlvDetailHUTblSet create", data)
+            //                         },
+            //                         error: function(err) {
+            //                             console.log("error", err)
+            //                         }
+            //                     });
+    
+    
+            //                     iIdx++;
+            //                     if (iIdx === aOrigSelIdx.length) {
+            //                         _this.onSaveDlvDtl();
+            //                     }
+    
+            //                 },
+            //                 error: function(err) {
+            //                     console.log("error", err)
+            //                 }
+            //             });
+            //         }, 100);
+                    
+            //     })
+
+            //     //console.log("onAdd", aOrigSelIdx)
 
 
-                // this._router.navTo("RouteInterplantTransferDC", {
-                //     sbu: _this.getView().getModel("ui").getData().sbu,
-                //     dlvNo: _this.getView().getModel("ui").getData().activeDlvNo
-                // }, true);
-            },            
+            //     // this._router.navTo("RouteInterplantTransferDC", {
+            //     //     sbu: _this.getView().getModel("ui").getData().sbu,
+            //     //     dlvNo: _this.getView().getModel("ui").getData().activeDlvNo
+            //     // }, true);
+            // },            
 
             onSaveDlvDtl() {
                 var oModel = this.getOwnerComponent().getModel();
