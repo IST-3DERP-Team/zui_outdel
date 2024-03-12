@@ -18,44 +18,45 @@
             <core:CommandExecution id="CE_REFRESH" command="Refresh" enabled="true" execute="onRefreshHK" />
         </dependents>
         <content>
-            <VBox id="vbOutDel" fitContainer="true">
-                <sfb:SmartFilterBar id="sfbOutDel" entitySet="ZVB_3DERP_OUTDELFILTER" enableBasicSearch="true" search="onSearch" 
-                    persistencyKey="3DERP_OutDelKey" filterContainerWidth="14rem" useToolbar="true" showClearOnFB="true" initialise="onSFBInitialise">
-                    <sfb:controlConfiguration>
-                        <sfb:ControlConfiguration id="filterSbu" key="SBU" groupId="_BASIC" label="{ddtext>/SBU}" controlType="dropDownList" filterType="single"
-                            displayBehaviour="idOnly" mandatory="mandatory" index="0">
-                        </sfb:ControlConfiguration>
-                    </sfb:controlConfiguration>
-                    <sfb:controlConfiguration>
-                        <sfb:ControlConfiguration id="filterDlvType" key="DLVTYPE" groupId="_BASIC" label="{ddtext>/DLVTYPE}" controlType="dropDownList" 
-                            displayBehaviour="idAndDescription" mandatory="notMandatory" index="1">
-                        </sfb:ControlConfiguration>
-                    </sfb:controlConfiguration>
-                    <sfb:controlConfiguration>
-                        <sfb:ControlConfiguration id="filterDlvNo" key="DLVNO" groupId="_BASIC" label="{ddtext>/DLVNO}"
-                            preventInitialDataFetchInValueHelpDialog="false" displayBehaviour="idOnly" mandatory="notMandatory" index="2">
-                        </sfb:ControlConfiguration>
-                    </sfb:controlConfiguration>
-                    <sfb:controlConfiguration>
-                        <sfb:ControlConfiguration id="filterIssPlant" key="ISSPLANT" groupId="_BASIC" label="{ddtext>/ISSPLANT}" controlType="dropDownList" 
-                            displayBehaviour="idOnly" mandatory="notMandatory" index="3">
-                        </sfb:ControlConfiguration>
-                    </sfb:controlConfiguration>
-                    <sfb:controlConfiguration>
-                        <sfb:ControlConfiguration id="filterRcvPlant" key="RCVPLANT" groupId="_BASIC" label="{ddtext>/RCVPLANT}" controlType="dropDownList" 
-                            displayBehaviour="idOnly" mandatory="notMandatory" index="4">
-                        </sfb:ControlConfiguration>
-                    </sfb:controlConfiguration>
-                    <sfb:controlConfiguration>
-                        <sfb:ControlConfiguration id="filterRefDlvNo" key="REFDLVNO" groupId="_BASIC" label="{ddtext>/REFDLVNO}"
-                            preventInitialDataFetchInValueHelpDialog="false" displayBehaviour="idOnly" mandatory="notMandatory" index="5">
-                        </sfb:ControlConfiguration>
-                    </sfb:controlConfiguration>
-                    <sfb:layoutData>
-                        <FlexItemData shrinkFactor="0"/>
-                    </sfb:layoutData>
-                </sfb:SmartFilterBar>
+            <sfb:SmartFilterBar id="sfbOutDel" entitySet="ZVB_3DERP_OUTDELFILTER" enableBasicSearch="true" search="onSearch" 
+                persistencyKey="3DERP_OutDelKey" filterContainerWidth="14rem" useToolbar="true" showClearOnFB="true" initialise="onSFBInitialise">
+                <sfb:controlConfiguration>
+                    <sfb:ControlConfiguration id="filterSbu" key="SBU" groupId="_BASIC" label="{ddtext>/SBU}" controlType="dropDownList" filterType="single"
+                        displayBehaviour="idOnly" mandatory="mandatory" index="0">
+                    </sfb:ControlConfiguration>
+                </sfb:controlConfiguration>
+                <sfb:controlConfiguration>
+                    <sfb:ControlConfiguration id="filterDlvType" key="DLVTYPE" groupId="_BASIC" label="{ddtext>/DLVTYPE}" controlType="dropDownList" 
+                        displayBehaviour="idAndDescription" mandatory="notMandatory" index="1">
+                    </sfb:ControlConfiguration>
+                </sfb:controlConfiguration>
+                <sfb:controlConfiguration>
+                    <sfb:ControlConfiguration id="filterDlvNo" key="DLVNO" groupId="_BASIC" label="{ddtext>/DLVNO}"
+                        preventInitialDataFetchInValueHelpDialog="false" displayBehaviour="idOnly" mandatory="notMandatory" index="2">
+                    </sfb:ControlConfiguration>
+                </sfb:controlConfiguration>
+                <sfb:controlConfiguration>
+                    <sfb:ControlConfiguration id="filterIssPlant" key="ISSPLANT" groupId="_BASIC" label="{ddtext>/ISSPLANT}" controlType="dropDownList" 
+                        displayBehaviour="idOnly" mandatory="notMandatory" index="3">
+                    </sfb:ControlConfiguration>
+                </sfb:controlConfiguration>
+                <sfb:controlConfiguration>
+                    <sfb:ControlConfiguration id="filterRcvPlant" key="RCVPLANT" groupId="_BASIC" label="{ddtext>/RCVPLANT}" controlType="dropDownList" 
+                        displayBehaviour="idOnly" mandatory="notMandatory" index="4">
+                    </sfb:ControlConfiguration>
+                </sfb:controlConfiguration>
+                <sfb:controlConfiguration>
+                    <sfb:ControlConfiguration id="filterRefDlvNo" key="REFDLVNO" groupId="_BASIC" label="{ddtext>/REFDLVNO}"
+                        preventInitialDataFetchInValueHelpDialog="false" displayBehaviour="idOnly" mandatory="notMandatory" index="5">
+                    </sfb:ControlConfiguration>
+                </sfb:controlConfiguration>
+                <sfb:layoutData>
+                    <FlexItemData shrinkFactor="0"/>
+                </sfb:layoutData>
+            </sfb:SmartFilterBar>
 
+            <!-- <VBox id="vbOutDel" fitContainer="true"> -->
+            <uiL:Splitter id="splitMain" orientation="Vertical" height="83%" width="100%">
                 <uiT:Table id="outDelHdrTab"
                     class="tablePadding"
                     rows="{outDelHdr>/results}"
@@ -113,8 +114,11 @@
                                 visible="true" />
                         </Toolbar>
                     </uiT:extension>
-                    <uiT:layoutData>
+                    <!-- <uiT:layoutData>
                         <FlexItemData growFactor="1" baseSize="0%"/>
+                    </uiT:layoutData> -->
+                    <uiT:layoutData>
+                        <uiL:SplitterLayoutData size="50%" />
                     </uiT:layoutData>
                 </uiT:Table>
                 
@@ -163,12 +167,19 @@
                                 visible="true" />
                         </Toolbar>
                     </uiT:extension>
-                    <uiT:layoutData>
+                    <!-- <uiT:layoutData>
                         <FlexItemData growFactor="1" baseSize="0%"/>
+                    </uiT:layoutData> -->
+                    <uiT:layoutData>
+                        <uiL:SplitterLayoutData size="50%" />
                     </uiT:layoutData>
                 </uiT:Table>
 
-            </VBox>
+                <uiL:layoutData>
+                    <uiL:SplitterLayoutData size="auto" />
+                </uiL:layoutData>
+            </uiL:Splitter>
+            <!-- </VBox> -->
         </content>
     </Page>
 </mvc:View>
